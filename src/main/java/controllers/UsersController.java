@@ -5,6 +5,7 @@ import domain.requests.posts.RequestPostUser;
 import domain.responses.gets.lists.ResponseGetUser;
 import domain.responses.posts.ResponsePostEntityCreation;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,6 +34,7 @@ public class UsersController {
     }
 
     @PostMapping(consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()

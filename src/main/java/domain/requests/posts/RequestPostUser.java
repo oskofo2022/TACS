@@ -6,22 +6,20 @@ import javax.validation.constraints.*;
 
 //TODO: Add spanish validations messages
 public class RequestPostUser {
-    @Min(4)
-    @Max(60)
+    @Size(min = 4, max = 60)
     @NotBlank
     private String name;
 
-    @Max(100)
+    @Size(max = 100)
     @Pattern(regexp = PatternConstants.EMAIL)
     @NotBlank
     private String email;
 
-    @Min(8)
-    @Max(32)
-    @Pattern(regexp = PatternConstants.ATLEASTONENUMBER)
-    @Pattern(regexp = PatternConstants.ATLEASTONELOWERCASELETTER)
-    @Pattern(regexp = PatternConstants.ATLEASTONEUPPERCASELETTER)
-    @Pattern(regexp = PatternConstants.ATLEASTONESPECIALCHARACTER)
+    @Size(min = 8, max = 32)
+    @Pattern(regexp = PatternConstants.AT_LEAST_ONE_NUMBER)
+    @Pattern(regexp = PatternConstants.AT_LEAST_ONE_LOWERCASE_LETTER)
+    @Pattern(regexp = PatternConstants.AT_LEAST_ONE_UPPERCASE_LETTER)
+    @Pattern(regexp = PatternConstants.AT_LEAST_ONE_SPECIAL_CHARACTER)
     @NotBlank
     private String password;
 
