@@ -8,7 +8,7 @@
 		<version>2.6.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>tacs.group.3</groupId>
+	<groupId>tacs.group.4</groupId>
 	<artifactId>wordle</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wordle</name>
