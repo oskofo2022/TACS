@@ -28,8 +28,8 @@ public class UsersController {
         this.userRepository = userRepository;
     }*/
 
-    @GetMapping(path = UriConstants.ID, produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetUser> get(@PathVariable String id)
+    @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
+    public ResponseEntity<ResponseGetUser> get(@PathVariable String userId)
     {
         ResponseGetUser responseGetUser = new ResponseGetUser("some name", "email@email.com");
 
@@ -60,7 +60,7 @@ public class UsersController {
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                                                  .path(UriConstants.ID)
+                                                  .path(UriConstants.Users.ID)
                                                   .buildAndExpand(1)
                                                   .toUri();
 
