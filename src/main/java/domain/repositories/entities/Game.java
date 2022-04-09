@@ -5,9 +5,9 @@ import domain.requests.posts.RequestPostUserInscriptionGameGuess;
 import domain.responses.gets.lists.CharProximity;
 import domain.responses.gets.lists.ResponseGetListGuessCharMatching;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -20,6 +20,15 @@ public class Game {
     @NotBlank
     @Size(max = 60)
     private String word;
+
+    @NotNull
+    private boolean isCompleted;
+
+    @ManyToOne
+    private Inscription inscription;
+
+    @OneToMany
+    private List<Guess> guesses;
 
     public long getId() {
         return id;
@@ -49,8 +58,9 @@ public class Game {
     }
 
     private void validateLengthConsistency(RequestPostUserInscriptionGameGuess requestPostUserInscriptionGameGuess) {
-        if (requestPostUserInscriptionGameGuess.getWord()
-                                               .length() != this.word.length()) {
+        var guessWordLength = requestPostUserInscriptionGameGuess.getWord()
+                                                                      .length();
+        if (guessWordLength != this.word.length()) {
             var message = "Expected length %d".formatted(this.word.length());
             throw new MismatchedGameWordLengthError(message);
         }

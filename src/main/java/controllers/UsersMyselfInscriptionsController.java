@@ -3,6 +3,7 @@ package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
 import domain.repositories.entities.Language;
+import domain.repositories.entities.TournamentState;
 import domain.repositories.entities.Visibility;
 import domain.requests.gets.lists.RequestGetListUserInscription;
 import domain.responses.gets.lists.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -21,9 +23,8 @@ public class UsersMyselfInscriptionsController {
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUserInscription>> list(RequestGetListUserInscription requestGetListUserInscription)
     {
 
-        var calendar = Calendar.getInstance();
-        calendar.set(2022, Calendar.DECEMBER, 1);
-        var responseGetListTournament = new ResponseGetListTournament(1, "tournament", Language.ENGLISH, Visibility.PUBLIC, calendar.getTime(), calendar.getTime());
+        var localDate = LocalDate.now();
+        var responseGetListTournament = new ResponseGetListTournament(1, "tournament", Language.ENGLISH, Visibility.PUBLIC, TournamentState.STARTED, localDate, localDate);
         var responsesGetListGameGuess = new ArrayList<ResponseGetListGameGuess>() {
             {
                 add(new ResponseGetListGameGuess("lord", new ArrayList<>() {
