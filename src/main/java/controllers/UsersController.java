@@ -40,11 +40,7 @@ public class UsersController {
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(RequestGetListUser requestGetListUser)
     {
 
-        var responseGetListUser = new ResponseGetListUser();
-        responseGetListUser.setId(1);
-        responseGetListUser.setName("some name");
-        responseGetListUser.setEmail("email@email.com");
-
+        var responseGetListUser = new ResponseGetListUser(1, "some name", "email@email.com");
         var responsesGetListUser = new ArrayList<ResponseGetListUser>() {
             {
                 add(responseGetListUser);
