@@ -1,6 +1,7 @@
 package domain.repositories.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -12,16 +13,16 @@ public class User {
 
 
     @Size(min = 4, max = 60)
-    @Column(nullable = false)
+    @NotNull
     private String name;
 
     @Size(max = 100)
-    @Column(nullable = false)
+    @NotNull
     private String email;
 
-    @Column(nullable = false)
+    @NotNull
     private byte[] password;
 
-    @Column(nullable = false)
+    @NotNull
     private byte[] salt;
 }
