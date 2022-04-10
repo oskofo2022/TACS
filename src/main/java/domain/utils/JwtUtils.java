@@ -1,10 +1,14 @@
 package domain.utils;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Component
@@ -29,14 +33,13 @@ public class JwtUtils {
     }
 
     public String generateTokenFromUsername(String username) {
-        Date issuedAt = new Date();
-        Date expiration = (Date) issuedAt.clone();
-        expiration.setTime(issuedAt.getTime()+Long.parseLong(jwtExpirationMs));
+        LocalDateTime issuedAt = LocalDateTime.now();
+        LocalDateTime expiration = issuedAt.plus(Long.parseLong(jwtExpirationMs), ChronoUnit.MILLIS);
 
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(issuedAt)
-                .setExpiration(expiration)
+                .setIssuedAt(Date.from(issuedAt.toInstant(ZoneOffset.UTC)))
+                .setExpiration(Date.from(expiration.toInstant(ZoneOffset.UTC)))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
