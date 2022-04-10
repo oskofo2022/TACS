@@ -1,4 +1,4 @@
-package domain.utils;
+package domain.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

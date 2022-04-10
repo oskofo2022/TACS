@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import domain.utils.JwtUtils;
+import domain.security.JwtUtils;
 
 import javax.validation.Valid;
 
@@ -31,7 +31,7 @@ public class LoginController {
 
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(requestPostLogin.getEmail());
 
-        ResponsePostUserLogin ResponsePostUserLogin = new ResponsePostUserLogin(1);
+        ResponsePostUserLogin ResponsePostUserLogin = new ResponsePostUserLogin(1, "juan");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
