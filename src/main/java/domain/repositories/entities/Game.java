@@ -3,7 +3,7 @@ package domain.repositories.entities;
 import domain.errors.runtime.MismatchedGameWordLengthError;
 import domain.requests.posts.RequestPostUserInscriptionGameGuess;
 import domain.responses.gets.lists.CharProximity;
-import domain.responses.gets.lists.ResponseGetListGuessCharMatching;
+import domain.responses.common.gets.ResponseCommonGetGuessCharMatching;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -47,7 +47,7 @@ public class Game {
     }
 
 
-    public List<ResponseGetListGuessCharMatching> listGuessCharsMatching(RequestPostUserInscriptionGameGuess requestPostUserInscriptionGameGuess) {
+    public List<ResponseCommonGetGuessCharMatching> listGuessCharsMatching(RequestPostUserInscriptionGameGuess requestPostUserInscriptionGameGuess) {
         this.validateLengthConsistency(requestPostUserInscriptionGameGuess);
 
         var wordGuess = requestPostUserInscriptionGameGuess.getWord();
@@ -66,7 +66,7 @@ public class Game {
         }
     }
 
-    private ResponseGetListGuessCharMatching getCharMatching(char character, int index) {
-        return new ResponseGetListGuessCharMatching(character, CharProximity.HIT.getProximity(this.word, character, index));
+    private ResponseCommonGetGuessCharMatching getCharMatching(char character, int index) {
+        return new ResponseCommonGetGuessCharMatching(character, CharProximity.HIT.getProximity(this.word, character, index));
     }
 }

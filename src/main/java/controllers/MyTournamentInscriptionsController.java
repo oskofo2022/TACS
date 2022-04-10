@@ -5,6 +5,7 @@ import constants.UriConstants;
 import domain.repositories.entities.Language;
 import domain.repositories.entities.TournamentState;
 import domain.repositories.entities.Visibility;
+import domain.responses.common.gets.ResponseCommonGetGuessCharMatching;
 import domain.requests.gets.lists.RequestGetListUserInscription;
 import domain.responses.gets.lists.*;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 @RestController
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.URL)
-public class UsersMyselfInscriptionsController {
+public class MyTournamentInscriptionsController {
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUserInscription>> list(RequestGetListUserInscription requestGetListUserInscription)
     {
@@ -29,33 +29,33 @@ public class UsersMyselfInscriptionsController {
             {
                 add(new ResponseGetListGameGuess("lord", new ArrayList<>() {
                     {
-                        add(new ResponseGetListGuessCharMatching('l', CharProximity.NONE));
-                        add(new ResponseGetListGuessCharMatching('o', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('r', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('d', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('l', CharProximity.NONE));
+                        add(new ResponseCommonGetGuessCharMatching('o', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('r', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('d', CharProximity.HIT));
                     }
                 }));
                 add(new ResponseGetListGameGuess("bord", new ArrayList<>() {
                     {
-                        add(new ResponseGetListGuessCharMatching('b', CharProximity.NONE));
-                        add(new ResponseGetListGuessCharMatching('o', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('r', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('d', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('b', CharProximity.NONE));
+                        add(new ResponseCommonGetGuessCharMatching('o', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('r', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('d', CharProximity.HIT));
                     }
                 }));
                 add(new ResponseGetListGameGuess("word", new ArrayList<>() {
                     {
-                        add(new ResponseGetListGuessCharMatching('w', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('o', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('r', CharProximity.HIT));
-                        add(new ResponseGetListGuessCharMatching('d', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('w', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('o', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('r', CharProximity.HIT));
+                        add(new ResponseCommonGetGuessCharMatching('d', CharProximity.HIT));
                     }
                 }));
             }
         };
         var responsesGetListUserInscriptionGame = new ArrayList<ResponseGetListUserInscriptionGame>() {
             {
-                add(new ResponseGetListUserInscriptionGame("word", true, responsesGetListGameGuess));
+                add(new ResponseGetListUserInscriptionGame(5, "word", true, responsesGetListGameGuess));
             }
         };
         var responseGetListUserInscription = new ResponseGetListUserInscription(responseGetListTournament, responsesGetListUserInscriptionGame);

@@ -1,8 +1,5 @@
 package domain.requests.posts;
 
-import domain.errors.runtime.MismatchedGameWordLengthError;
-import domain.repositories.entities.Game;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
