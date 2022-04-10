@@ -4,18 +4,13 @@ import constants.MediaTypeConstants;
 import constants.UriConstants;
 import domain.repositories.entities.*;
 import domain.requests.gets.lists.RequestGetListTournament;
-import domain.requests.gets.lists.RequestGetPagedList;
-import domain.requests.posts.RequestPostInscriptionTournament;
 import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.responses.gets.lists.ResponseGetPagedList;
-import domain.responses.posts.ResponsePostEntityCreation;
-import domain.responses.posts.ResponsePostUserInscriptionGameGuess;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,31 +35,15 @@ public class TournamentsController {
     }
 
 
-    /*
-    @PostMapping(path = UriConstants.Tournaments.UserTournament.URL, consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
+    @PostMapping(path = UriConstants.Tournaments.UserTournament.URL, produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostInscriptionTournament requestPostInscriptionTournament){
+    public ResponseEntity post(){
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(UriConstants.Tournaments.ID).buildAndExpand(1).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(UriConstants.Tournaments.URL)
+                        .buildAndExpand(1).toUri();
 
-        var user = new User();
-        var inscription = new Inscription();
-        var inscriptionIdentifier = new InscriptionIdentifier();
-        inscriptionIdentifier.setUserId(1);
-        inscriptionIdentifier.setTournamentId(22);
-        inscription.setInscriptionIdentifier(inscriptionIdentifier);
-
-
-        var responsesGetListGuessCharMatching =  game.listGuessCharsMatching(requestPostUserGameGuess);
-
-        ResponsePostUserInscriptionGameGuess responsePostUserInscriptionGameGuess = new ResponsePostUserInscriptionGameGuess(1, responsesGetListGuessCharMatching);
-
-        return ResponseEntity.created(location)
-                .body(responsePostUserInscriptionGameGuess);
-
+        return ResponseEntity.created(location).build();
 
     }
-    
-     */
 
 }
