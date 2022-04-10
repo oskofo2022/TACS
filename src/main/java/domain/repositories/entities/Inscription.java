@@ -21,4 +21,32 @@ public class Inscription {
 
     @OneToMany
     private List<Game> games;
+
+    public InscriptionIdentifier getInscriptionIdentifier() {
+        return inscriptionIdentifier;
+    }
+    public void setInscriptionIdentifier(InscriptionIdentifier inscriptionIdentifier) {
+        this.inscriptionIdentifier = inscriptionIdentifier;
+    }
+
+    public Tournament getTournament() {
+        return tournament;
+    }
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
 }

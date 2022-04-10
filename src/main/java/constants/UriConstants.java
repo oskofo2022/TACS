@@ -25,9 +25,24 @@ public class UriConstants {
             }
         }
 
+        // /api/users/tournaments
         public static class Tournaments {
-            private static final String URL = Users.URL + "/tournaments";
+            public static final String URL = Users.URL + "/tournaments";
             public static final String ID = "/{tournamentId}";
+        }
+    }
+
+    // /api/tournaments
+    public static class Tournaments {
+        public static final String URL = "tournaments";
+        public static final String ID = "/{tournamentId}";
+        public static final String PUBLIC = "/public";
+        public static final String TOURNAMENTPUBLIC = Tournaments.PUBLIC + Tournaments.ID;
+
+        public static class UserTournament{
+            public static final String INSCRIPTION = "/inscriptions";
+            public static final String MYSELF = "/myself";
+            public static final String URL = Tournaments.TOURNAMENTPUBLIC + INSCRIPTION + MYSELF;
         }
     }
 
