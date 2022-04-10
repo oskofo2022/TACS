@@ -40,4 +40,12 @@ public class UriConstants {
             public static final String Word = "/{word}";
         }
     }
+
+    public static class Logins {
+        public static final String URL = "logins";
+    }
+
+    public static class Logouts {
+        public static final String URL = "logouts";
+    }
 }
