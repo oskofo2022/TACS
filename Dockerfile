@@ -1,4 +1,6 @@
-FROM tomcat:9-jdk8
-ADD target/wordle.war /usr/local/tomcat/webapps/wordle.war
+FROM maven:3.8.5-openjdk-17 AS build
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} /wordle.jar
+ENTRYPOINT ["java","-jar","/wordle.jar"]
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
+

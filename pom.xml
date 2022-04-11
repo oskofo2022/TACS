@@ -11,7 +11,7 @@
 	<groupId>tacs.group.4</groupId>
 	<artifactId>wordle</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>wordle</name>
 	<description>Minified Wordle</description>
 	<properties>
@@ -92,6 +92,22 @@
 
 	<build>
 		<plugins>
+<!--			<plugin>-->
+<!--				<groupId>org.codehaus.mojo</groupId>-->
+<!--				<artifactId>exec-maven-plugin</artifactId>-->
+<!--				<version>1.2.1</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<goals>-->
+<!--							<goal>java</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<includePluginDependencies>true</includePluginDependencies>-->
+<!--					<mainClass>app.Program</mainClass>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.asciidoctor</groupId>
 				<artifactId>asciidoctor-maven-plugin</artifactId>
@@ -120,6 +136,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>app.Program</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
