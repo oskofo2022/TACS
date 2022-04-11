@@ -3,9 +3,9 @@ El uso de myself a las urls hace referencia a APIs a ser consumidas por usuarios
 
 ### Correr en docker:
 ```
-$ mvn clean install -Dmaven.test.skip=true (compilamos el .war)
-$ docker build --tag wordle . (generamos la imagen)
-$ docker run -d --name wordle wordle (generamos el contenedor y lo corremos)
+$ mvn clean install -Dmaven.test.skip=true
+$ docker build --tag wordle .
+$ docker run -d --name wordle wordle
 ```
 swagger: http://172.17.0.2:8080/api/swagger-ui/index.html#/
 
