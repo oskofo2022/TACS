@@ -11,7 +11,6 @@ public class User {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-
     @Size(min = 4, max = 60)
     @NotNull
     private String name;

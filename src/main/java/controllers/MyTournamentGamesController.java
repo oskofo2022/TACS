@@ -22,9 +22,9 @@ import java.util.ArrayList;
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Games.URL)
 public class MyTournamentGamesController {
 
-    @PostMapping(consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
+    @PostMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Games.ID, consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ResponsePostUserInscriptionGameGuess> post(@PathVariable String tournamentId, @Valid @RequestBody RequestPostUserInscriptionGameGuess requestPostUserGameGuess)
+    public ResponseEntity<ResponsePostUserInscriptionGameGuess> post(@PathVariable String tournamentId, @PathVariable String gameId,  @Valid @RequestBody RequestPostUserInscriptionGameGuess requestPostUserGameGuess)
     {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                                                   .path(UriConstants.Users.Myself.Inscriptions.Tournaments.Games.ID)

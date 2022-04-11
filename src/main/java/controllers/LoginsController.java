@@ -16,12 +16,12 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = UriConstants.Logins.URL)
-public class LoginController {
+public class LoginsController {
 
     private final JwtUtils jwtUtils;
 
     @Autowired
-    public LoginController(JwtUtils jwtUtils){
+    public LoginsController(JwtUtils jwtUtils){
         this.jwtUtils = jwtUtils;
     }
 
@@ -34,7 +34,7 @@ public class LoginController {
         ResponsePostUserLogin ResponsePostUserLogin = new ResponsePostUserLogin(1, "juan");
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(ResponsePostUserLogin);
+                             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                             .body(ResponsePostUserLogin);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 public class RequestGetListUserInscription extends RequestGetPagedList {
+    private long tournamentId;
+
     private String tournamentName;
 
     private Visibility tournamentVisibility;
@@ -90,5 +92,13 @@ public class RequestGetListUserInscription extends RequestGetPagedList {
 
     public void setTournamentTopEndDate(LocalDate tournamentTopEndDate) {
         this.tournamentTopEndDate = tournamentTopEndDate;
+    }
+
+    public long getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(long tournamentId) {
+        this.tournamentId = tournamentId;
     }
 }
