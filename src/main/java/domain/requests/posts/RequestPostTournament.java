@@ -10,8 +10,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 public class RequestPostTournament {
-
-
     @Size(min = 4, max = 60)
     @NotBlank
     private String name;

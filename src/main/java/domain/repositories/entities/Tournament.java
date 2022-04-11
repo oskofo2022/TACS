@@ -23,7 +23,7 @@ public class Tournament {
     private Language language;
 
     @NotNull
-    private TournamentState tournamentState;
+    private TournamentState state;
 
     @NotNull
     private LocalDate startDate;

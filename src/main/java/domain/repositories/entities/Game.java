@@ -22,7 +22,7 @@ public class Game {
     private String word;
 
     @NotNull
-    private boolean isCompleted;
+    private GameState state;
 
     @ManyToOne
     private Inscription inscription;

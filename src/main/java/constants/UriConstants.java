@@ -1,6 +1,7 @@
 package constants;
 
 public class UriConstants {
+    public static String DELIMITER = "/";
 
     public static class Users {
         public static final String URL = "users";
@@ -15,6 +16,10 @@ public class UriConstants {
                 public static class Tournaments {
                     public static final String URL = Inscriptions.URL + "/tournaments";
                     public static final String ID = "/{tournamentId}";
+
+                    public static class Queries {
+                        public static String ID = "tournamentId={tournamentId}";
+                    }
 
                     public static class Games {
                         public static final String URL_ALL = Tournaments.URL + "/games";
@@ -36,13 +41,12 @@ public class UriConstants {
     public static class Tournaments {
         public static final String URL = "tournaments";
         public static final String ID = "/{tournamentId}";
-        public static final String PUBLIC = "/public";
-        public static final String TOURNAMENTPUBLIC = Tournaments.PUBLIC + Tournaments.ID;
 
-        public static class UserTournament{
-            public static final String INSCRIPTION = "/inscriptions";
-            public static final String MYSELF = "/myself";
-            public static final String URL = Tournaments.TOURNAMENTPUBLIC + INSCRIPTION + MYSELF;
+        public static final String PUBLIC = "/public";
+
+        public static class Inscriptions {
+            public static final String URL = Tournaments.URL + Tournaments.ID +  "/inscriptions";
+            public static final String CURRENT_USER = "myself";
         }
     }
 
