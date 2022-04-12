@@ -19,6 +19,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.URL)
 public class MyTournamentInscriptionsController {
+
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUserInscription>> list(RequestGetListUserInscription requestGetListUserInscription)
     {

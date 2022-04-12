@@ -25,6 +25,10 @@ public class UriConstants {
                         public static final String URL_ALL = Tournaments.URL + "/games";
                         public static final String URL = Tournaments.URL + Tournaments.ID + "/games";
                         public static final String ID = "/{gameId}";
+
+                        public static class Guesses {
+                            public static final String URL = Games.URL + Games.ID + "/guesses";
+                        }
                     }
                 }
             }

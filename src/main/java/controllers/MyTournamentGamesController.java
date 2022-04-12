@@ -22,26 +22,6 @@ import java.util.ArrayList;
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Games.URL)
 public class MyTournamentGamesController {
 
-    @PostMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Games.ID, consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ResponsePostUserInscriptionGameGuess> post(@PathVariable String tournamentId, @PathVariable String gameId,  @Valid @RequestBody RequestPostUserInscriptionGameGuess requestPostUserGameGuess)
-    {
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                                                  .path(UriConstants.Users.Myself.Inscriptions.Tournaments.Games.ID)
-                                                  .buildAndExpand(1)
-                                                  .toUri();
-
-        var game = new Game();
-        game.setWord("word");
-
-        var responsesGetListGuessCharMatching =  game.listGuessCharsMatching(requestPostUserGameGuess);
-
-        ResponsePostUserInscriptionGameGuess responsePostUserInscriptionGameGuess = new ResponsePostUserInscriptionGameGuess(1, responsesGetListGuessCharMatching);
-
-        return ResponseEntity.created(location)
-                             .body(responsePostUserInscriptionGameGuess);
-    }
-
     @GetMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Games.ID, produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponseGetInscriptionTournamentGame> get(@PathVariable String tournamentId, @PathVariable String gameId)
