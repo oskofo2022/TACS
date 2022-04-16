@@ -1,7 +1,7 @@
 package controllers.advices;
 
 import domain.errors.APIError;
-import domain.errors.ErrorCodeConstants;
+import domain.errors.constants.ErrorCodeConstants;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

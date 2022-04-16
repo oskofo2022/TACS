@@ -1,5 +1,6 @@
 package domain.persistence.entities;
 
+import constants.ApplicationProperties;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
 
@@ -26,10 +27,8 @@ public class User {
     private String email;
 
     @NotNull
-    private byte[] password;
-
-    @NotNull
-    private byte[] salt;
+    @Size(max = 80)
+    private String password;
 
     @OneToMany
     @JoinColumn(name = ColumnConstants.Names.ID)
@@ -59,27 +58,19 @@ public class User {
         this.email = email;
     }
 
-    public byte[] getPassword() {
-        return password;
-    }
-
-    public void setPassword(byte[] password) {
-        this.password = password;
-    }
-
-    public byte[] getSalt() {
-        return salt;
-    }
-
-    public void setSalt(byte[] salt) {
-        this.salt = salt;
-    }
-
     public List<Inscription> getInscriptions() {
         return inscriptions;
     }
 
     public void setInscriptions(List<Inscription> inscriptions) {
         this.inscriptions = inscriptions;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

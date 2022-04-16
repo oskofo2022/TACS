@@ -1,6 +1,6 @@
 package domain.errors.runtime;
 
-import domain.errors.ErrorCodeConstants;
+import domain.errors.constants.ErrorCodeConstants;
 import org.springframework.http.HttpStatus;
 
 public class MismatchedGameWordLengthError extends BusinessRuntimeException {
