@@ -1,8 +1,8 @@
 package domain.requests.gets.lists;
 
-import domain.repositories.entities.Language;
-import domain.repositories.entities.TournamentState;
-import domain.repositories.entities.Visibility;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.TournamentState;
+import domain.persistence.entities.enums.Visibility;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;

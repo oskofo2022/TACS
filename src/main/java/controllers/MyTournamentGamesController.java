@@ -2,20 +2,14 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.repositories.entities.Game;
 import domain.responses.gets.ResponseGetInscriptionTournamentGame;
-import domain.requests.posts.RequestPostUserInscriptionGameGuess;
 import domain.responses.gets.lists.CharProximity;
 import domain.responses.gets.lists.ResponseGetListGameGuess;
 import domain.responses.common.gets.ResponseCommonGetGuessCharMatching;
-import domain.responses.posts.ResponsePostUserInscriptionGameGuess;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
 import java.util.ArrayList;
 
 @RestController

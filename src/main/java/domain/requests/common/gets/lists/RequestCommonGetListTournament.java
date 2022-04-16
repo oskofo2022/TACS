@@ -1,6 +1,6 @@
 package domain.requests.common.gets.lists;
 
-import domain.repositories.entities.Language;
+import domain.persistence.entities.enums.Language;
 import domain.requests.gets.lists.RequestGetPagedList;
 import org.springframework.format.annotation.DateTimeFormat;
 

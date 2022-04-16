@@ -1,7 +1,7 @@
 package domain.responses.posts;
 
-import domain.repositories.entities.Language;
-import domain.repositories.entities.Visibility;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.Visibility;
 
 import java.time.LocalDate;
 

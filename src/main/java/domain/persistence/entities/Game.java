@@ -1,6 +1,9 @@
-package domain.repositories.entities;
+package domain.persistence.entities;
 
 import domain.errors.runtime.MismatchedGameWordLengthError;
+import domain.persistence.constants.ColumnConstants;
+import domain.persistence.constants.TableConstants;
+import domain.persistence.entities.enums.GameState;
 import domain.requests.posts.RequestPostUserInscriptionGameGuess;
 import domain.responses.gets.lists.CharProximity;
 import domain.responses.common.gets.ResponseCommonGetGuessCharMatching;
@@ -13,8 +16,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Entity
+@Table(name = TableConstants.Names.GAMES)
 public class Game {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank
@@ -22,13 +27,19 @@ public class Game {
     private String word;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private GameState state;
 
-    @ManyToOne
-    private Inscription inscription;
-
     @OneToMany
+    @JoinColumn(name = ColumnConstants.Names.ID)
     private List<Guess> guesses;
+
+    @ManyToOne(optional = false)
+    @JoinColumns( {
+            @JoinColumn(name = ColumnConstants.Names.Inscriptions.TOURNAMENT_ID, referencedColumnName = ColumnConstants.Names.TOURNAMENT_ID),
+            @JoinColumn(name = ColumnConstants.Names.Inscriptions.USER_ID, referencedColumnName = ColumnConstants.Names.USER_ID)
+    })
+    private Inscription inscription;
 
     public long getId() {
         return id;

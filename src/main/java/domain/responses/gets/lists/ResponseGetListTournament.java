@@ -1,8 +1,8 @@
 package domain.responses.gets.lists;
 
-import domain.repositories.entities.Language;
-import domain.repositories.entities.TournamentState;
-import domain.repositories.entities.Visibility;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.TournamentState;
+import domain.persistence.entities.enums.Visibility;
 
 import java.time.LocalDate;
 

@@ -2,9 +2,9 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.repositories.entities.Language;
-import domain.repositories.entities.TournamentState;
-import domain.repositories.entities.Visibility;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.TournamentState;
+import domain.persistence.entities.enums.Visibility;
 import domain.requests.gets.lists.RequestGetListPublicTournament;
 import domain.requests.gets.lists.RequestGetListTournament;
 import domain.requests.posts.RequestPostTournament;
@@ -68,11 +68,11 @@ public class TournamentsController {
 
         ResponsePostTournament responsePostTournament = new ResponsePostTournament(
                 tournamentId,
-                requestPostTournament.getName(),
-                requestPostTournament.getLang(),
-                requestPostTournament.getVisibility(),
-                requestPostTournament.getBeginDate(),
-                requestPostTournament.getEndDate()
+                "TournamentName",
+                Language.SPANISH,
+                Visibility.PUBLIC,
+                LocalDate.now(),
+                LocalDate.now().plusDays(1)
         );
 
         return ResponseEntity.created(location)

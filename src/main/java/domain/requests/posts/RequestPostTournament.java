@@ -1,11 +1,7 @@
 package domain.requests.posts;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import domain.repositories.entities.Language;
-import domain.repositories.entities.Visibility;
-import domain.serialization.CustomDateDeserializer;
-import domain.serialization.CustomDateSerializer;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.Visibility;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
@@ -25,17 +21,14 @@ public class RequestPostTournament {
     private Visibility visibility;
 
     @FutureOrPresent
-    @JsonSerialize(using = CustomDateSerializer.class)
-    @JsonDeserialize(using = CustomDateDeserializer.class)
     private LocalDate beginDate;
 
-
     @FutureOrPresent
-    @JsonSerialize(using = CustomDateSerializer.class)
-    @JsonDeserialize(using = CustomDateDeserializer.class)
     private LocalDate endDate;
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     public void setName(String name) {
         this.name = name;

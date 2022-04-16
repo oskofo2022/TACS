@@ -2,7 +2,7 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.repositories.entities.Game;
+import domain.persistence.entities.Game;
 import domain.requests.posts.RequestPostUserInscriptionGameGuess;
 import domain.responses.posts.ResponsePostUserInscriptionGameGuess;
 import org.springframework.http.HttpStatus;

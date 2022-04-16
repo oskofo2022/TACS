@@ -2,9 +2,9 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.repositories.entities.Language;
-import domain.repositories.entities.TournamentState;
-import domain.repositories.entities.Visibility;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.TournamentState;
+import domain.persistence.entities.enums.Visibility;
 import domain.responses.common.gets.ResponseCommonGetGuessCharMatching;
 import domain.requests.gets.lists.RequestGetListUserInscription;
 import domain.responses.gets.lists.*;

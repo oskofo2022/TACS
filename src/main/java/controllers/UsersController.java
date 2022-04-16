@@ -1,8 +1,7 @@
 package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.repositories.UserRepository;
-import domain.repositories.entities.User;
+import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListUser;
 import domain.requests.posts.RequestPostUser;
 import domain.responses.gets.lists.ResponseGetListUser;
@@ -17,8 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 @RestController
@@ -59,21 +56,12 @@ public class UsersController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
-        //TODO This should not be here
-        User user = new User();
-        user.setEmail(requestPostUser.getEmail());
-        user.setPassword(requestPostUser.getPassword().getBytes(StandardCharsets.UTF_8));
-        user.setName(requestPostUser.getName());
-        user.setSalt(requestPostUser.getPassword().getBytes(StandardCharsets.UTF_8));
-
-        userRepository.saveAndFlush(user);
-
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path(UriConstants.Users.ID)
-                .buildAndExpand(user.getId())
-                .toUri();
+                                                  .path(UriConstants.Users.ID)
+                                                  .buildAndExpand(1)
+                                                  .toUri();
 
-        ResponsePostEntityCreation responsePostEntityCreation = new ResponsePostEntityCreation(user.getId());
+        ResponsePostEntityCreation responsePostEntityCreation = new ResponsePostEntityCreation(1);
 
         return ResponseEntity.created(location)
                              .body(responsePostEntityCreation);
