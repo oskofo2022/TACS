@@ -20,7 +20,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.URL)
@@ -69,11 +68,11 @@ public class TournamentsController {
 
         ResponsePostTournament responsePostTournament = new ResponsePostTournament(
                 tournamentId,
-                "TournamentName",
-                Language.SPANISH,
-                Visibility.PUBLIC,
-                LocalDate.now(),
-                LocalDate.now().plusDays(1)
+                requestPostTournament.getName(),
+                requestPostTournament.getLang(),
+                requestPostTournament.getVisibility(),
+                requestPostTournament.getBeginDate(),
+                requestPostTournament.getEndDate()
         );
 
         return ResponseEntity.created(location)
