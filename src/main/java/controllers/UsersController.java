@@ -9,6 +9,9 @@ import domain.responses.gets.lists.ResponseGetListUser;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.gets.lists.ResponseGetUser;
 import domain.responses.posts.ResponsePostEntityCreation;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
@@ -27,11 +31,13 @@ public class UsersController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Session session;
 
     @Autowired
-    public UsersController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UsersController(UserRepository userRepository, PasswordEncoder passwordEncoder, Session session) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.session = session;
     }
 
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
@@ -61,8 +67,6 @@ public class UsersController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
-
-
         var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
 
         var user = new User();

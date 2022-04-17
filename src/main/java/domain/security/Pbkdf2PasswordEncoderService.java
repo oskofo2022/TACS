@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Pbkdf2HashCreator {
+public class Pbkdf2PasswordEncoderService {
 
     @Value(ApplicationProperties.Wordle.Hash.Arguments.SECRET)
     private String secret;

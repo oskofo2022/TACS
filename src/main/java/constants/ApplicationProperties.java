@@ -33,4 +33,41 @@ public class ApplicationProperties {
             }
         }
     }
+
+    public static class Spring {
+        private static final String NAME = BIND_START_TOKEN + "spring";
+        public static class Datasource {
+            private static final String NAME = Spring.NAME + SEPARATOR + "datasource";
+            public static class Arguments {
+                public static final String URL = Datasource.NAME + SEPARATOR + "url" + BIND_END_TOKEN;
+                public static final String USERNAME = Datasource.NAME + SEPARATOR + "username" + BIND_END_TOKEN;
+                public static final String PASSWORD = Datasource.NAME + SEPARATOR + "password" + BIND_END_TOKEN;
+                public static final String DRIVER_CLASS_NAME = Datasource.NAME + SEPARATOR + "driver-class-name" + BIND_END_TOKEN;
+            }
+        }
+
+        public static class JPA {
+            private static final String NAME = Spring.NAME + SEPARATOR + "jpa";
+
+            public static class Arguments {
+                public static final String OPEN_IN_VIEW = JPA.NAME + SEPARATOR + "open-in-view" + BIND_END_TOKEN;
+                public static final String GENERATE_DDL = JPA.NAME + SEPARATOR + "generate-ddl" + BIND_END_TOKEN;
+            }
+            public static class Hibernate {
+                private static final String NAME = JPA.NAME + SEPARATOR + "hibernate";
+                public static class Arguments {
+                    public static final String DDL_AUTO = Hibernate.NAME + SEPARATOR + "ddl-auto" + BIND_END_TOKEN;
+                }
+            }
+            public static class Properties {
+                private static final String NAME = JPA.NAME + SEPARATOR + "properties";
+                public static class Hibernate {
+                    private static final String NAME = Properties.NAME + SEPARATOR + "hibernate";
+                    public static class Arguments {
+                        public static final String DIALECT = Hibernate.NAME + SEPARATOR + "dialect" + BIND_END_TOKEN;
+                    }
+                }
+            }
+        }
+    }
 }
