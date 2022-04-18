@@ -18,7 +18,7 @@ public abstract class RequestGetPagedList {
     public RequestGetPagedList() {
         this.page = PaginationConstants.Default.PAGE;
         this.pageSize = PaginationConstants.Default.PAGE_SIZE;
-        this.queries = new ArrayList<>();
+        this.restrictions = new ArrayList<>();
     }
 
     @Size(min = 1)
@@ -37,7 +37,7 @@ public abstract class RequestGetPagedList {
     }
 
     @JsonIgnore
-    private final ArrayList<String> queries;
+    private final ArrayList<String> restrictions;
 
     public void setPage(int page) {
         this.page = page;
@@ -80,26 +80,26 @@ public abstract class RequestGetPagedList {
 
     @JsonIgnore
     public Optional<String> getFilter() {
-        this.addQueries();
-        return queries.stream()
-                      .reduce(((concatenatedQueries, query) -> concatenatedQueries + RSQLConstants.AND + query));
+        this.addRestrictions();
+        return restrictions.stream()
+                           .reduce(((concatenatedQueries, query) -> concatenatedQueries + RSQLConstants.AND + query));
     }
 
-    protected void addQuery(String query, Object value) {
-        this.addQuery(query, value, Objects::nonNull);
+    protected void addRestriction(String query, Object value) {
+        this.addRestriction(query, value, Objects::nonNull);
     }
 
-    protected void addQuery(String query, String value) {
-        this.addQuery(query, value, v -> value != null && !value.isBlank());
+    protected void addRestriction(String query, String value) {
+        this.addRestriction(query, value, v -> value != null && !value.isBlank());
     }
 
-    private <TObject> void addQuery(String query, TObject value, Function<TObject, Boolean> isValid) {
+    private <TObject> void addRestriction(String query, TObject value, Function<TObject, Boolean> isValid) {
         if (isValid.apply(value)) {
-            this.queries.add(query.formatted(value));
+            this.restrictions.add(query.formatted(value));
         }
     }
 
-    protected void addQueries() {
+    protected void addRestrictions() {
 
     }
 }

@@ -1,5 +1,7 @@
 package domain.requests.gets.lists;
 
+import constants.RSQLConstants;
+
 import java.util.Optional;
 
 public class RequestGetListUser extends RequestGetPagedList {
@@ -23,8 +25,8 @@ public class RequestGetListUser extends RequestGetPagedList {
     }
 
     @Override
-    protected void addQueries() {
-        this.addQuery("email=like='%s'", this.email);
-        this.addQuery("name=like='%s'", this.name);
+    protected void addRestrictions() {
+        this.addRestriction(RSQLConstants.Filters.getLike("email"), this.email);
+        this.addRestriction(RSQLConstants.Filters.getLike("name"), this.name);
     }
 }
