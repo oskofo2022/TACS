@@ -3,19 +3,16 @@ package controllers;
 import constants.UriConstants;
 import constants.MediaTypeConstants;
 import domain.errors.runtime.LoginCredentialsRuntimeException;
-import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.posts.RequestPostLogin;
 import domain.responses.posts.ResponsePostUserLogin;
 import domain.security.contracts.SessionCreator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import domain.security.JwtCreator;
 
 import javax.validation.Valid;
 

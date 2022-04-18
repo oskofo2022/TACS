@@ -9,40 +9,34 @@ import domain.responses.gets.lists.ResponseGetListUser;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.gets.lists.ResponseGetUser;
 import domain.responses.posts.ResponsePostEntityCreation;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+import io.github.perplexhub.rsql.RSQLJPASupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.ArrayList;
+
 
 @RestController
 @RequestMapping(path = UriConstants.Users.URL)
-public class UsersController {
+public class UsersController extends PagedListController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Session session;
-
     @Autowired
-    public UsersController(UserRepository userRepository, PasswordEncoder passwordEncoder, Session session) {
+    public UsersController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.session = session;
     }
 
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetUser> get(@PathVariable String userId)
     {
+
         ResponseGetUser responseGetUser = new ResponseGetUser("some name", "email@email.com");
 
         return ResponseEntity.ok(responseGetUser);
@@ -51,15 +45,7 @@ public class UsersController {
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(RequestGetListUser requestGetListUser)
     {
-        var responsesGetListUser = this.userRepository.findAll().stream().map(u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail())).toList();
-        /*var responseGetListUser = new ResponseGetListUser(1, "some name", "email@email.com");
-        var responsesGetListUser = new ArrayList<ResponseGetListUser>() {
-            {
-                add(responseGetListUser);
-            }
-        };*/
-        ResponseGetPagedList<ResponseGetListUser> responseGetPagedList = new ResponseGetPagedList<>(1, responsesGetListUser, 1);
-
+        var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
         return ResponseEntity.ok(responseGetPagedList);
     }
 

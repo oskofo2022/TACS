@@ -97,6 +97,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.github.perplexhub</groupId>
+			<artifactId>rsql-querydsl-spring-boot-starter</artifactId>
+			<version>5.0.19</version>
+		</dependency>
     </dependencies>
 
 	<build>

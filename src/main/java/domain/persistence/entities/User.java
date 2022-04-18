@@ -1,9 +1,7 @@
 package domain.persistence.entities;
 
-import constants.ApplicationProperties;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
