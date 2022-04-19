@@ -44,8 +44,12 @@ public class Tournament {
     private LocalDate endDate;
 
     @OneToMany
-    @JoinColumn(name = ColumnConstants.Names.ID)
+    @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
     private List<Inscription> inscriptions;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = ColumnConstants.Names.USER_CREATOR_ID)
+    private User UserCreator;
 
     public long getId() {
         return id;
@@ -109,5 +113,13 @@ public class Tournament {
 
     public void setInscriptions(List<Inscription> inscriptions) {
         this.inscriptions = inscriptions;
+    }
+
+    public User getUserCreator() {
+        return UserCreator;
+    }
+
+    public void setUserCreator(User userCreator) {
+        UserCreator = userCreator;
     }
 }

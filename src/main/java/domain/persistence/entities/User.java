@@ -29,7 +29,7 @@ public class User {
     private String password;
 
     @OneToMany
-    @JoinColumn(name = ColumnConstants.Names.ID)
+    @JoinColumn(name = ColumnConstants.Names.USER_ID)
     private List<Inscription> inscriptions;
 
     public long getId() {

@@ -28,6 +28,14 @@ public class Inscription {
     @OneToMany(mappedBy = ClassConstants.Names.Lowercase.INSCRIPTION)
     private List<Game> games;
 
+    public InscriptionIdentifier getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(InscriptionIdentifier identifier) {
+        this.identifier = identifier;
+    }
+
     public Tournament getTournament() {
         return tournament;
     }

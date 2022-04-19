@@ -43,7 +43,7 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(RequestGetListUser requestGetListUser)
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(@Valid RequestGetListUser requestGetListUser)
     {
         var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
         return ResponseEntity.ok(responseGetPagedList);
