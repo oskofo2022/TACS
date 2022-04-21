@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,7 +44,7 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(@Valid RequestGetListUser requestGetListUser)
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(RequestGetListUser requestGetListUser)
     {
         var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
         return ResponseEntity.ok(responseGetPagedList);
