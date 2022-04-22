@@ -36,7 +36,7 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetUser> get(Long userId) {
+    public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
 
         Optional<User> u = this.userRepository.findById(userId);
 
