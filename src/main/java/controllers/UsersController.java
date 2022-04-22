@@ -1,6 +1,7 @@
 package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.runtime.UserGetRuntimeException;
 import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListUser;
@@ -9,7 +10,6 @@ import domain.responses.gets.lists.ResponseGetListUser;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.gets.lists.ResponseGetUser;
 import domain.responses.posts.ResponsePostEntityCreation;
-import io.github.perplexhub.rsql.RSQLJPASupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 
 @RestController
@@ -34,12 +35,18 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetUser> get(@PathVariable String userId)
-    {
+    public ResponseEntity<ResponseGetUser> get(Long userId) {
 
-        ResponseGetUser responseGetUser = new ResponseGetUser("some name", "email@email.com");
+        Optional<User> u = this.userRepository.findById(userId);
 
-        return ResponseEntity.ok(responseGetUser);
+        if(u.isPresent()){
+            ResponseGetUser responseGetUser = new ResponseGetUser(u.get().getName(), u.get().getEmail());
+            return ResponseEntity.ok(responseGetUser);
+        }
+        else{
+            throw new UserGetRuntimeException("User ID " + userId + " has not found");
+        }
+
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)

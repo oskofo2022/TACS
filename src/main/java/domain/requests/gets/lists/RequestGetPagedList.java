@@ -6,6 +6,8 @@ import constants.RSQLConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -21,10 +23,13 @@ public abstract class RequestGetPagedList {
         this.restrictions = new ArrayList<>();
     }
 
-    @Size(min = 1)
+    //@Size(min = 1)
+    @Min(1)
     private Integer page;
 
-    @Size(min = 2, max = 1000)
+    //@Size(min = 2, max = 1000)
+    @Min(2)
+    @Max(1000)
     private Integer pageSize;
 
     @NotBlank
