@@ -1,7 +1,22 @@
 package constants;
 
 public class UriConstants {
-    public static String DELIMITER = "/";
+    public static class AntMatchers {
+        public static String[] getAnonymousWhitelist() {
+            return new String[]{
+            };
+        }
+
+        public static String[] getPermitAllWhitelist() {
+            return new String[] {
+                "/logins",
+                "/v3/api-docs/**",
+                "/swagger-ui/**"
+            };
+        }
+    }
+
+    public static final String DELIMITER = "/";
 
     public static class Users {
         public static final String URL = "users";
@@ -66,9 +81,5 @@ public class UriConstants {
 
     public static class Logins {
         public static final String URL = "logins";
-    }
-
-    public static class Logouts {
-        public static final String URL = "logouts";
     }
 }

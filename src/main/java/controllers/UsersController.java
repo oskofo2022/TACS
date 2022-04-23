@@ -10,6 +10,7 @@ import domain.responses.gets.lists.ResponseGetListUser;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.gets.lists.ResponseGetUser;
 import domain.responses.posts.ResponsePostEntityCreation;
+import domain.security.WordleAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class UsersController extends PagedListController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public UsersController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;

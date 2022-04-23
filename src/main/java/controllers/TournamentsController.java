@@ -10,7 +10,7 @@ import domain.requests.gets.lists.RequestGetListTournament;
 import domain.requests.posts.RequestPostTournament;
 import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.responses.gets.lists.ResponseGetPagedList;
-import domain.responses.posts.ResponsePostTournament;
+import domain.responses.posts.ResponsePostEntityCreation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,25 +57,18 @@ public class TournamentsController {
 
     @PostMapping(produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ResponsePostTournament> post(@Valid @RequestBody RequestPostTournament requestPostTournament) {
+    public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostTournament requestPostTournament) {
 
-        long tournamentId = 1;
+        final long tournamentId = 1;
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                                                   .path(UriConstants.Tournaments.ID)
                                                   .buildAndExpand(1)
                                                   .toUri();
 
-        ResponsePostTournament responsePostTournament = new ResponsePostTournament(
-                tournamentId,
-                "TournamentName",
-                Language.SPANISH,
-                Visibility.PUBLIC,
-                LocalDate.now(),
-                LocalDate.now().plusDays(1)
-        );
+        final var responsePostEntityCreation = new ResponsePostEntityCreation(tournamentId);
 
         return ResponseEntity.created(location)
-                             .body(responsePostTournament);
+                             .body(responsePostEntityCreation);
     }
 }

@@ -1,5 +1,8 @@
 package domain.persistence.entities;
 
+import domain.persistence.constants.ColumnConstants;
+
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serial;
 import java.io.Serializable;

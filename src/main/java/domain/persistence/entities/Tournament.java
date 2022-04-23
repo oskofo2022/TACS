@@ -49,7 +49,7 @@ public class Tournament {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = ColumnConstants.Names.USER_CREATOR_ID)
-    private User UserCreator;
+    private User userCreator;
 
     public long getId() {
         return id;
@@ -116,10 +116,10 @@ public class Tournament {
     }
 
     public User getUserCreator() {
-        return UserCreator;
+        return userCreator;
     }
 
     public void setUserCreator(User userCreator) {
-        UserCreator = userCreator;
+        this.userCreator = userCreator;
     }
 }

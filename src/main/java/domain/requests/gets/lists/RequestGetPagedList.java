@@ -23,11 +23,9 @@ public abstract class RequestGetPagedList {
         this.restrictions = new ArrayList<>();
     }
 
-    //@Size(min = 1)
     @Min(1)
     private Integer page;
 
-    //@Size(min = 2, max = 1000)
     @Min(2)
     @Max(1000)
     private Integer pageSize;
