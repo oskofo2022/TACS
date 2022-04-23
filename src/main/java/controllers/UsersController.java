@@ -37,10 +37,8 @@ public class UsersController extends PagedListController {
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
 
-        var optionalUser = this.userRepository.findById(userId);
-
-        optionalUser.orElseThrow(() -> new EntityNotFoundRuntimeException("User not found", User.class));
-        var user = optionalUser.get();
+        var user = this.userRepository.findById(userId)
+                                            .orElseThrow(() -> new EntityNotFoundRuntimeException("User not found", User.class));
 
         ResponseGetUser responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
         return ResponseEntity.ok(responseGetUser);
