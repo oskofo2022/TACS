@@ -1,7 +1,7 @@
 package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.errors.runtime.UserGetRuntimeException;
+import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListUser;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,16 +37,13 @@ public class UsersController extends PagedListController {
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
 
-        Optional<User> u = this.userRepository.findById(userId);
+        var optionalUser = this.userRepository.findById(userId);
 
-        if(u.isPresent()){
-            ResponseGetUser responseGetUser = new ResponseGetUser(u.get().getName(), u.get().getEmail());
-            return ResponseEntity.ok(responseGetUser);
-        }
-        else{
-            throw new UserGetRuntimeException("User ID " + userId + " has not found");
-        }
+        optionalUser.orElseThrow(() -> new EntityNotFoundRuntimeException("User not found", User.class));
+        var user = optionalUser.get();
 
+        ResponseGetUser responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
+        return ResponseEntity.ok(responseGetUser);
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
