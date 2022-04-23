@@ -3,27 +3,29 @@ package controllers;
 import domain.persistence.repositories.AbstractRepository;
 import domain.requests.gets.lists.RequestGetPagedList;
 import domain.responses.gets.lists.ResponseGetPagedList;
-import org.springframework.data.domain.Page;
+import io.github.perplexhub.rsql.RSQLJPASupport;
+import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Optional;
 import java.util.function.Function;
-
-import static io.github.perplexhub.rsql.RSQLJPASupport.toSpecification;
 
 public abstract class PagedListController {
     protected <TEntity, TResponseGetList> ResponseGetPagedList<TResponseGetList> list(AbstractRepository<TEntity> abstractRepository, RequestGetPagedList requestGetPagedList, Function<TEntity, TResponseGetList> mapping) {
-        var filter = requestGetPagedList.getFilter();
-        var pageRequest = requestGetPagedList.getPageRequest();
-        long totalCount = filter.map(s -> abstractRepository.count(toSpecification(s)))
-                                .orElseGet(abstractRepository::count);
+        final Optional<Specification<TEntity>> filter = requestGetPagedList.getFilter()
+                                                                           .map(RSQLJPASupport::toSpecification);
+        final var pageRequest = requestGetPagedList.getPageRequest();
 
-        var pageCount = ((totalCount - 1) / requestGetPagedList.getPageSize()) + 1;
+        final long totalCount = filter.map(abstractRepository::count)
+                                      .orElseGet(abstractRepository::count);
 
-        var entities = filter.map(s -> abstractRepository.findAll(toSpecification(s), pageRequest))
-                                         .orElseGet(() -> abstractRepository.findAll(pageRequest));
+        final var pageCount = ((totalCount - 1) / requestGetPagedList.getPageSize()) + 1;
 
-        var responsesGetList = entities.stream()
-                                                          .map(mapping)
-                                                          .toList();
+        final var entities = filter.map(s -> abstractRepository.findAll(s, pageRequest))
+                                                .orElseGet(() -> abstractRepository.findAll(pageRequest));
+
+        final var responsesGetList = entities.stream()
+                                                                .map(mapping)
+                                                                .toList();
 
         return new ResponseGetPagedList<>(pageCount, responsesGetList, totalCount);
     }

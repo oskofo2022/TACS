@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class JwtCreator implements SessionCreator {
@@ -22,10 +23,13 @@ public class JwtCreator implements SessionCreator {
     public String jwtSecret;
 
     @Value(ApplicationProperties.Wordle.Jwt.Arguments.EXPIRATION)
-    public String jwtExpirationMilliseconds;
+    public Long jwtExpirationMilliseconds;
 
     @Value(ApplicationProperties.Wordle.Cookie.Arguments.NAME)
     public String cookieName;
+
+    @Value(ApplicationProperties.Wordle.Cookie.Arguments.EXPIRATION)
+    public Long cookieExpirationSeconds;
 
     @Value(ApplicationProperties.Wordle.Cookie.Arguments.PATH)
     public String cookiePath;
@@ -35,14 +39,14 @@ public class JwtCreator implements SessionCreator {
         var jwt = this.generate(user);
         return ResponseCookie.from(this.cookieName, jwt)
                              .path(this.cookiePath)
-                             .maxAge(24 * 60 * 60)
+                             .maxAge(this.cookieExpirationSeconds)
                              .httpOnly(true)
                              .build();
     }
 
     private String generate(User user) {
         LocalDateTime issuedAt = LocalDateTime.now();
-        LocalDateTime expiration = issuedAt.plus(Long.parseLong(this.jwtExpirationMilliseconds), ChronoUnit.MILLIS);
+        LocalDateTime expiration = issuedAt.plus(this.jwtExpirationMilliseconds, ChronoUnit.MILLIS);
 
         return Jwts.builder()
                    .setId(Long.toString(user.getId()))

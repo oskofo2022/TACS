@@ -19,6 +19,7 @@ public class ApplicationProperties {
         public static class Cookie {
             private static final String NAME = Wordle.NAME + SEPARATOR + "cookie";
             public static class Arguments {
+                public static final String EXPIRATION = Cookie.NAME + SEPARATOR + "expiration" + BIND_END_TOKEN;
                 public static final String NAME = Cookie.NAME + SEPARATOR + "name" + BIND_END_TOKEN;
                 public static final String PATH = Cookie.NAME + SEPARATOR + "path" + BIND_END_TOKEN;
             }

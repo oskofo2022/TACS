@@ -19,8 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping(path = UriConstants.Users.URL)
@@ -37,17 +35,17 @@ public class UsersController extends PagedListController {
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
 
-        var user = this.userRepository.findById(userId)
-                                            .orElseThrow(() -> new EntityNotFoundRuntimeException("User not found", User.class));
+        final var user = this.userRepository.findById(userId)
+                                                  .orElseThrow(() -> new EntityNotFoundRuntimeException("User not found", User.class));
 
-        ResponseGetUser responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
+        final var responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
         return ResponseEntity.ok(responseGetUser);
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(@Valid RequestGetListUser requestGetListUser)
     {
-        var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
+        final var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
         return ResponseEntity.ok(responseGetPagedList);
     }
 
@@ -55,9 +53,9 @@ public class UsersController extends PagedListController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
-        var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
+        final var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
 
-        var user = new User();
+        final var user = new User();
         user.setName(requestPostUser.getName());
         user.setEmail(requestPostUser.getEmail());
         user.setName(requestPostUser.getName());
@@ -70,7 +68,7 @@ public class UsersController extends PagedListController {
                                                   .buildAndExpand(user.getId())
                                                   .toUri();
 
-        ResponsePostEntityCreation responsePostEntityCreation = new ResponsePostEntityCreation(user.getId());
+        final var responsePostEntityCreation = new ResponsePostEntityCreation(user.getId());
 
         return ResponseEntity.created(location)
                              .body(responsePostEntityCreation);
