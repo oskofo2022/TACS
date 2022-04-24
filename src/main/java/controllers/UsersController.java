@@ -10,7 +10,6 @@ import domain.responses.gets.lists.ResponseGetListUser;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.gets.lists.ResponseGetUser;
 import domain.responses.posts.ResponsePostEntityCreation;
-import domain.security.WordleAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class UsersController extends PagedListController {
     public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
 
         final var user = this.userRepository.findById(userId)
-                                                  .orElseThrow(() -> new EntityNotFoundRuntimeException("User not found", User.class));
+                                                  .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
 
         final var responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
         return ResponseEntity.ok(responseGetUser);
