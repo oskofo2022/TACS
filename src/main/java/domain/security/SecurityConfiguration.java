@@ -47,8 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeRequests(eiur -> {
-                eiur.antMatchers(UriConstants.AntMatchers.getPermitAllWhitelist()).permitAll();
-//                    .anyRequest().authenticated();
+                eiur.antMatchers(UriConstants.AntMatchers.getPermitAllWhitelist()).permitAll()
+                    .anyRequest().authenticated();
             })
             .addFilterBefore(this.authenticationAdapterRequestFilter, UsernamePasswordAuthenticationFilter.class)
             .cors();
