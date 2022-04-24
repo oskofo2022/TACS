@@ -17,5 +17,4 @@ public class BusinessRuntimeExceptionControllerAdviser {
         var aPIError = new APIError(businessRuntimeException.getCode(), businessRuntimeException.getMessage());
         return new ResponseEntity<>(aPIError, businessRuntimeException.getHttpStatus());
     }
-
 }

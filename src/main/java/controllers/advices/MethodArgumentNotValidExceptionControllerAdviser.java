@@ -2,6 +2,7 @@ package controllers.advices;
 
 import domain.errors.APIError;
 import domain.errors.constants.ErrorCodeConstants;
+import domain.errors.constants.ErrorMessageConstants;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class MethodArgumentNotValidExceptionControllerAdviser extends ResponseEn
             HttpStatus status,
             WebRequest request) {
         var fieldError = methodArgumentNotValidException.getFieldError();
-        var aPIError = new APIError(ErrorCodeConstants.SEMANTICALLY_INCORRECT_REQUEST, fieldError.getDefaultMessage());
+        var aPIError = new APIError(ErrorCodeConstants.SEMANTICALLY_INCORRECT_REQUEST, ErrorMessageConstants.getInvalidField(fieldError.getField(), fieldError.getDefaultMessage()));
         return new ResponseEntity<>(aPIError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

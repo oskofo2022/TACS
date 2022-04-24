@@ -1,7 +1,7 @@
 package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.errors.runtime.UserGetRuntimeException;
+import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListUser;
@@ -19,8 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping(path = UriConstants.Users.URL)
@@ -28,6 +26,7 @@ public class UsersController extends PagedListController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public UsersController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -35,24 +34,19 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetUser> get(Long userId) {
+    public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
 
-        Optional<User> u = this.userRepository.findById(userId);
+        final var user = this.userRepository.findById(userId)
+                                                  .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
 
-        if(u.isPresent()){
-            ResponseGetUser responseGetUser = new ResponseGetUser(u.get().getName(), u.get().getEmail());
-            return ResponseEntity.ok(responseGetUser);
-        }
-        else{
-            throw new UserGetRuntimeException("User ID " + userId + " has not found");
-        }
-
+        final var responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
+        return ResponseEntity.ok(responseGetUser);
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(@Valid RequestGetListUser requestGetListUser)
     {
-        var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
+        final var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
         return ResponseEntity.ok(responseGetPagedList);
     }
 
@@ -60,9 +54,9 @@ public class UsersController extends PagedListController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
-        var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
+        final var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
 
-        var user = new User();
+        final var user = new User();
         user.setName(requestPostUser.getName());
         user.setEmail(requestPostUser.getEmail());
         user.setName(requestPostUser.getName());
@@ -75,7 +69,7 @@ public class UsersController extends PagedListController {
                                                   .buildAndExpand(user.getId())
                                                   .toUri();
 
-        ResponsePostEntityCreation responsePostEntityCreation = new ResponsePostEntityCreation(user.getId());
+        final var responsePostEntityCreation = new ResponsePostEntityCreation(user.getId());
 
         return ResponseEntity.created(location)
                              .body(responsePostEntityCreation);

@@ -1,57 +1,63 @@
 package domain.security;
 
 import constants.ApplicationProperties;
-import domain.persistence.entities.User;
 import domain.security.contracts.SessionCreator;
+import domain.security.users.WordleUser;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.function.Function;
 
 @Service
-public class JwtCreator implements SessionCreator {
+public class JwtService implements SessionCreator {
 
     @Value(ApplicationProperties.Wordle.Jwt.Arguments.SECRET)
     public String jwtSecret;
 
     @Value(ApplicationProperties.Wordle.Jwt.Arguments.EXPIRATION)
-    public String jwtExpirationMilliseconds;
+    public Long jwtExpirationMilliseconds;
 
     @Value(ApplicationProperties.Wordle.Cookie.Arguments.NAME)
     public String cookieName;
+
+    @Value(ApplicationProperties.Wordle.Cookie.Arguments.EXPIRATION)
+    public Long cookieExpirationSeconds;
 
     @Value(ApplicationProperties.Wordle.Cookie.Arguments.PATH)
     public String cookiePath;
 
 
-    public ResponseCookie generateResponseCookie(User user) {
-        var jwt = this.generate(user);
+    public ResponseCookie generateResponseCookie(WordleUser wordleUser) {
+        var jwt = this.generate(wordleUser);
         return ResponseCookie.from(this.cookieName, jwt)
                              .path(this.cookiePath)
-                             .maxAge(24 * 60 * 60)
+                             .maxAge(this.cookieExpirationSeconds)
                              .httpOnly(true)
                              .build();
     }
 
-    private String generate(User user) {
-        LocalDateTime issuedAt = LocalDateTime.now();
-        LocalDateTime expiration = issuedAt.plus(Long.parseLong(this.jwtExpirationMilliseconds), ChronoUnit.MILLIS);
-
+    private String generate(WordleUser wordleUser) {
         return Jwts.builder()
-                   .setId(Long.toString(user.getId()))
-                   .setSubject(user.getEmail())
-                   .setIssuedAt(Date.from(issuedAt.toInstant(ZoneOffset.UTC)))
-                   .setExpiration(Date.from(expiration.toInstant(ZoneOffset.UTC)))
+                   .setId(Long.toString(wordleUser.getId()))
+                   .setSubject(wordleUser.getEmail())
+                   .setIssuedAt(new Date(System.currentTimeMillis()))
+                   .setExpiration(new Date(System.currentTimeMillis() + this.jwtExpirationMilliseconds))
                    .signWith(SignatureAlgorithm.HS512, this.jwtSecret)
                    .compact();
+    }
 
-
+    public Claims extractClaims(String token) {
+        return Jwts.parser()
+                   .setSigningKey(this.jwtSecret)
+                   .parseClaimsJws(token)
+                   .getBody();
     }
 }

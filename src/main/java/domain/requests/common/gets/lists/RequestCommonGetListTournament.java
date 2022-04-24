@@ -40,6 +40,11 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
     }
 
     @Override
+    protected String defaultSortBy() {
+        return "name";
+    }
+
+    @Override
     protected void addRestrictions() {
     }
 }

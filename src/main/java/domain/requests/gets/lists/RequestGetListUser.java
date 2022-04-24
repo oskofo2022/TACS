@@ -29,4 +29,9 @@ public class RequestGetListUser extends RequestGetPagedList {
         this.addRestriction(RSQLConstants.Filters.getLike("email"), this.email);
         this.addRestriction(RSQLConstants.Filters.getLike("name"), this.name);
     }
+
+    @Override
+    protected String defaultSortBy() {
+        return "name";
+    }
 }

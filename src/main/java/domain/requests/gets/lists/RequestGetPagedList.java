@@ -3,6 +3,7 @@ package domain.requests.gets.lists;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import constants.PaginationConstants;
 import constants.RSQLConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -23,16 +24,15 @@ public abstract class RequestGetPagedList {
         this.restrictions = new ArrayList<>();
     }
 
-    //@Size(min = 1)
     @Min(1)
+    @Value("1")
     private Integer page;
 
-    //@Size(min = 2, max = 1000)
     @Min(2)
     @Max(1000)
+    @Value("100")
     private Integer pageSize;
 
-    @NotBlank
     private String sortBy;
 
     private SortOrder sortOrder;
@@ -57,7 +57,8 @@ public abstract class RequestGetPagedList {
     }
 
     public String getSortBy() {
-        return sortBy;
+        return Optional.ofNullable(sortBy)
+                       .orElseGet(this::defaultSortBy);
     }
 
     public void setSortBy(String sortBy) {
@@ -80,7 +81,7 @@ public abstract class RequestGetPagedList {
 
     @JsonIgnore
     private Sort getSort() {
-        return Sort.by(this.sortOrder == SortOrder.ASCENDING ? Sort.Direction.ASC : Sort.Direction.DESC, this.sortBy);
+        return Sort.by(this.sortOrder == SortOrder.ASCENDING ? Sort.Direction.ASC : Sort.Direction.DESC, this.getSortBy());
     }
 
     @JsonIgnore
@@ -107,4 +108,6 @@ public abstract class RequestGetPagedList {
     protected void addRestrictions() {
 
     }
+
+    abstract protected String defaultSortBy();
 }

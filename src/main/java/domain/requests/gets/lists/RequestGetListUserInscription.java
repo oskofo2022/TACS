@@ -101,4 +101,9 @@ public class RequestGetListUserInscription extends RequestGetPagedList {
     public void setTournamentId(long tournamentId) {
         this.tournamentId = tournamentId;
     }
+
+    @Override
+    protected String defaultSortBy() {
+        return "tournament.name";
+    }
 }
