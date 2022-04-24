@@ -43,7 +43,7 @@ public class Tournament {
     @NotNull
     private LocalDate endDate;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
     private List<Inscription> inscriptions;
 
@@ -121,5 +121,9 @@ public class Tournament {
 
     public void setUserCreator(User userCreator) {
         UserCreator = userCreator;
+    }
+
+    public void addInscription(Inscription inscription){
+        inscriptions.add(inscription);
     }
 }
