@@ -38,4 +38,9 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    protected String defaultSortBy() {
+        return "name";
+    }
 }
