@@ -61,11 +61,12 @@ public class UriConstants {
         public static final String URL = "tournaments";
         public static final String ID = "/{tournamentId}";
 
-        public static final String PUBLIC = "/public";
-
-        public static class Inscriptions {
-            public static final String URL = Tournaments.URL + Tournaments.ID +  "/inscriptions";
-            public static final String CURRENT_USER = "myself";
+        public static class Public {
+            public static final String URL = "/public";
+            public static class Inscriptions {
+                public static final String URL = Tournaments.URL + Tournaments.ID +  "/inscriptions";
+                public static final String CURRENT_USER = "myself";
+            }
         }
     }
 
