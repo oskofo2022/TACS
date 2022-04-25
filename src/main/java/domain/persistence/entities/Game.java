@@ -30,7 +30,7 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameState state;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = ColumnConstants.Names.ID)
     private List<Guess> guesses;
 
@@ -57,6 +57,13 @@ public class Game {
         this.word = word;
     }
 
+    public List<Guess> getGuesses() {
+        return guesses;
+    }
+
+    public void setGuesses(List<Guess> guesses) {
+        this.guesses = guesses;
+    }
 
     public List<ResponseCommonGetGuessCharMatching> listGuessCharsMatching(RequestPostUserInscriptionGameGuess requestPostUserInscriptionGameGuess) {
         this.validateLengthConsistency(requestPostUserInscriptionGameGuess);

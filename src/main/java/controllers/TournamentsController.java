@@ -4,9 +4,7 @@ import constants.MediaTypeConstants;
 import constants.UriConstants;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.User;
-import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
-import domain.persistence.entities.enums.Visibility;
 import domain.persistence.repositories.TournamentRepository;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListPublicTournament;
@@ -15,6 +13,7 @@ import domain.requests.posts.RequestPostTournament;
 import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.posts.ResponsePostEntityCreation;
+import domain.security.WordleAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 
 
@@ -34,10 +31,13 @@ public class TournamentsController extends PagedListController{
 
     private final TournamentRepository tournamentRepository;
     private final UserRepository userRepository;
+    private final WordleAuthenticationManager wordleAuthenticationManager;
+
     @Autowired
-    public TournamentsController(TournamentRepository tournamentRepository, UserRepository userRepository) {
+    public TournamentsController(TournamentRepository tournamentRepository, UserRepository userRepository, WordleAuthenticationManager wordleAuthenticationManager) {
         this.tournamentRepository = tournamentRepository;
         this.userRepository = userRepository;
+        this.wordleAuthenticationManager = wordleAuthenticationManager;
     }
 
     // Only public's tournaments, was thinked for general usage without authentication
@@ -46,12 +46,22 @@ public class TournamentsController extends PagedListController{
 
         var responseGetPagedList = this.list(this.tournamentRepository, requestGetListPublicTournament,
                                             t -> new ResponseGetListTournament(t.getId(), t.getName(),t.getLanguage(),t.getVisibility(),t.getState(),t.getStartDate(),t.getEndDate()));
+
         return ResponseEntity.ok(responseGetPagedList);
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> list(RequestGetListTournament requestGetListTournament) {
 
+        /*
+        final var wordleUser = this.wordleAuthenticationManager.getCurrentUser();
+
+        var user = new User();
+        user = this.userRepository.findById(wordleUser.getId()).get();
+         */
+
+        // To debugging purposes we use hardcoded id
+        requestGetListTournament.setIdUserCreator(1);
         var responseGetPagedList = this.list(this.tournamentRepository, requestGetListTournament,
                 t -> new ResponseGetListTournament(t.getId(), t.getName(),t.getLanguage(),t.getVisibility(),t.getState(),t.getStartDate(),t.getEndDate()));
         return ResponseEntity.ok(responseGetPagedList);
@@ -63,15 +73,24 @@ public class TournamentsController extends PagedListController{
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostTournament requestPostTournament) {
 
-        // TODO: Take the ID user from token session
+
+        // To debugging purposes:
         var user = new User();
-        user = this.userRepository.findById(Integer.toUnsignedLong(1)).get();
+        user = this.userRepository.findById(1L).get();
+
+
+        /*
+        final var wordleUser = this.wordleAuthenticationManager.getCurrentUser();
+
+        var user = new User();
+        user = this.userRepository.findById(wordleUser.getId()).get();
+         */
 
         var tournament = new Tournament();
         tournament.setName(requestPostTournament.getName());
         tournament.setEndDate(requestPostTournament.getEndDate());
-        tournament.setStartDate(requestPostTournament.getBeginDate());
-        tournament.setLanguage(requestPostTournament.getLang());
+        tournament.setStartDate(requestPostTournament.getStartDate());
+        tournament.setLanguage(requestPostTournament.getLanguage());
         tournament.setVisibility(requestPostTournament.getVisibility());
         tournament.setState(TournamentState.READY);
         tournament.setUserCreator(user);
