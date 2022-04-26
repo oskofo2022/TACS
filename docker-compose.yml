@@ -5,7 +5,7 @@ services:
     container_name: wordle-db
     environment:
       - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=wordleDB
+      - MYSQL_DATABASE=wordle
   web-app:
     build: .
     container_name: wordle-web-app
@@ -13,6 +13,16 @@ services:
       - "8080:8080"
     depends_on:
       - web-app-db
+  wordle-front:
+    build: ./web
+    container_name: wordle-web-front
+    ports:
+      - "3000:3000"
+    depends_on:
+        - web-app
+#  telegram-bot:
+#    image: wordle-telegram-bot
+#    container_name: wordle-telegram-bot
 
 
 
