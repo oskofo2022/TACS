@@ -1,10 +1,12 @@
 package domain.persistence.entities;
 
+import domain.errors.runtime.TournamentStateInvalidInscriptionRuntimeException;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
+import domain.security.users.WordleUser;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -43,9 +45,13 @@ public class Tournament {
     @NotNull
     private LocalDate endDate;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
     private List<Inscription> inscriptions;
+
+    @OneToMany
+    @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
+    private List<TournamentDailyGame> games;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = ColumnConstants.Names.USER_CREATOR_ID)
@@ -125,5 +131,26 @@ public class Tournament {
 
     public void addInscription(Inscription inscription){
         inscriptions.add(inscription);
+    }
+
+    public Inscription inscribe(User user) {
+        this.state.validateInscriptionCreation();
+
+        final var inscriptionIdentifier = new InscriptionIdentifier();
+        inscriptionIdentifier.setTournamentId(this.getId());
+        inscriptionIdentifier.setUserId(user.getId());
+
+        final var inscription = new Inscription();
+        inscription.setTournament(this);
+        inscription.setUser(user);
+        inscription.setIdentifier(inscriptionIdentifier);
+
+        return inscription;
+    }
+
+    public void validateAuthority(WordleUser user) {
+        if (user.getId() != this.userCreator.getId()) {
+            throw new TournamentStateInvalidInscriptionRuntimeException();
+        }
     }
 }

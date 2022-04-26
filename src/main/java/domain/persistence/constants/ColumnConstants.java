@@ -8,10 +8,10 @@ public class ColumnConstants {
         public static final String GAME_ID = "gameId";
         public static final String ID = "id";
 
-        public static class Inscriptions {
-            public static final String TOURNAMENT_ID = Inscriptions.BASE + "tournamentId";
-            public static final String USER_ID = Inscriptions.BASE + "USER_ID";
-            private static final String BASE = "inscription_";
+        public static class TournamentsDailyGames {
+            public static final String TOURNAMENT_ID = TournamentsDailyGames.BASE + "tournamentId";
+            public static final String GAME_ID = TournamentsDailyGames.BASE + "gameId";
+            private static final String BASE = "tournamentDailyGame_";
         }
     }
 }

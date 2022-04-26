@@ -25,9 +25,6 @@ public class Inscription {
     @JoinColumn(name = ColumnConstants.Names.USER_ID, referencedColumnName = ColumnConstants.Names.ID)
     private User user;
 
-    @OneToMany(mappedBy = ClassConstants.Names.Lowercase.INSCRIPTION)
-    private List<Game> games;
-
     public InscriptionIdentifier getIdentifier() {
         return identifier;
     }
@@ -48,12 +45,5 @@ public class Inscription {
     }
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<Game> getGames() {
-        return games;
-    }
-    public void setGames(List<Game> games) {
-        this.games = games;
     }
 }

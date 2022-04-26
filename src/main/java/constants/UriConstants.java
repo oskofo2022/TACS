@@ -18,12 +18,30 @@ public class UriConstants {
 
     public static final String DELIMITER = "/";
 
+    public static class Games {
+        private static final String URL = "/games";
+        public static class Language {
+            private static final String URL = Games.URL + "/{language}";
+            public static class Helps {
+                public static final String URL = Language.URL + "/helps";
+            }
+        }
+
+    }
+
     public static class Users {
         public static final String URL = "users";
         public static final String ID = "/{userId}";
 
         public static class Myself {
             public static final String URL = Users.URL + "/myself";
+
+            public static class Matches {
+                private static final String URL = Myself.URL + "/matches";
+                public static class Today {
+                    public static final String URL = Matches.URL + "/today";
+                }
+            }
 
             public static class Inscriptions {
                 private static final String URL = Myself.URL + "/inscriptions";
@@ -32,40 +50,33 @@ public class UriConstants {
                     public static final String URL = Inscriptions.URL + "/tournaments";
                     public static final String ID = "/{tournamentId}";
 
-                    public static class Queries {
-                        public static String ID = "tournamentId={tournamentId}";
+                    public static class Positions {
+                        public static final String URL = Tournaments.URL + "/positions";
                     }
 
-                    public static class Games {
-                        public static final String URL_ALL = Tournaments.URL + "/games";
-                        public static final String URL = Tournaments.URL + Tournaments.ID + "/games";
-                        public static final String ID = "/{gameId}";
-
-                        public static class Guesses {
-                            public static final String URL = Games.URL + Games.ID + "/guesses";
-                        }
+                    public static class Queries {
+                        public static String ID = "tournamentId={tournamentId}";
                     }
                 }
             }
         }
-
-        // /api/users/tournaments
-        public static class Tournaments {
-            public static final String URL = Users.URL + "/tournaments";
-            public static final String ID = "/{tournamentId}";
-        }
     }
 
-    // /api/tournaments
     public static class Tournaments {
         public static final String URL = "tournaments";
         public static final String ID = "/{tournamentId}";
 
+        public static class Inscriptions {
+            public static final String URL = Tournaments.URL + Tournaments.ID +  "/inscriptions";
+        }
+
         public static class Public {
-            public static final String URL = "/public";
+            public static final String URL = Tournaments.URL + "/public";
+            public static final String SUBTYPE = "/public";
+
             public static class Inscriptions {
-                public static final String URL = Tournaments.URL + Tournaments.ID +  "/inscriptions";
-                public static final String CURRENT_USER = "myself";
+                public static final String URL = Public.URL + Tournaments.ID +  "/inscriptions";
+                public static final String CURRENT_USER = "/myself";
             }
         }
     }

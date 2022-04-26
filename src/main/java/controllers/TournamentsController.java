@@ -47,23 +47,23 @@ public class TournamentsController extends PagedListController{
     }
 
     // Only public's tournaments, was thinked for general usage without authentication
-    @GetMapping(path = UriConstants.Tournaments.Public.URL, produces = MediaTypeConstants.JSON)
+    @GetMapping(path = UriConstants.Tournaments.Public.SUBTYPE, produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> listPublic(RequestGetListPublicTournament requestGetListPublicTournament) {
 
-        var responseGetPagedList = this.list(this.tournamentRepository, requestGetListPublicTournament,
-                                            t -> new ResponseGetListTournament(t.getId(), t.getName(),t.getLanguage(),t.getVisibility(),t.getState(),t.getStartDate(),t.getEndDate()));
+        var responseGetPagedList = this.list(this.tournamentRepository,
+                                                                                    requestGetListPublicTournament,
+                                                                                    t -> new ResponseGetListTournament(t.getId(), t.getName(), t.getLanguage(), t.getVisibility(), t.getState(), t.getStartDate(), t.getEndDate()));
         return ResponseEntity.ok(responseGetPagedList);
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> list(RequestGetListTournament requestGetListTournament) {
 
-        var responseGetPagedList = this.list(this.tournamentRepository, requestGetListTournament,
-                t -> new ResponseGetListTournament(t.getId(), t.getName(),t.getLanguage(),t.getVisibility(),t.getState(),t.getStartDate(),t.getEndDate()));
+        var responseGetPagedList = this.list(this.tournamentRepository,
+                                                                                    requestGetListTournament,
+                                                                                    t -> new ResponseGetListTournament(t.getId(), t.getName(), t.getLanguage(), t.getVisibility(), t.getState(), t.getStartDate(), t.getEndDate()));
         return ResponseEntity.ok(responseGetPagedList);
-
     }
-
 
     @PostMapping(produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
@@ -84,13 +84,7 @@ public class TournamentsController extends PagedListController{
 
         this.tournamentRepository.save(tournament);
 
-        final var inscriptionIdentifier = new InscriptionIdentifier();
-        inscriptionIdentifier.setUserId(user.getId());
-        inscriptionIdentifier.setTournamentId(tournament.getId());
-        final var inscription = new Inscription();
-        inscription.setIdentifier(inscriptionIdentifier);
-        inscription.setTournament(tournament);
-        inscription.setUser(user);
+        final var inscription = tournament.inscribe(user);
 
         this.inscriptionRepository.save(inscription);
 

@@ -30,16 +30,9 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameState state;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = ColumnConstants.Names.ID)
-    private List<Guess> guesses;
-
-    @ManyToOne(optional = false)
-    @JoinColumns( {
-            @JoinColumn(name = ColumnConstants.Names.Inscriptions.TOURNAMENT_ID, referencedColumnName = ColumnConstants.Names.TOURNAMENT_ID),
-            @JoinColumn(name = ColumnConstants.Names.Inscriptions.USER_ID, referencedColumnName = ColumnConstants.Names.USER_ID)
-    })
-    private Inscription inscription;
+    @OneToMany
+    @JoinColumn(name = ColumnConstants.Names.GAME_ID)
+    private List<TournamentDailyGame> tournaments;
 
     public long getId() {
         return id;
@@ -55,14 +48,6 @@ public class Game {
 
     public void setWord(String word) {
         this.word = word;
-    }
-
-    public List<Guess> getGuesses() {
-        return guesses;
-    }
-
-    public void setGuesses(List<Guess> guesses) {
-        this.guesses = guesses;
     }
 
     public List<ResponseCommonGetGuessCharMatching> listGuessCharsMatching(RequestPostUserInscriptionGameGuess requestPostUserInscriptionGameGuess) {

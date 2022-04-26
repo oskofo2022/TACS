@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = TableConstants.Names.USERS)
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(unique = true)
@@ -31,6 +31,10 @@ public class User {
     @OneToMany
     @JoinColumn(name = ColumnConstants.Names.USER_ID)
     private List<Inscription> inscriptions;
+
+    @OneToMany
+    @JoinColumn(name = ColumnConstants.Names.USER_ID, referencedColumnName = ColumnConstants.Names.ID)
+    private List<Match> matches;
 
     public long getId() {
         return id;

@@ -4,17 +4,17 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class InscriptionIdentifier implements Serializable {
-    private long userId;
+public class TournamentGameIdentifier implements Serializable{
 
+    private long gameId;
     private long tournamentId;
 
-    public long getUserId() {
-        return userId;
+    public long getGameId() {
+        return gameId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setGameId(long gameId) {
+        this.gameId = gameId;
     }
 
     public long getTournamentId() {
@@ -30,15 +30,15 @@ public class InscriptionIdentifier implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        InscriptionIdentifier that = (InscriptionIdentifier) o;
+        TournamentGameIdentifier that = (TournamentGameIdentifier) o;
 
-        if (userId != that.userId) return false;
+        if (gameId != that.gameId) return false;
         return tournamentId == that.tournamentId;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (userId ^ (userId >>> 32));
+        int result = (int) (gameId ^ (gameId >>> 32));
         result = 31 * result + (int) (tournamentId ^ (tournamentId >>> 32));
         return result;
     }

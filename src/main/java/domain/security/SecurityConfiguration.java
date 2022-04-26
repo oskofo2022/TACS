@@ -1,8 +1,10 @@
 package domain.security;
 
+import constants.ApplicationProperties;
 import constants.UriConstants;
 import domain.security.filters.AuthenticationAdapterRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Value(ApplicationProperties.Wordle.Cors.Origin.Arguments.PATTERN)
+    private String corsOriginPattern;
 
     private final AuthenticationAdapterRequestFilter  authenticationAdapterRequestFilter;
     private final PasswordEncoder passwordEncoder;
@@ -68,7 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration(this.corsOriginPattern, new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
 }

@@ -19,14 +19,13 @@ public class DictionariesWordsController {
     @GetMapping(path = UriConstants.Dictionaries.Words.Word, produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetDictionaryWord> list(@PathVariable Language language, @PathVariable String word)
     {
-        var responsesGetDictionaryWordMeaning = new ArrayList<ResponseGetDictionaryWordMeaning>() {
+        final var responsesGetDictionaryWordMeaning = new ArrayList<ResponseGetDictionaryWordMeaning>() {
             {
                 add(new ResponseGetDictionaryWordMeaning("noun", "is a word"));
             }
         };
-        var responseGetDictionaryWord = new ResponseGetDictionaryWord(responsesGetDictionaryWordMeaning);
+        final var responseGetDictionaryWord = new ResponseGetDictionaryWord(responsesGetDictionaryWordMeaning);
 
         return ResponseEntity.ok(responseGetDictionaryWord);
     }
-
 }
