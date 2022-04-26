@@ -1,3 +1,5 @@
 package domain.requests.gets.lists;
 
-public record RequestGetListGameHelp(String goodLetters, String badLetters) { }
+import java.util.ArrayList;
+
+public record RequestGetListGameHelp(String goodLetters, String badLetters, ArrayList<RequestGetListGreenLetter> greenLetters) { }
