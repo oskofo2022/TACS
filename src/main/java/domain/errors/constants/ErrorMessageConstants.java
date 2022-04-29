@@ -7,12 +7,15 @@ public class ErrorMessageConstants {
 
     private static final String INVALID_FIELD = "%s: %s.";
     private static final String ENTITY_NOT_FOUND = "La entidad %s no pudo ser encontrada";
-
+    private static final String INVALID_FILE_PATH = "El path %s no posee el archivo buscado";
 
     public static String getInvalidField(String field, String error) {
         return INVALID_FIELD.formatted(field, error);
     }
     public static <T> String getEntityNotFound(Class<T> specificClass) {
         return ENTITY_NOT_FOUND.formatted(specificClass.getName());
+    }
+    public static <T> String getInvalidFilePath(String filePath) {
+        return INVALID_FILE_PATH.formatted(filePath);
     }
 }
