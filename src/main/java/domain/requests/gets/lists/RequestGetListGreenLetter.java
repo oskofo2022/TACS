@@ -1,22 +1,7 @@
 package domain.requests.gets.lists;
 
-public class RequestGetListGreenLetter {
-    private int position;
-    private char letter;
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public char getLetter() {
-        return letter;
-    }
-
-    public void setLetter(char letter) {
-        this.letter = letter;
+public record RequestGetListGreenLetter(int position, char letter) {
+    public boolean isValid(String word) {
+        return word.indexOf(this.letter) == this.position;
     }
 }

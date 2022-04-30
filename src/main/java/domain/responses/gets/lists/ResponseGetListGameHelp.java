@@ -1,5 +1,5 @@
 package domain.responses.gets.lists;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public record ResponseGetListGameHelp (ArrayList<String> words) { }
+public record ResponseGetListGameHelp (List<String> words) { }
