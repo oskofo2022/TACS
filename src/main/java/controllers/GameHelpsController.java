@@ -31,12 +31,15 @@ public class GameHelpsController {
     @GetMapping(produces = MediaTypeConstants.JSON)
     public ResponseEntity<ResponseGetListGameHelp> list(@PathVariable Language language, RequestGetListGameHelp requestGetListGameHelp)
     {
-        //TODO: Implement scanner reading file using dictionary and use letters.
+        //TODO: Validate pagination.
 
         final var requestsGetListGreenLetters = requestGetListGameHelp.getIndexedGreenLetters();
-        final var words = this.fileLinesStreamer.list(language.getPathWordsFile())
-                                                           .filter(s -> this.isValid(s, requestGetListGameHelp, requestsGetListGreenLetters))
-                                                           .toList();
+        final var lines = this.fileLinesStreamer.list(language.getPathWordsFile());
+        final var words = lines.filter(s -> this.isValid(s, requestGetListGameHelp, requestsGetListGreenLetters))
+                                                .toList();
+
+        lines.close();
+
         final var responseGetListGameHelp = new ResponseGetListGameHelp(words);
 
         return ResponseEntity.ok(responseGetListGameHelp);

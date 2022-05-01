@@ -13,7 +13,7 @@ public class ErrorMessageConstants {
         return INVALID_FIELD.formatted(field, error);
     }
     public static <T> String getEntityNotFound(Class<T> specificClass) {
-        return ENTITY_NOT_FOUND.formatted(specificClass.getName());
+        return ENTITY_NOT_FOUND.formatted(specificClass.getSimpleName());
     }
     public static <T> String getInvalidFilePath(String filePath) {
         return INVALID_FILE_PATH.formatted(filePath);

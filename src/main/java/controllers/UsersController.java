@@ -39,6 +39,8 @@ public class UsersController extends PagedListController {
         final var user = this.userRepository.findById(userId)
                                                   .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
 
+        // TODO: Validate duplicate name or email and throw exception if found
+
         final var responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
         return ResponseEntity.ok(responseGetUser);
     }
@@ -54,6 +56,8 @@ public class UsersController extends PagedListController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
+        // TODO: Validate duplicate name or email and throw exception if found
+
         final var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
 
         final var user = new User();

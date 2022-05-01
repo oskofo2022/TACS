@@ -1,6 +1,6 @@
 package domain.files;
 
-import domain.errors.constants.ErrorMessageConstants;
+import domain.errors.runtime.FileNotFoundRuntimeException;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 
 @Service
 public class FileLinesStreamer {
-    public Stream<String> list(String filename) {
-        return this.createBufferedReader(filename)
+    public Stream<String> list(String filePath) {
+        return this.createBufferedReader(filePath)
                    .lines();
     }
 
@@ -18,7 +18,7 @@ public class FileLinesStreamer {
         final var fileStream = getClass().getResourceAsStream(filePath);
 
         if (fileStream == null) {
-            throw new RuntimeException(ErrorMessageConstants.getInvalidFilePath(filePath));
+            throw new FileNotFoundRuntimeException(filePath);
         }
 
         return new BufferedReader(new InputStreamReader(fileStream));

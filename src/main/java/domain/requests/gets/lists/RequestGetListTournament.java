@@ -8,7 +8,7 @@ public class RequestGetListTournament extends RequestCommonGetListTournament {
 
     private Visibility visibility;
 
-    private long idUserCreator;
+    private Long userCreatorId;
 
     public Visibility getVisibility() {
         return visibility;
@@ -18,18 +18,18 @@ public class RequestGetListTournament extends RequestCommonGetListTournament {
         this.visibility = visibility;
     }
 
-    public long getIdUserCreator() {
-        return idUserCreator;
+    public Long getUserCreatorId() {
+        return userCreatorId;
     }
 
-    public void setIdUserCreator(long idUserCreator) {
-        this.idUserCreator = idUserCreator;
+    public void setUserCreatorId(Long userCreatorId) {
+        this.userCreatorId = userCreatorId;
     }
 
     @Override
     protected void addRestrictions() {
         super.addRestrictions();
         this.addRestriction(RSQLConstants.Filters.getEqual("visibility"), this.visibility);
-        this.addRestriction(RSQLConstants.Filters.getEqual("id"), this.idUserCreator);
+        this.addRestriction(RSQLConstants.Filters.getEqual("userCreator.id"), this.userCreatorId);
     }
 }

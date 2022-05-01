@@ -12,6 +12,6 @@ public class ErrorCodeConstants {
     private static final String ENTITY_NOT_FOUND = "%s_NOT_FOUND";
 
     public static <T> String getEntityNotFound(Class<T> specificClass) {
-        return ENTITY_NOT_FOUND.formatted(specificClass.getName());
+        return ENTITY_NOT_FOUND.formatted(specificClass.getSimpleName().toUpperCase());
     }
 }

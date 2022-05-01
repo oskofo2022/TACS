@@ -15,18 +15,16 @@ public abstract class PagedListController {
                                                                            .map(RSQLJPASupport::toSpecification);
         final var pageRequest = requestGetPagedList.getPageRequest();
 
-        final long totalCount = filter.map(abstractRepository::count)
-                                      .orElseGet(abstractRepository::count);
+        final var pageEntities = filter.map(s -> abstractRepository.findAll(s, pageRequest))
+                                                    .orElseGet(() -> abstractRepository.findAll(pageRequest));
 
-        final var pageCount = ((totalCount - 1) / requestGetPagedList.getPageSize()) + 1;
+        final var totalElements = pageEntities.getTotalElements();
+        final var totalPages = pageEntities.getTotalPages();
 
-        final var entities = filter.map(s -> abstractRepository.findAll(s, pageRequest))
-                                                .orElseGet(() -> abstractRepository.findAll(pageRequest));
+        final var responsesGetList = pageEntities.stream()
+                                                                    .map(mapping)
+                                                                    .toList();
 
-        final var responsesGetList = entities.stream()
-                                                                .map(mapping)
-                                                                .toList();
-
-        return new ResponseGetPagedList<>(pageCount, responsesGetList, totalCount);
+        return new ResponseGetPagedList<>(totalPages, responsesGetList, totalElements);
     }
 }

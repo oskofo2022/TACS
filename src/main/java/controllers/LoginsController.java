@@ -36,6 +36,7 @@ public class LoginsController {
 
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .header("x-session", "session")
                              .body(ResponsePostUserLogin);
     }
 }

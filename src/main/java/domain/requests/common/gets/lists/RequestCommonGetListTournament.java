@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 public class RequestCommonGetListTournament extends RequestGetPagedList {
-    private long idTournament;
+    private Long tournamentId;
     private String name;
     private Language language;
 
@@ -15,9 +15,6 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
     private LocalDate startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
-
-    public long getIdTournament() { return idTournament; }
-    public void setIdTournament(long idTournament) { this.idTournament = idTournament;}
 
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
@@ -37,6 +34,14 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
     }
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public Long getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(Long tournamentId) {
+        this.tournamentId = tournamentId;
     }
 
     @Override
