@@ -1,5 +1,7 @@
 package constants;
 
+import domain.persistence.entities.enums.Language;
+
 public class UriConstants {
     public static class AntMatchers {
         public static String[] getAnonymousWhitelist() {
@@ -84,10 +86,20 @@ public class UriConstants {
     public static class Dictionaries {
         public static final String URL = "dictionaries";
         public static final String LANGUAGE = "/{language}";
+        public static final String Word = "/{word}";
 
-        public static class Words {
-            public static final String URL = Dictionaries.URL + Dictionaries.LANGUAGE + "/words";
-            public static final String Word = "/{word}";
+        public static class English {
+            private static final String URL = Dictionaries.URL + "/ENGLISH";
+            public static class Words {
+                public static final String URL = English.URL + "/words";
+            }
+        }
+
+        public static class Spanish {
+            private static final String URL = Dictionaries.URL + "/SPANISH";
+            public static class Words {
+                public static final String URL = Spanish.URL + "/words";
+            }
         }
     }
 
