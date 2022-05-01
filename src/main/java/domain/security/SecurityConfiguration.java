@@ -1,27 +1,25 @@
 package domain.security;
 
 import constants.ApplicationProperties;
-import constants.UriConstants;
 import domain.security.filters.AuthenticationAdapterRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value(ApplicationProperties.Wordle.Cors.Origin.Arguments.PATTERN)
     private String corsOriginPattern;
 
-    private final AuthenticationAdapterRequestFilter  authenticationAdapterRequestFilter;
+    private final AuthenticationAdapterRequestFilter authenticationAdapterRequestFilter;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
 
@@ -47,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeRequests().anyRequest().permitAll();
-        http.cors();
+        http.cors().configurationSource(corsConfigurationSource());
         /*
         http.sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
@@ -57,7 +55,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             })
             .addFilterBefore(this.authenticationAdapterRequestFilter, UsernamePasswordAuthenticationFilter.class)
             .cors();
-
          */
     }
 
@@ -74,8 +71,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        final var corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(this.corsOriginPattern, new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration(this.corsOriginPattern, corsConfiguration);
         return source;
     }
 }

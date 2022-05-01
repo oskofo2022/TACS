@@ -34,13 +34,15 @@ const Login = () => {
           method: 'POST',
           mode: 'cors',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: username, password: password })
+          body: JSON.stringify({ email: username, password: password }),
+          credentials: 'include'
       };
-      const response = await fetch('http://localhost:8080/api/logins', requestOptions);
-      const data = await response.headers;
       
-      console.log(data);
-      console.log(response);
+      fetch('http://localhost:8080/api/logins', requestOptions).then((response) => {
+        const data = response.headers;
+        console.log(data);
+        console.log(response);
+      });
   }
 
   const handleUsernameOnChange = (e) => setUsername(e.target.value);
