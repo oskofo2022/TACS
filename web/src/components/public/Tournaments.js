@@ -57,14 +57,18 @@ const Tournaments = () => {
             };
             const response = await fetch(url + '?' + params);
             const responseJson = await response.json()
-            const rows = responseJson.pageItems.map((item) => createData(item.id, item.Name, item.language, item.startDate, item.endDate, item.tournamentState));
-            updateData("totalRows", responseJson.totalCount);
-            updateData("rows", rows);
-            updateData("loading", false);
+            
+            return responseJson;
         }
         
         if (request.current === true) {
-            handleGetPublicTournaments();
+            handleGetPublicTournaments().then(r => {
+                const rows = r.pageItems.map((item) => createData(item.id, item.Name, item.language, item.startDate, item.endDate, item.tournamentState));
+                const totalRows = r.totalCount;
+                updateData("totalRows", totalRows);
+                updateData("rows", rows);
+                updateData("loading", false);
+            });
             request.current = false
         }
     }, [data.page, data.pageSize]);

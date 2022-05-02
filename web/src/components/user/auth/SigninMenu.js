@@ -2,15 +2,17 @@ import * as React from 'react';
 //import axios from 'axios';
 import { Container, MenuItem, Typography, Button } from '@mui/material';
 import { TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import Header from './Header.js'
+import Header from '../../main/Header.js'
 import SignUpDialog from './SignUpDialog'
+import AuthContext from "../../context/AuthContext";
 
-const Login = () => {
+const SigninMenu = () => {
 
   const [signinOpen, setSigninOpen] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isSignUpDialogOpen, setIsSignUpDialogOpen] = React.useState(false);
+  const authContext = React.useContext(AuthContext);
 
   const handleCloseSignUpDialog = () => {
     setIsSignUpDialogOpen(false);
@@ -30,6 +32,7 @@ const Login = () => {
 
   const handleSigninPost = async () => {
       // POST request using fetch with async/await
+      const url = 'http://localhost:8080/api/logins'
       const requestOptions = {
           method: 'POST',
           mode: 'cors',
@@ -37,12 +40,13 @@ const Login = () => {
           body: JSON.stringify({ email: username, password: password }),
           credentials: 'include'
       };
-      
-      fetch('http://localhost:8080/api/logins', requestOptions).then((response) => {
-        const data = response.headers;
-        console.log(data);
-        console.log(response);
-      });
+      const response = await fetch(url, requestOptions);
+      const responseJson = await response.json();
+      const name = responseJson.name;
+      console.log(name);
+      handleCloseSigninDialog();
+      authContext.signin();
+      authContext.name = name;
   }
 
   const handleUsernameOnChange = (e) => setUsername(e.target.value);
@@ -97,4 +101,4 @@ const Login = () => {
     </Container>
   );
 };
-export default Login;
+export default SigninMenu;
