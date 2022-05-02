@@ -44,7 +44,7 @@ const SignedupMenu = () => {
                 onClose={handleCloseUserMenu}
             >
                 {settings.map((setting) => (
-                    <Link to={'/' + setting} style={{textDecoration: 'none'}}>
+                    <Link to={'/' + setting.toLowerCase().replace(' ', '')} style={{textDecoration: 'none'}}>
                         <MenuItem key={setting} onClick={() => handleMenuOnclick(setting)} style={{color: '#BFE3B4'}}>
                             <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
