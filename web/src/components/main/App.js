@@ -6,9 +6,11 @@ import Footer from './Footer'
 import {BrowserRouter as Router} from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 
+const pages = ['diccionarios', 'torneos'];
+const defaultName = 'invitado';
+
 function App() {
-    const pages = ['diccionarios', 'torneos'];
-    const defaultName = 'invitado';
+
     const [activeTab, setActiveTab] = React.useState(pages[0]);
     const [authenticated, setAuthenticated] = React.useState(false);
     const [name, setName] = React.useState(defaultName);
