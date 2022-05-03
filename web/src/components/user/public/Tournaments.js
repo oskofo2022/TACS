@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {DataGrid, GridColDef} from '@mui/x-data-grid';
 
 const Tournaments = () => {
 
@@ -14,7 +14,7 @@ const Tournaments = () => {
         sortOrder:'ASCENDING',
       });
     
-      const updateData = (k, v) => setData((prev) => ({ ...prev, [k]: v }));
+    const updateData = (k, v) => setData((prev) => ({ ...prev, [k]: v }));
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 70, sortable: false, },
@@ -55,7 +55,7 @@ const Tournaments = () => {
                 mode: 'cors',
                 headers: { 'Content-Type': 'application/json' },
             };
-            const response = await fetch(url + '?' + params);
+            const response = await fetch(url + '?' + params, requestOptions);
             const responseJson = await response.json()
             
             return responseJson;

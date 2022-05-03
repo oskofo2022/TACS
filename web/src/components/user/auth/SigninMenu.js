@@ -1,8 +1,16 @@
 import * as React from 'react';
 //import axios from 'axios';
-import { Container, MenuItem, Typography, Button } from '@mui/material';
-import { TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import Header from '../../main/Header.js'
+import {
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    MenuItem,
+    TextField,
+    Typography
+} from '@mui/material';
 import SignUpDialog from './SignUpDialog'
 import AuthContext from "../../context/AuthContext";
 
@@ -45,8 +53,7 @@ const SigninMenu = () => {
       const name = responseJson.name;
       console.log(name);
       handleCloseSigninDialog();
-      authContext.signin();
-      authContext.name = name;
+      authContext.signin(name);
   }
 
   const handleUsernameOnChange = (e) => setUsername(e.target.value);
@@ -55,13 +62,11 @@ const SigninMenu = () => {
 
   return (
     <Container
-      // open={Boolean(anchorElNav)}
-      // onClose={handleCloseNavMenu}
       sx={{ display: "flex", flexDirection: "row" }}>
       <MenuItem key="Sign in" onClick={handleOpenSigninDialog}>
         <Typography sx={{ color: "#BFE3B4" }} textAlign="center">Sign in</Typography>
       </MenuItem>
-      <MenuItem key="Sign up" onClick={() => setIsSignUpDialogOpen(true)}>
+      <MenuItem key="Sign up" onClick={handleOpenSignUpDialog}>
         <Typography sx={{ color: "#BFE3B4" }} textAlign="center">Sign up</Typography>
       </MenuItem>
       <Dialog open={signinOpen} onClose={handleCloseSigninDialog} className='signinmodal'>
@@ -101,4 +106,5 @@ const SigninMenu = () => {
     </Container>
   );
 };
+
 export default SigninMenu;

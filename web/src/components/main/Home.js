@@ -6,12 +6,13 @@ import Signout from "../user/private/Signout";
 import Container from "@mui/material/Container";
 import MyTournaments from "../user/private/MyTournaments";
 import MyMatches from "../user/private/MyMatches";
+import AuthContext from "../context/AuthContext";
 
 const Home = ({activeTab}) => {
-
+    const authContext = React.useContext(AuthContext);
     return (
         <Routes>
-            <Route path="/" element={<Container></Container>}></Route>
+            <Route path="/" element={<Container><p>Bienvenido {authContext.name}!</p></Container>}></Route>
             <Route path="/torneos" element={<Tournaments/>}/>
             <Route path="/diccionarios" element={<Dictionaries activeTab={activeTab}/>}/>
             <Route path="/mistorneos" element={<MyTournaments/>} ></Route>
