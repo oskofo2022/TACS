@@ -26,7 +26,7 @@ const AppMenu = ({size, pages, handleTab}) => {
     const sdAppMenu = () => (
         <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map((page) => (
-                <Link to={'/' + page} style={{textDecoration: 'none'}}>
+                <Link key={page} to={'/' + page} style={{textDecoration: 'none'}}>
                     <Button
                         key={page}
                         onClick={() => handleMenuOnclick(page)}
@@ -42,6 +42,7 @@ const AppMenu = ({size, pages, handleTab}) => {
     const mdAppMenu = () => (
         <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
             <IconButton
+                key={'appIconButton'}
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -53,6 +54,7 @@ const AppMenu = ({size, pages, handleTab}) => {
             </IconButton>
             <Menu
                 id="menu-appbar"
+                key={'mdAppMenu'}
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -70,7 +72,7 @@ const AppMenu = ({size, pages, handleTab}) => {
                 }}
             >
                 {pages.map((page) => (
-                    <Link to={'/' + page} style={{textDecoration: 'none'}}>
+                    <Link key={page} to={'/' + page} style={{textDecoration: 'none'}}>
                         <MenuItem key={page} onClick={() => handleMenuOnclick(page)}
                                   style={{color: '#BFE3B4'}}>
                             <Typography textAlign="center">{page}</Typography>

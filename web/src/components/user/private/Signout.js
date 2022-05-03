@@ -4,7 +4,7 @@ import {Navigate} from 'react-router-dom';
 
 const Signout = () => {
     const authContext = React.useContext(AuthContext);
-    authContext.signout();
+    React.useEffect(() => authContext.signout() );
     return (<Navigate to={'/'}/> );
 };
 

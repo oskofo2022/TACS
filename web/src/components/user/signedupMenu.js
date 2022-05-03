@@ -24,12 +24,13 @@ const SignedupMenu = () => {
 
     return (
         <Container>
-            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+            <IconButton key={'avatar'} onClick={handleOpenUserMenu} sx={{p: 0}}>
                 <Avatar/>
             </IconButton>
             <Menu
-                sx={{mt: '45px'}}
+                key={'menu-user'}
                 id="menu-user"
+                sx={{mt: '45px'}}
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                     vertical: 'top',
@@ -44,7 +45,7 @@ const SignedupMenu = () => {
                 onClose={handleCloseUserMenu}
             >
                 {settings.map((setting) => (
-                    <Link to={'/' + setting.toLowerCase().replace(' ', '')} style={{textDecoration: 'none'}}>
+                    <Link key={setting} to={'/' + setting.toLowerCase().replace(' ', '')} style={{textDecoration: 'none'}}>
                         <MenuItem key={setting} onClick={() => handleMenuOnclick(setting)} style={{color: '#BFE3B4'}}>
                             <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
