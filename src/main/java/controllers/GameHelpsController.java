@@ -8,6 +8,7 @@ import domain.requests.gets.lists.RequestGetListGameHelp;
 import domain.requests.gets.lists.RequestGetListGreenLetter;
 import domain.responses.gets.lists.ResponseGetListGameHelp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(path = UriConstants.Games.Language.Helps.URL)
@@ -42,7 +44,13 @@ public class GameHelpsController {
 
         final var responseGetListGameHelp = new ResponseGetListGameHelp(words);
 
-        return ResponseEntity.ok(responseGetListGameHelp);
+        CacheControl cacheControl = CacheControl.maxAge(Long.MAX_VALUE, TimeUnit.DAYS)
+                                                .cachePublic()
+                                                .noTransform();
+
+        return ResponseEntity.ok()
+                             .cacheControl(cacheControl)
+                             .body(responseGetListGameHelp);
     }
 
     private boolean isValid(String word, RequestGetListGameHelp requestGetListGameHelp, List<RequestGetListGreenLetter> requestsGetListGreenLetter) {
