@@ -2,6 +2,7 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.persistence.repositories.InscriptionRepository;
 import domain.persistence.repositories.TournamentRepository;
 import domain.requests.gets.lists.RequestGetListUserInscription;
 import domain.responses.gets.lists.*;
@@ -14,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.URL)
 public class MyTournamentInscriptionsController extends PagedListController{
 
-    private final TournamentRepository tournamentRepository;
+    private final InscriptionRepository inscriptionRepository;
     private final WordleAuthenticationManager wordleAuthenticationManager;
 
     @Autowired
-    public MyTournamentInscriptionsController(TournamentRepository tournamentRepository, WordleAuthenticationManager wordleAuthenticationManager) {
-        this.tournamentRepository = tournamentRepository;
+    public MyTournamentInscriptionsController(WordleAuthenticationManager wordleAuthenticationManager, InscriptionRepository inscriptionRepository) {
         this.wordleAuthenticationManager = wordleAuthenticationManager;
+        this.inscriptionRepository = inscriptionRepository;
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
@@ -29,9 +30,9 @@ public class MyTournamentInscriptionsController extends PagedListController{
         final var userId = this.wordleAuthenticationManager.getCurrentUser()
                                                                  .getId();
         requestGetListUserInscription.setUserId(userId);
-        var responseGetPagedList = this.list(this.tournamentRepository,
+        var responseGetPagedList = this.list(this.inscriptionRepository,
                                                                                      requestGetListUserInscription,
-                                                                                     t -> new ResponseGetListUserInscription(new ResponseGetListTournament(t.getId(), t.getName(), t.getLanguage(), t.getVisibility(), t.getState(), t.getStartDate(), t.getEndDate())));
+                                                                                     i -> new ResponseGetListUserInscription(new ResponseGetListTournament(i.getTournament().getId(), i.getTournament().getName(), i.getTournament().getLanguage(), i.getTournament().getVisibility(), i.getTournament().getState(), i.getTournament().getStartDate(), i.getTournament().getEndDate())));
 
         return ResponseEntity.ok(responseGetPagedList);
     }

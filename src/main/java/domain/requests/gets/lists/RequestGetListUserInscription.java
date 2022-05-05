@@ -8,12 +8,13 @@ import domain.persistence.entities.enums.Visibility;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class RequestGetListUserInscription extends RequestGetPagedList {
     @JsonIgnore
     private long userId;
 
-    private long tournamentId;
+    private Long tournamentId;
 
     private String tournamentName;
 
@@ -117,12 +118,12 @@ public class RequestGetListUserInscription extends RequestGetPagedList {
 
     @Override
     protected void addRestrictions() {
-        this.addRestriction(RSQLConstants.Filters.getLike("user.id"), this.userId);
+        this.addRestriction(RSQLConstants.Filters.getEqual("user.id"), this.userId);
         this.addRestriction(RSQLConstants.Filters.getLike("tournament.name"), this.tournamentName);
         this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("tournament.endDate"), this.tournamentBottomEndDate);
-        this.addRestriction(RSQLConstants.Filters.getLowerThan("tournament.endDate"), this.tournamentTopEndDate.plusDays(1));
+        this.addRestriction(RSQLConstants.Filters.getLowerThan("tournament.endDate"), Optional.ofNullable(this.tournamentTopEndDate).map(d -> d.plusDays(1)).orElse(null));
         this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("tournament.startDate"), this.tournamentBottomStartDate);
-        this.addRestriction(RSQLConstants.Filters.getLowerThan("tournament.startDate"), this.tournamentTopStartDate.plusDays(1));
+        this.addRestriction(RSQLConstants.Filters.getLowerThan("tournament.startDate"), Optional.ofNullable(this.tournamentTopStartDate).map(d -> d.plusDays(1)).orElse(null));
         this.addRestriction(RSQLConstants.Filters.getEqual("tournament.id"), this.tournamentId);
         this.addRestriction(RSQLConstants.Filters.getEqual("tournament.state"), this.tournamentState);
         this.addRestriction(RSQLConstants.Filters.getEqual("tournament.language"), this.tournamentLanguage);
