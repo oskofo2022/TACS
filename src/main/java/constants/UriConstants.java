@@ -14,7 +14,9 @@ public class UriConstants {
             return new String[] {
                 "/logins",
                 "/v3/api-docs/**",
-                "/swagger-ui/**"
+                "/swagger-ui/**",
+                "/tournaments/public",
+                "/dictionaries/**"
             };
         }
     }
@@ -24,7 +26,9 @@ public class UriConstants {
             return new String[] {
                     "/logins",
                     "/v3/api-docs",
-                    "/swagger-ui"
+                    "/swagger-ui",
+                    "/tournaments/public",
+                    "/dictionaries"
             };
         }
     }
