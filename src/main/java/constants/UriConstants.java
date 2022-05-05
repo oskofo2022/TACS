@@ -1,6 +1,7 @@
 package constants;
 
 import domain.persistence.entities.enums.Language;
+import domain.security.filters.AuthenticationAdapterRequestFilter;
 
 public class UriConstants {
     public static class AntMatchers {
@@ -14,6 +15,16 @@ public class UriConstants {
                 "/logins",
                 "/v3/api-docs/**",
                 "/swagger-ui/**"
+            };
+        }
+    }
+
+    public static class AuthenticationAdapterRequestFilter {
+        public static String[] getPermitAllWhitelist() {
+            return new String[] {
+                    "/logins",
+                    "/v3/api-docs",
+                    "/swagger-ui"
             };
         }
     }

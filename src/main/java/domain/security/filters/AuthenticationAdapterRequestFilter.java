@@ -1,6 +1,7 @@
 package domain.security.filters;
 
 import constants.ApplicationProperties;
+import constants.UriConstants;
 import domain.security.JwtService;
 import domain.security.WordleUserDetails;
 import io.jsonwebtoken.Claims;
@@ -45,17 +46,24 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        var cookies = request.getCookies();
-        if (cookies == null) {
-            cookies = new Cookie[] {};
-        }
+        final var requestURI = request.getRequestURI();
 
-        Arrays.stream(cookies)
-              .filter(c -> c.getName().equals(this.cookieName))
-              .findFirst()
-              .map(Cookie::getValue)
-              .map(this.jwtService::extractClaims)
-              .ifPresent(c -> this.authenticate(c, request));
+        if (Arrays.stream(UriConstants.AuthenticationAdapterRequestFilter.getPermitAllWhitelist()).noneMatch(requestURI::contains)) {
+            final var cookies = this.getCookies(request);
+
+            final var optionalClaims = Arrays.stream(cookies)
+                                                            .filter(c -> c.getName().equals(this.cookieName))
+                                                            .findFirst()
+                                                            .map(Cookie::getValue)
+                                                            .map(this::getClaims);
+
+            if (optionalClaims.isEmpty()) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+
+            this.authenticate(optionalClaims.get(), request);
+        }
 
         chain.doFilter(request, response);
     }
@@ -66,5 +74,22 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
                 userDetails, null, userDetails.getAuthorities());
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+    }
+
+    private Cookie[] getCookies(HttpServletRequest request) {
+        var cookies = request.getCookies();
+        if (cookies == null) {
+            cookies = new Cookie[] {};
+        }
+        return cookies;
+    }
+
+    private Claims getClaims(String jwt) {
+        try {
+            return this.jwtService.extractClaims(jwt);
+        }
+        catch (Exception exception) {
+            return null;
+        }
     }
 }
