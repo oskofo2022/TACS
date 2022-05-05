@@ -5,5 +5,5 @@ import domain.persistence.entities.InscriptionIdentifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface InscriptionRepository extends JpaRepository<Inscription, InscriptionIdentifier>, JpaSpecificationExecutor<Inscription> {
+public interface InscriptionRepository extends AbstractRepository<Inscription> {
 }
