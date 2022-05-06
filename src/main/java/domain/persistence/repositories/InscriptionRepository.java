@@ -1,9 +1,7 @@
 package domain.persistence.repositories;
 
 import domain.persistence.entities.Inscription;
-import domain.persistence.entities.InscriptionIdentifier;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 
-public interface InscriptionRepository extends AbstractRepository<Inscription> {
+public interface InscriptionRepository extends JpaRepositoryImplementation<Inscription, Long> {
 }

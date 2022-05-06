@@ -29,7 +29,6 @@ public class RequestGetListTournament extends RequestCommonGetListTournament {
     @Override
     protected void addRestrictions() {
         super.addRestrictions();
-        this.addRestriction(RSQLConstants.Filters.getEqual("visibility"), this.visibility);
         this.addRestriction(RSQLConstants.Filters.getEqual("userCreator.id"), this.userCreatorId);
     }
 }

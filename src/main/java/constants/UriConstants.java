@@ -16,7 +16,8 @@ public class UriConstants {
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/tournaments/public",
-                "/dictionaries/**"
+                "/dictionaries/**",
+                "/games/**"
             };
         }
     }
@@ -28,7 +29,8 @@ public class UriConstants {
                     "/v3/api-docs",
                     "/swagger-ui",
                     "/tournaments/public",
-                    "/dictionaries"
+                    "/dictionaries",
+                    "/games"
             };
         }
     }
