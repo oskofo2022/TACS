@@ -8,6 +8,7 @@ public class RSQLConstants {
     public static class Filters {
         private static final String LIKE = "{propertyPath}=like='%s'";
         private static final String EQUAL = "{propertyPath}==%s";
+        private static final String EQUAL_STRING = "{propertyPath}=='%s'";
         private static final String GREATER_THAN_EQUAL = "{propertyPath}>=%s";
         private static final String GREATER_THAN = "{propertyPath}>%s";
         private static final String LOWER_THAN_EQUAL = "{propertyPath}<=%s";
@@ -19,6 +20,10 @@ public class RSQLConstants {
 
         public static String getEqual(String propertyPath) {
             return EQUAL.replace(PROPERTY_PATH, propertyPath);
+        }
+
+        public static String getEqualString(String propertyPath) {
+            return EQUAL_STRING.replace(PROPERTY_PATH, propertyPath);
         }
 
         public static String getGreaterThanEqual(String propertyPath) {

@@ -2,40 +2,40 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.persistence.entities.Inscription;
+import domain.persistence.sessions.UserContextService;
+import domain.requests.gets.lists.RequestGetListTournamentPosition;
 import domain.responses.gets.lists.ResponseGetListTournamentPosition;
 import domain.responses.gets.lists.ResponseGetListTournamentPositionResult;
-import domain.security.WordleAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-
 @RestController
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Positions.URL)
 public class MyTournamentsPositionsController {
-    private final WordleAuthenticationManager wordleAuthenticationManager;
+    private final UserContextService userContextService;
 
     @Autowired
-    public MyTournamentsPositionsController(WordleAuthenticationManager wordleAuthenticationManager) {
-        this.wordleAuthenticationManager = wordleAuthenticationManager;
+    public MyTournamentsPositionsController(UserContextService userContextService) {
+        this.userContextService = userContextService;
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetListTournamentPosition> list() {
-        final var user = this.wordleAuthenticationManager.getCurrentUser();
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseGetListTournamentPosition> list(RequestGetListTournamentPosition requestGetListTournamentPosition) {
+        final var user = this.userContextService.get();
 
-        //TODO: Add logic to summarize each position based on guesses count ordered by the sum column, after that pre filter the query with the user id, consider pagination (possible manual query to optimize API response times)
+        final var responsesGetListTournamentPositionResult = user.getInscriptions()
+                                                                                                     .stream()
+                                                                                                     .map(Inscription::getTournament)
+                                                                                                     .filter(requestGetListTournamentPosition::isValid)
+                                                                                                     .map(t -> new ResponseGetListTournamentPositionResult(t.getName(), t.getState(), t.getStartDate(), t.getEndDate(), t.listPositions()))
+                                                                                                     .toList();
 
-        final var responsesGetListTournamentPositionResult = new ArrayList<ResponseGetListTournamentPositionResult>() {
-            {
-                add(new ResponseGetListTournamentPositionResult("player 1", 100));
-                add(new ResponseGetListTournamentPositionResult("player 2", 49));
-                add(new ResponseGetListTournamentPositionResult("player 3", 31));
-            }
-        };
         final var responseGetListTournamentPosition = new ResponseGetListTournamentPosition(responsesGetListTournamentPositionResult);
         return ResponseEntity.ok(responseGetListTournamentPosition);
     }

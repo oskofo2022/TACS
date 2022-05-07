@@ -1,8 +1,10 @@
 package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.User;
+import domain.persistence.queries.SpecificationBuilder;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListUser;
 import domain.requests.posts.RequestPostUser;
@@ -39,8 +41,6 @@ public class UsersController extends PagedListController {
         final var user = this.userRepository.findById(userId)
                                                   .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
 
-        // TODO: Validate duplicate name or email and throw exception if found
-
         final var responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
         return ResponseEntity.ok(responseGetUser);
     }
@@ -56,7 +56,18 @@ public class UsersController extends PagedListController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
-        // TODO: Validate duplicate name or email and throw exception if found
+        final var specificationBuilder = new SpecificationBuilder();
+        specificationBuilder.orEqual("email", requestPostUser.getEmail())
+                            .orEqual("name", requestPostUser.getName());
+
+
+        final var optionalDuplicateUser = this.userRepository.findAll(specificationBuilder.build())
+                                                                          .stream()
+                                                                          .findAny();
+
+        if (optionalDuplicateUser.isPresent()) {
+            throw new DuplicateEntityFoundRuntimeException(User.class);
+        }
 
         final var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());
 

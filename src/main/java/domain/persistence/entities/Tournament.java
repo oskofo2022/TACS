@@ -6,6 +6,7 @@ import domain.persistence.constants.TableConstants;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
+import domain.responses.gets.lists.ResponseGetListTournamentPositionElement;
 import domain.security.users.WordleUser;
 
 import javax.persistence.*;
@@ -13,7 +14,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = TableConstants.Names.TOURNAMENTS)
@@ -48,10 +53,6 @@ public class Tournament {
     @OneToMany
     @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
     private List<Inscription> inscriptions;
-
-    @OneToMany
-    @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
-    private List<TournamentDailyGame> games;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = ColumnConstants.Names.USER_CREATOR_ID)
@@ -152,5 +153,41 @@ public class Tournament {
         if (user.getId() != this.userCreator.getId()) {
             throw new TournamentStateInvalidInscriptionRuntimeException();
         }
+    }
+
+    public List<ResponseGetListTournamentPositionElement> listPositions() {
+        return this.inscriptions.stream()
+                                .map(Inscription::getUser)
+                                .map(this::getPosition)
+                                .sorted(Comparator.comparing(ResponseGetListTournamentPositionElement::guessesCount))
+                                .toList();
+
+    }
+
+    private ResponseGetListTournamentPositionElement getPosition(User user) {
+        final var actualDate = LocalDate.now();
+        final var topDate = actualDate.isAfter(this.endDate) ? this.endDate : actualDate;
+        var deltaDays = ChronoUnit.DAYS.between(this.startDate, topDate);
+
+        final var localDateGuessesCountMap = user.getMatches()
+                                                                     .stream()
+                                                                     .filter(m -> m.getLanguage() == this.language && this.isInDateRange(m, topDate))
+                                                                     .collect(Collectors.toMap(Match::getDate, Match::getGuessesCount));
+
+        var score = this.getScore(localDateGuessesCountMap, this.startDate);
+        while (deltaDays > 0) {
+            score += this.getScore(localDateGuessesCountMap, this.startDate.plusDays(deltaDays));
+            deltaDays--;
+        }
+
+        return new ResponseGetListTournamentPositionElement(user.getName(), score);
+    }
+
+    private boolean isInDateRange(Match match, LocalDate topDate) {
+        return match.getDate().compareTo(this.startDate) >= 0 && match.getDate().compareTo(topDate) <= 0;
+    }
+
+    private int getScore(Map<LocalDate, Integer> localDateGuessesCountMap, LocalDate date) {
+        return localDateGuessesCountMap.getOrDefault(date, 7);
     }
 }

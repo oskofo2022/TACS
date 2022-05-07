@@ -8,6 +8,7 @@ public class ErrorMessageConstants {
     private static final String INVALID_FIELD = "%s: %s.";
     private static final String ENTITY_NOT_FOUND = "La entidad %s no pudo ser encontrada";
     private static final String INVALID_FILE_PATH = "El path %s no posee el archivo buscado";
+    private static final String DUPLICATE_ENTITY_FOUND = "La entidad %s que intenta crear ya se encuentra presente";
 
     public static String getInvalidField(String field, String error) {
         return INVALID_FIELD.formatted(field, error);
@@ -17,5 +18,8 @@ public class ErrorMessageConstants {
     }
     public static <T> String getInvalidFilePath(String filePath) {
         return INVALID_FILE_PATH.formatted(filePath);
+    }
+    public static <T> String getDuplicateEntityFound(Class<T> specificClass) {
+        return DUPLICATE_ENTITY_FOUND.formatted(specificClass.getSimpleName());
     }
 }

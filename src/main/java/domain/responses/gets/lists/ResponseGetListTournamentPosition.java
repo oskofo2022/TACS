@@ -1,5 +1,5 @@
 package domain.responses.gets.lists;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public record ResponseGetListTournamentPosition(ArrayList<ResponseGetListTournamentPositionResult> positions) { }
+public record ResponseGetListTournamentPosition(List<ResponseGetListTournamentPositionResult> tournaments) { }

@@ -2,37 +2,41 @@ package domain.persistence.entities;
 
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
+import domain.persistence.entities.enums.Language;
+import domain.persistence.entities.enums.TournamentState;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = TableConstants.Names.MATCHES)
 public class Match {
-    @EmbeddedId
-    private MatchIdentifier identifier;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     @ManyToOne(optional = false)
-    @MapsId(ColumnConstants.Names.USER_ID)
     @JoinColumn(name = ColumnConstants.Names.USER_ID, referencedColumnName = ColumnConstants.Names.ID)
     private User user;
 
     @NotNull
     private int guessesCount;
 
-    @ManyToOne(optional = false)
-    @JoinColumns( {
-            @JoinColumn(name = ColumnConstants.Names.TournamentsDailyGames.TOURNAMENT_ID, referencedColumnName = ColumnConstants.Names.TOURNAMENT_ID),
-            @JoinColumn(name = ColumnConstants.Names.TournamentsDailyGames.GAME_ID, referencedColumnName = ColumnConstants.Names.GAME_ID)
-    })
-    private TournamentDailyGame tournamentDailyGame;
+    @NotNull
+    private LocalDate date;
 
-    public MatchIdentifier getIdentifier() {
-        return identifier;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Language language;
+
+    public long getId() {
+        return id;
     }
 
-    public void setIdentifier(MatchIdentifier identifier) {
-        this.identifier = identifier;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public User getUser() {
@@ -51,11 +55,19 @@ public class Match {
         this.guessesCount = guessesCount;
     }
 
-    public TournamentDailyGame getTournamentDailyGame() {
-        return tournamentDailyGame;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTournamentDailyGame(TournamentDailyGame tournamentDailyGame) {
-        this.tournamentDailyGame = tournamentDailyGame;
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 }

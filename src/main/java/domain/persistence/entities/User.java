@@ -33,7 +33,7 @@ public class User {
     private List<Inscription> inscriptions;
 
     @OneToMany
-    @JoinColumn(name = ColumnConstants.Names.USER_ID, referencedColumnName = ColumnConstants.Names.ID)
+    @JoinColumn(name = ColumnConstants.Names.USER_ID)
     private List<Match> matches;
 
     public long getId() {
@@ -74,5 +74,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Match> getMatches() {
+        return matches;
+    }
+
+    public void setMatches(List<Match> matches) {
+        this.matches = matches;
     }
 }

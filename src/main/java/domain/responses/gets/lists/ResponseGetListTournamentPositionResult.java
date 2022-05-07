@@ -1,3 +1,8 @@
 package domain.responses.gets.lists;
 
-public record ResponseGetListTournamentPositionResult(String name, int score) { }
+import domain.persistence.entities.enums.TournamentState;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public record ResponseGetListTournamentPositionResult(String name, TournamentState state, LocalDate startDate, LocalDate endDate, List<ResponseGetListTournamentPositionElement> positions) { }

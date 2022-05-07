@@ -8,10 +8,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public record WordleAuthenticationManager(AuthenticationManager authenticationManager) {
+public class WordleAuthenticationManager {
+
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public WordleAuthenticationManager {
+    public WordleAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
 
     public WordleUser authenticate(String email, String password) {
