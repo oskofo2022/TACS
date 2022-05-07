@@ -76,6 +76,7 @@ public class RequestGetListTournamentPosition extends RequestGetListOnMemoryPage
     }
 
     @JsonIgnore
+    @Override
     public boolean isValid(Tournament tournament) {
         return (this.tournamentName == null || this.tournamentName.isBlank() || tournament.getName().contains(this.tournamentName))
                && (this.tournamentState == null || tournament.getState() == this.tournamentState)

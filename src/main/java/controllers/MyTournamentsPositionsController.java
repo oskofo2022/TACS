@@ -6,7 +6,7 @@ import domain.persistence.entities.Inscription;
 import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListTournamentPosition;
 import domain.responses.gets.lists.ResponseGetListTournamentPosition;
-import domain.responses.gets.lists.ResponseGetListTournamentPositionResult;
+import domain.responses.gets.lists.ResponseGetPagedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +26,13 @@ public class MyTournamentsPositionsController {
 
     @GetMapping(produces = MediaTypeConstants.JSON)
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseGetListTournamentPosition> list(RequestGetListTournamentPosition requestGetListTournamentPosition) {
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournamentPosition>> list(RequestGetListTournamentPosition requestGetListTournamentPosition) {
         final var user = this.userContextService.get();
 
-        final var responsesGetListTournamentPositionResult = user.getInscriptions()
-                                                                                                     .stream()
-                                                                                                     .map(Inscription::getTournament)
-                                                                                                     .filter(requestGetListTournamentPosition::isValid)
-                                                                                                     .map(t -> new ResponseGetListTournamentPositionResult(t.getName(), t.getState(), t.getStartDate(), t.getEndDate(), t.listPositions()))
-                                                                                                     .toList();
-
-        final var responseGetListTournamentPosition = new ResponseGetListTournamentPosition(responsesGetListTournamentPositionResult);
-        return ResponseEntity.ok(responseGetListTournamentPosition);
+        final var responseGetPagedList = requestGetListTournamentPosition.paginate(() -> user.getInscriptions()
+                                                                                                                                         .stream()
+                                                                                                                                         .map(Inscription::getTournament),
+                                                                                                                               t -> new ResponseGetListTournamentPosition(t.getName(), t.getState(), t.getStartDate(), t.getEndDate(), t.listPositions()));
+        return ResponseEntity.ok(responseGetPagedList);
     }
 }

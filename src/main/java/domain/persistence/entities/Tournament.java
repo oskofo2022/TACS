@@ -6,7 +6,7 @@ import domain.persistence.constants.TableConstants;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
-import domain.responses.gets.lists.ResponseGetListTournamentPositionElement;
+import domain.responses.gets.lists.ResponseGetListTournamentPositionResult;
 import domain.security.users.WordleUser;
 
 import javax.persistence.*;
@@ -155,16 +155,16 @@ public class Tournament {
         }
     }
 
-    public List<ResponseGetListTournamentPositionElement> listPositions() {
+    public List<ResponseGetListTournamentPositionResult> listPositions() {
         return this.inscriptions.stream()
                                 .map(Inscription::getUser)
                                 .map(this::getPosition)
-                                .sorted(Comparator.comparing(ResponseGetListTournamentPositionElement::guessesCount))
+                                .sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
                                 .toList();
 
     }
 
-    private ResponseGetListTournamentPositionElement getPosition(User user) {
+    private ResponseGetListTournamentPositionResult getPosition(User user) {
         final var actualDate = LocalDate.now();
         final var topDate = actualDate.isAfter(this.endDate) ? this.endDate : actualDate;
         var deltaDays = ChronoUnit.DAYS.between(this.startDate, topDate);
@@ -180,7 +180,7 @@ public class Tournament {
             deltaDays--;
         }
 
-        return new ResponseGetListTournamentPositionElement(user.getName(), score);
+        return new ResponseGetListTournamentPositionResult(user.getName(), score);
     }
 
     private boolean isInDateRange(Match match, LocalDate topDate) {
