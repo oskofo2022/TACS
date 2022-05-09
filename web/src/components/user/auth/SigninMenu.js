@@ -1,11 +1,13 @@
 import * as React from 'react';
 //import axios from 'axios';
+import * as URL from '../../../constants/wordleURLs'
 import {
     Button,
     Container,
     Dialog,
     DialogActions,
-    DialogContent, DialogContentText,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
     MenuItem,
     TextField,
@@ -13,6 +15,7 @@ import {
 } from '@mui/material';
 import SignUpDialog from './SignUpDialog'
 import AuthContext from "../../context/AuthContext";
+import {Request} from "../../../httpUtils/Request";
 
 const SigninMenu = () => {
 
@@ -43,14 +46,8 @@ const SigninMenu = () => {
 
     const handleSigninPost = async () => {
         // POST request using fetch with async/await
-        const url = 'http://localhost:8080/api/logins'
-        const requestOptions = {
-            method: 'POST',
-            mode: 'cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email: username, password: password}),
-            credentials: 'include'
-        };
+        const url = URL.LOGIN
+        const requestOptions = Request.post(JSON.stringify({email: username, password: password}));
         const response = await fetch(url, requestOptions);
         const responseJson = await response.json();
 
@@ -61,8 +58,6 @@ const SigninMenu = () => {
         } else {
             setIncorrectAccount(true);
         }
-
-
     }
 
     const handleUsernameOnChange = (e) => setUsername(e.target.value);

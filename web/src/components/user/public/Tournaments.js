@@ -1,5 +1,8 @@
 import * as React from 'react'
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
+import * as URL from '../../../constants/wordleURLs'
+import {Params} from "../../../httpUtils/Params";
+import {Request} from "../../../httpUtils/Request";
 
 const Tournaments = () => {
 
@@ -48,14 +51,11 @@ const Tournaments = () => {
         
         async function handleGetPublicTournaments() {
             updateData("loading", true);
-            const url = 'http://localhost:8080/api/tournaments/public'
-            const params = ['page='+data.page,'pageSize='+data.pageSize,'sortBy='+data.sortBy,'sortOrder='+data.sortOrder].join('&')
-            const requestOptions = {
-                method: 'GET',
-                mode: 'cors',
-                headers: { 'Content-Type': 'application/json' },
-            };
-            const response = await fetch(url + '?' + params, requestOptions);
+            const url = URL.PUBLIC_TOURNAMENTS
+            const params = new Params(data.page, data.pageSize, data.sortBy, data.sortOrder)
+            const fullURL = url + '?' + params.toString();
+
+            const response = await fetch(fullURL, Request.get());
             const responseJson = await response.json()
             
             return responseJson;
@@ -88,8 +88,8 @@ const Tournaments = () => {
                 rowsPerPageOptions={data.rowsPerPageOptions}
                 rowCount={data.totalRows}
                 paginationMode='server'
-                onPageChange={ (p, d) => {updateData("page", p + 1); request.current = true;} }
-                onPageSizeChange={ (ps, d) => {console.log(ps);updateData("page", 1); updateData("pageSize", ps); request.current = true;} }
+                onPageChange={ (p) => {updateData("page", p + 1); request.current = true;} }
+                onPageSizeChange={ (ps) => {updateData("page", 1); updateData("pageSize", ps); request.current = true;} }
             />
         </div>
     )

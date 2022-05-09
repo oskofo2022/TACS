@@ -14,9 +14,9 @@ const Home = ({activeTab}) => {
         <Routes>
             <Route path="/" element={<Container><p>Bienvenido {authContext.name}!</p></Container>}></Route>
             <Route path="/torneos" element={<Tournaments/>}/>
-            <Route path="/diccionarios" element={<Dictionaries activeTab={activeTab}/>}/>
-            <Route path="/mistorneos" element={<MyTournaments/>} ></Route>
-            <Route path="/mispartidas" element={<MyMatches/>}></Route>
+            <Route path="/diccionarios" element={<Dictionaries/>}/>
+            <Route path="/mis-torneos" element={<MyTournaments/>} ></Route>
+            <Route path="/mis-partidas" element={<MyMatches/>}></Route>
             <Route path="/logout" element={<Signout/>} ></Route>
         </Routes>
     );
