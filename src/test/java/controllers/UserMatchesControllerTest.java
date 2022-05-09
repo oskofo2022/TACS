@@ -62,7 +62,6 @@ public class UserMatchesControllerTest {
 
         Mockito.when(this.userContextService.get()).thenReturn(user);
         Mockito.when(this.matchRepository.findAll(Mockito.any(Specification.class))).thenReturn(matchList);
-        Mockito.when(requestPostUserMatchToday.listMatches(user)).thenReturn(matchList);
 
         final var responseEntity = this.userMatchesController.post(requestPostUserMatchToday);
 
