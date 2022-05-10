@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WordleAuthenticationManager {
@@ -22,6 +23,7 @@ public class WordleAuthenticationManager {
         return (WordleUser) authentication.getPrincipal();
     }
 
+    @Transactional
     public WordleUser getCurrentUser() {
         return (WordleUser) SecurityContextHolder.getContext()
                                                  .getAuthentication()

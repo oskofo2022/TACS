@@ -2,7 +2,7 @@ import React from "react";
 import SigninMenu from "./auth/SigninMenu";
 import Box from "@mui/material/Box";
 import AuthContext from "../context/AuthContext";
-import SignedupMenu from "./signedupMenu";
+import SignedupMenu from "./SignedupMenu";
 
 const UserMenu = () => {
 

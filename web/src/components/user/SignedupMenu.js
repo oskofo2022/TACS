@@ -20,7 +20,7 @@ const SignedupMenu = () => {
         setAnchorElUser(null);
     };
 
-    const handleMenuOnclick = (setting) => { handleCloseUserMenu(); }
+    const handleMenuOnclick = () => { handleCloseUserMenu(); }
 
     return (
         <Container>
@@ -45,8 +45,8 @@ const SignedupMenu = () => {
                 onClose={handleCloseUserMenu}
             >
                 {settings.map((setting) => (
-                    <Link key={setting} to={'/' + setting.toLowerCase().replace(' ', '')} style={{textDecoration: 'none'}}>
-                        <MenuItem key={setting} onClick={() => handleMenuOnclick(setting)} style={{color: '#BFE3B4'}}>
+                    <Link key={setting} to={'/' + setting.toLowerCase().replace(' ', '-')} style={{textDecoration: 'none'}}>
+                        <MenuItem key={setting} onClick={handleMenuOnclick} style={{color: '#BFE3B4'}}>
                             <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                     </Link>
