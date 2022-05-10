@@ -2,11 +2,10 @@ import React from 'react'
 import {Button, Divider, List, ListItem, ListItemText, MenuItem, SelectChangeEvent, TextField} from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import * as URL from "../../../constants/wordleURLs";
 import {Request} from "../../../httpUtils/Request";
 import Typography from "@mui/material/Typography";
 import SearchIcon from '@mui/icons-material/Search';
-
+import {LANGUAGES} from "../../../constants/languages";
 
 const Dictionaries = () => {
     const noMeanings=[];
@@ -20,15 +19,15 @@ const Dictionaries = () => {
         setLanguage(event.target.value);
     };
 
-    const capitalizeFirstLetter = (string) => (string.charAt(0).toUpperCase() + string.slice(1));
+    const capitalizeFirstLetter = (string) => (string.charAt(0).toUpperCase() + string.slice(1).toLowerCase());
 
     const handleWordOnChange = (e) => setWord(e.target.value);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const url = language === 'SPANISH' ? URL.SPANISH_DICTIONARY : URL.ENGLISH_DICTIONARY;
 
-        const response = await fetch(url.replace('{word}', word), Request.get());
+        const url = LANGUAGES[language].url.replace('{word}', word);
+        const response = await fetch(url, Request.get());
         const responseJson = await response.json();
         //TODO: response validation. Show some error message if server fails.
         if (response.status === 200 && responseJson["meanings"].length > 0) {
@@ -65,13 +64,22 @@ const Dictionaries = () => {
                     onChange={handleLanguageOnChange}
                     helperText="Please select the language"
                 >
-                    <MenuItem value={'SPANISH'}>Spanish</MenuItem>
-                    <MenuItem value={'ENGLISH'}>English</MenuItem>
+                    {Object.entries(LANGUAGES).map(([key, value])=>(
+                        <MenuItem key={key} value={key}>{value.label}</MenuItem>
+                    ))}
                 </TextField>
-                <Button type='Submit' variant="contained" size="medium" endIcon={<SearchIcon fontSize='large'/>} sx={[
-                    {backgroundColor:'#BFE3B4', height:'50px', top:'2px'},
-                    {'&:hover': {color:'gray', backgroundColor:'white', fontWeight: '700'}} //, textShadow: '2px 2px 4px #FF0000'
-                ]}>Search</Button>
+                <Button
+                    type='Submit'
+                    variant="contained"
+                    size="medium"
+                    endIcon={<SearchIcon fontSize='large'/>}
+                    sx={[
+                        {backgroundColor:'#BFE3B4', height:'50px', top:'2px'},
+                        {'&:hover': {color:'gray', backgroundColor:'white', fontWeight: '700'}} //, textShadow: '2px 2px 4px #FF0000'
+                    ]}
+                >
+                    Search
+                </Button>
             </Box>
             <Typography
                 variant="h3"
@@ -84,9 +92,10 @@ const Dictionaries = () => {
             <List sx={{ width: '100%', maxWidth: 360 }}>
                 {!!meanings.length && <Divider variant="inset" component="li"/>}
                 {meanings.map( (meaning, index) => (
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                         <ListItem key={index} alignItems="flex-start">
                             <Typography
+                                key={index}
                                 sx={{ display: "inline", margin: "10%"}}
                                 component="span"
                                 variant="body2"
