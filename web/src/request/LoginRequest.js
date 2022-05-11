@@ -1,8 +1,8 @@
-import * as URL from "../constants/wordleURLs";
+import {UrlConstants} from "../constants/UrlConstants";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
 
 export class LoginRequest {
-    postURL = URL.LOGIN;
+    postURL = UrlConstants.LOGIN;
     request;
     response;
     body;

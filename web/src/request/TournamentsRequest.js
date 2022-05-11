@@ -1,10 +1,10 @@
-import * as URL from "../constants/wordleURLs";
 import {QueryParams} from "../httpUtils/QueryParams";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
 import {PagedResponse} from "../response/PagedResponse";
+import {UrlConstants} from "../constants/UrlConstants";
 
 export class TournamentsRequest {
-    getURL = URL.PUBLIC_TOURNAMENTS;
+    getURL = UrlConstants.PUBLIC_TOURNAMENTS;
     request;
 
     buildRequest = (params) => {

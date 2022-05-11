@@ -1,4 +1,4 @@
-import * as URL from "../constants/wordleURLs";
+import {UrlConstants} from "../constants/UrlConstants";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
 
 class DictionaryRequest{
@@ -33,7 +33,7 @@ class DictionaryRequest{
 export class SpanishDictRequest extends DictionaryRequest{
 
     constructor(pathParams) {
-        super(pathParams, URL.SPANISH_DICTIONARY);
+        super(pathParams, UrlConstants.SPANISH_DICTIONARY);
     }
 
     static from(pathParams) {
@@ -44,7 +44,7 @@ export class SpanishDictRequest extends DictionaryRequest{
 export class EnglishDictRequest extends DictionaryRequest{
 
     constructor(pathParams) {
-        super(pathParams, URL.ENGLISH_DICTIONARY);
+        super(pathParams, UrlConstants.ENGLISH_DICTIONARY);
     }
 
     static from(pathParams) {

@@ -1,6 +1,6 @@
 import {EnglishDictRequest, SpanishDictRequest} from "../request/DictionaryRequest";
 
-export const LANGUAGES = Object.freeze({
+export const LanguagesConstants = Object.freeze({
     SPANISH: Object.freeze({
         label: 'Spanish',
         request: SpanishDictRequest

@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SearchIcon from '@mui/icons-material/Search';
-import {LANGUAGES} from "../../../constants/languages";
+import {LanguagesConstants} from "../../../constants/LanguagesConstants";
 
 const Dictionaries = () => {
     const noMeanings=[];
@@ -34,7 +34,7 @@ const Dictionaries = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dictionaryRequest = LANGUAGES[language].request.from(pathParam);
+        const dictionaryRequest = LanguagesConstants[language].request.from(pathParam);
         const responseJson = await dictionaryRequest.fetchAsJSON();
 
         //TODO: response validation. Show some error message if server fails.
@@ -72,7 +72,7 @@ const Dictionaries = () => {
                     onChange={handleLanguageOnChange}
                     helperText="Please select the language"
                 >
-                    {Object.entries(LANGUAGES).map(([key, value])=>(
+                    {Object.entries(LanguagesConstants).map(([key, value])=>(
                         <MenuItem key={key} value={key}>{value.label}</MenuItem>
                     ))}
                 </TextField>
