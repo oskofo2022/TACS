@@ -7,6 +7,7 @@ import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.gets.lists.RequestGetListUser;
 import domain.requests.posts.RequestPostUser;
+import domain.security.WordleAuthenticationManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,7 @@ class UsersControllerTest {
     private UserRepository userRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UsersController usersController;
 
@@ -47,6 +49,8 @@ class UsersControllerTest {
         user.setId(userId);
         user.setName("name");
         user.setEmail("some@email.com");
+
+
 
         Mockito.when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
 
