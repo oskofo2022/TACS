@@ -1,32 +1,35 @@
-class Get {
-    constructor({
-                method = 'GET',
-                mode = 'cors',
-                headers = {'Content-Type': 'application/json'}
-            }){
-        this.method = method;
-        this.mode = mode;
-        this.headers = headers;
-    }
-}
-
-class Post {
-    constructor({
-                method = 'POST',
-                mode = 'cors',
-                headers = {'Content-Type': 'application/json'},
-                body = {},
-                credentials = 'include'
-            }){
-        this.method = method;
-        this.mode = mode;
-        this.headers = headers;
-        this.body = body;
-        this.credentials = credentials;
-    }
-}
+import {QueryParams} from "./QueryParams";
+import {HttpMethod} from "./RequestOptions";
 
 export class Request {
-    static get = () => (new Get({}))
-    static post = (body) => (new Post({body: body}))
+    url: string;
+    requestOptions: HttpMethod;
+    queryParams: QueryParams;
+    completedURL: string;
+    pathParams: [{name: string, value: string}];
+    constructor({
+                    url,
+                    requestOptions,
+                    pathParams = [],
+                    queryParams
+                }) {
+        this.url = url;
+        this.requestOptions = requestOptions;
+        this.pathParams = pathParams;
+        this.queryParams = queryParams;
+        this.completedURL = this.completeURL();
+    }
+
+    completeURL(){
+        let url = this.url;
+        for(let p of this.pathParams) url = url.replace('{'+p.name+'}', p.value);
+        if(!!this.queryParams)
+            return url+'?'+this.queryParams.toString();
+        return url;
+    }
+
+    async fetch(){
+        return await fetch(this.completedURL, this.requestOptions);
+    }
+
 }
