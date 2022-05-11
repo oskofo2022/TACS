@@ -20,7 +20,7 @@ public class SpanishDictionaryController extends DictionariesWordsController {
     }
 
     @Override
-    protected DictionaryWordResponse getWordResponse(String word) throws IOException {
+    protected DictionaryWordResponse getWordResponse(String word) {
         return this.tryGetResponse(this.spanishDictionaryAPI.get(word));
     }
 }

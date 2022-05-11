@@ -22,7 +22,7 @@ public class EnglishDictionaryWordsController extends DictionariesWordsControlle
     }
 
     @Override
-    protected DictionaryWordResponse getWordResponse(String word) throws IOException {
+    protected DictionaryWordResponse getWordResponse(String word) {
         return new DictionaryWordResponseWrapper(this.tryGetResponse(this.englishDictionaryAPI.get(word)));
     }
 }

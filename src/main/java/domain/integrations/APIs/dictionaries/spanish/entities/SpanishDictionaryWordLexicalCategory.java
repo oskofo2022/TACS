@@ -1,8 +1,4 @@
-package domain.integrations.APIs.dictionaries.spanish;
-
-import domain.integrations.APIs.dictionaries.english.EnglishDictionaryWordMeaning;
-
-import java.util.List;
+package domain.integrations.APIs.dictionaries.spanish.entities;
 
 public class SpanishDictionaryWordLexicalCategory {
     private String text;

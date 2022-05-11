@@ -1,4 +1,4 @@
-package domain.integrations.APIs.dictionaries.english;
+package domain.integrations.APIs.dictionaries.english.entities;
 
 public class EnglishDictionaryWordMeaningDefinition {
     private String definition;

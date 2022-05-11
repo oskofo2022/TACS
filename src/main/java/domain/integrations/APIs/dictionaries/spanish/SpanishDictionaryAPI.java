@@ -1,5 +1,6 @@
 package domain.integrations.APIs.dictionaries.spanish;
 
+import domain.integrations.APIs.dictionaries.spanish.entities.SpanishDictionaryWordResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

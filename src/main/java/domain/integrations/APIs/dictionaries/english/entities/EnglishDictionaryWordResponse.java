@@ -1,4 +1,4 @@
-package domain.integrations.APIs.dictionaries.english;
+package domain.integrations.APIs.dictionaries.english.entities;
 
 import domain.integrations.APIs.dictionaries.DictionaryWordResponseSupplier;
 import domain.responses.gets.lists.ResponseGetDictionaryWordMeaning;

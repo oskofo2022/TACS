@@ -40,8 +40,7 @@ public abstract class DictionariesWordsController {
         return dictionaryWordResponse == null ? new ArrayList<>() : dictionaryWordResponse.listMeanings();
     }
 
-
-    abstract protected DictionaryWordResponse getWordResponse(String word) throws IOException;
+    abstract protected DictionaryWordResponse getWordResponse(String word);
 
     protected <TResponse> TResponse tryGetResponse(Call<TResponse> call) {
         try {

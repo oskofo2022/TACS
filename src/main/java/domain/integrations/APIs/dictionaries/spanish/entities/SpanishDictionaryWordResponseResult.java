@@ -1,4 +1,4 @@
-package domain.integrations.APIs.dictionaries.spanish;
+package domain.integrations.APIs.dictionaries.spanish.entities;
 
 import domain.responses.gets.lists.ResponseGetDictionaryWordMeaning;
 
