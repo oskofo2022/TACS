@@ -3,10 +3,12 @@ import {EnglishDictRequest, SpanishDictRequest} from "../request/DictionaryReque
 export const LanguagesConstants = Object.freeze({
     SPANISH: Object.freeze({
         label: 'Spanish',
-        request: SpanishDictRequest
+        request: SpanishDictRequest,
+        getRequest: (pathParams) => this.request.from(pathParams)
     }),
     ENGLISH: Object.freeze({
         label: 'English',
-        request: EnglishDictRequest
+        request: EnglishDictRequest,
+        getRequest: (pathParams) => this.request.from(pathParams)
     })
 })

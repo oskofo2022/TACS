@@ -15,15 +15,14 @@ const Dictionaries = () => {
     const [wordTitle, setWordTitle] = React.useState('');
     const [pathParam, setPathParam] = React.useState({name:'word', value: word});
 
-    const updateWordParam = (newWord) => {
-        setPathParam(
-            {name:'word', value: newWord.toLowerCase()}
-        )
-    }
+    const updateWordParam = (_word) =>
+        setPathParam({
+            name:'word',
+            value: _word.toLowerCase()
+        });
 
-    const handleLanguageOnChange = (event: SelectChangeEvent) => {
-        setLanguage(event.target.value);
-    };
+
+    const handleLanguageOnChange = (event: SelectChangeEvent) => setLanguage(event.target.value);
 
     const capitalizeFirstLetter = (string) => (string.charAt(0).toUpperCase() + string.slice(1).toLowerCase());
 
@@ -34,7 +33,7 @@ const Dictionaries = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dictionaryRequest = LanguagesConstants[language].request.from(pathParam);
+        const dictionaryRequest = LanguagesConstants[language].getRequest(pathParam);
         const responseJson = await dictionaryRequest.fetchAsJSON();
 
         //TODO: response validation. Show some error message if server fails.
