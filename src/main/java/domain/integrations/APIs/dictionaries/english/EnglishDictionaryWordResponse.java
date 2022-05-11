@@ -1,12 +1,12 @@
 package domain.integrations.APIs.dictionaries.english;
 
-import domain.integrations.APIs.dictionaries.DictionaryWordResponse;
+import domain.integrations.APIs.dictionaries.DictionaryWordResponseSupplier;
 import domain.responses.gets.lists.ResponseGetDictionaryWordMeaning;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class EnglishDictionaryWordResponse {
+public class EnglishDictionaryWordResponse implements DictionaryWordResponseSupplier {
     private List<EnglishDictionaryWordMeaning> meanings;
 
     public List<EnglishDictionaryWordMeaning> getMeanings() {
