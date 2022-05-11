@@ -1,6 +1,5 @@
 import * as React from 'react';
 //import axios from 'axios';
-import * as URL from '../../../constants/wordleURLs'
 import {
     Button,
     Container,
@@ -15,7 +14,7 @@ import {
 } from '@mui/material';
 import SignUpDialog from './SignUpDialog'
 import AuthContext from "../../context/AuthContext";
-import {Request} from "../../../httpUtils/Request";
+import {LoginRequest} from "../../../request/LoginRequest";
 
 const SigninMenu = () => {
 
@@ -45,13 +44,11 @@ const SigninMenu = () => {
     };
 
     const handleSigninPost = async () => {
-        // POST request using fetch with async/await
-        const url = URL.LOGIN
-        const requestOptions = Request.post(JSON.stringify({email: username, password: password}));
-        const response = await fetch(url, requestOptions);
-        const responseJson = await response.json();
+        const body = JSON.stringify({email: username, password: password});
+        const loginRequest = LoginRequest.from(body);
+        const responseJson = await loginRequest.fetchAsJSON();
 
-        if (response.status === 200) {
+        if (loginRequest.response.status === 200) {
             const name = responseJson.name;
             authContext.signin(name);
             handleCloseSigninDialog();

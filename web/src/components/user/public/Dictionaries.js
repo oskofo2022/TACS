@@ -2,7 +2,6 @@ import React from 'react'
 import {Button, Divider, List, ListItem, ListItemText, MenuItem, SelectChangeEvent, TextField} from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import {Request} from "../../../httpUtils/Request";
 import Typography from "@mui/material/Typography";
 import SearchIcon from '@mui/icons-material/Search';
 import {LANGUAGES} from "../../../constants/languages";
@@ -14,6 +13,13 @@ const Dictionaries = () => {
     const [word, setWord] = React.useState('');
     const [meanings, setmeanings] = React.useState(noMeanings);
     const [wordTitle, setWordTitle] = React.useState('');
+    const [pathParam, setPathParam] = React.useState({name:'word', value: word});
+
+    const updateWordParam = (newWord) => {
+        setPathParam(
+            {name:'word', value: newWord.toLowerCase()}
+        )
+    }
 
     const handleLanguageOnChange = (event: SelectChangeEvent) => {
         setLanguage(event.target.value);
@@ -21,16 +27,18 @@ const Dictionaries = () => {
 
     const capitalizeFirstLetter = (string) => (string.charAt(0).toUpperCase() + string.slice(1).toLowerCase());
 
-    const handleWordOnChange = (e) => setWord(e.target.value);
+    const handleWordOnChange = (e) => {
+        setWord(e.target.value);
+        updateWordParam(e.target.value);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const dictionaryRequest = LANGUAGES[language].request.from(pathParam);
+        const responseJson = await dictionaryRequest.fetchAsJSON();
 
-        const url = LANGUAGES[language].url.replace('{word}', word);
-        const response = await fetch(url, Request.get());
-        const responseJson = await response.json();
         //TODO: response validation. Show some error message if server fails.
-        if (response.status === 200 && responseJson["meanings"].length > 0) {
+        if (dictionaryRequest.response.status === 200 && responseJson["meanings"].length > 0) {
             setmeanings(responseJson["meanings"]);
             setWordTitle(capitalizeFirstLetter(word));
         } else {

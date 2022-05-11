@@ -1,12 +1,12 @@
-import * as URL from './wordleURLs'
+import {EnglishDictRequest, SpanishDictRequest} from "../request/DictionaryRequest";
 
 export const LANGUAGES = Object.freeze({
     SPANISH: Object.freeze({
         label: 'Spanish',
-        url: URL.SPANISH_DICTIONARY
+        request: SpanishDictRequest
     }),
     ENGLISH: Object.freeze({
         label: 'English',
-        url: URL.ENGLISH_DICTIONARY
+        request: EnglishDictRequest
     })
 })

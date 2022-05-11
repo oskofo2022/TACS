@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import * as URL from '../../../constants/wordleURLs'
-import {Params} from "../../../httpUtils/Params";
-import {Request} from "../../../httpUtils/Request";
+import {QueryParams} from "../../../httpUtils/QueryParams";
+import {TournamentsRequest} from "../../../request/TournamentsRequest"
+import {PagedResponse} from "../../../response/PagedResponse";
 
 const Tournaments = () => {
 
@@ -46,23 +46,28 @@ const Tournaments = () => {
     }
 
     const request = React.useRef(true);
-    
-    React.useEffect(() => {
-        
-        async function handleGetPublicTournaments() {
-            updateData("loading", true);
-            const url = URL.PUBLIC_TOURNAMENTS
-            const params = new Params(data.page, data.pageSize, data.sortBy, data.sortOrder)
-            const fullURL = url + '?' + params.toString();
 
-            const response = await fetch(fullURL, Request.get());
-            const responseJson = await response.json()
-            
-            return responseJson;
+
+
+    React.useEffect(() => {
+
+        const tournamentRequest = TournamentsRequest.from(
+            new QueryParams({
+                page: data.page,
+                pageSize: data.pageSize,
+                sortBy: data.sortBy,
+                sortOrder: data.sortOrder
+            })
+        )
+
+        async function handleGetPublicTournaments(): PagedResponse {
+            updateData("loading", true);
+            return await tournamentRequest.fetchAsPaged();
         }
         
         if (request.current === true) {
             handleGetPublicTournaments().then(r => {
+                console.log(r);
                 const rows = r.pageItems.map((item) => createData(item.id, item.Name, item.language, item.startDate, item.endDate, item.tournamentState));
                 const totalRows = r.totalCount;
                 updateData("totalRows", totalRows);
