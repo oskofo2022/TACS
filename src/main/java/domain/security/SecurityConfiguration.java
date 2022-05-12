@@ -21,7 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +29,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value(ApplicationProperties.Wordle.Cors.Origin.Arguments.PATTERN)
     private String corsOriginPattern;
+
+    @Value(ApplicationProperties.Wordle.Cors.Configuration.Allowed.Arguments.ORIGINS)
+    public List<String> corsAllowedOrigins;
+
+    @Value(ApplicationProperties.Wordle.Cors.Configuration.Allowed.Arguments.HEADERS)
+    public List<String> corsAllowedHeaders;
+
+    @Value(ApplicationProperties.Wordle.Cors.Configuration.Allowed.Arguments.METHODS)
+    public List<String> corsAllowedMethods;
 
     private final AuthenticationAdapterRequestFilter authenticationAdapterRequestFilter;
     private final PasswordEncoder passwordEncoder;
@@ -73,10 +82,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final var corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000"));
+        corsConfiguration.setAllowedOrigins(this.corsAllowedOrigins);
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.setAllowedHeaders(this.corsAllowedHeaders);
+        corsConfiguration.setAllowedMethods(this.corsAllowedMethods);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration(this.corsOriginPattern, corsConfiguration);

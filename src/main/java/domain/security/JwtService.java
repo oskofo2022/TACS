@@ -10,11 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.function.Function;
 
 @Service
 public class JwtService implements SessionCreator {
@@ -34,13 +30,15 @@ public class JwtService implements SessionCreator {
     @Value(ApplicationProperties.Wordle.Cookie.Arguments.PATH)
     public String cookiePath;
 
+    @Value(ApplicationProperties.Wordle.Cookie.Arguments.SAME_SITE)
+    public String cookieSameSite;
 
     public ResponseCookie generateResponseCookie(WordleUser wordleUser) {
         var jwt = this.generate(wordleUser);
         return ResponseCookie.from(this.cookieName, jwt)
                              .path(this.cookiePath)
-                .sameSite("none")
-                .secure(true)
+                             .sameSite(this.cookieSameSite)
+                             .secure(true)
                              .maxAge(this.cookieExpirationSeconds)
                              .httpOnly(true)
                              .build();
