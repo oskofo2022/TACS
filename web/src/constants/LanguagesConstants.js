@@ -1,14 +1,14 @@
 import {EnglishDictRequest, SpanishDictRequest} from "../request/DictionaryRequest";
 
+class Language {
+    constructor(label, request){
+        this.label = label
+        this.request = request
+    }
+    getRequest = (pathParams) => this.request.from(pathParams)
+}
+
 export const LanguagesConstants = Object.freeze({
-    SPANISH: Object.freeze({
-        label: 'Spanish',
-        request: SpanishDictRequest,
-        getRequest: (pathParams) => this.request.from(pathParams)
-    }),
-    ENGLISH: Object.freeze({
-        label: 'English',
-        request: EnglishDictRequest,
-        getRequest: (pathParams) => this.request.from(pathParams)
-    })
+    SPANISH: Object.freeze(new Language('Spanish', SpanishDictRequest)),
+    ENGLISH: Object.freeze(new Language('English', EnglishDictRequest)),
 })
