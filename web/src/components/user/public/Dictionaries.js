@@ -30,7 +30,7 @@ const Dictionaries = () => {
     const [wordTitle, setWordTitle] = React.useState('');
     const [pathParam, setPathParam] = React.useState({name:'word', value: word});
     const [notFound, setNotFound] = React.useState(false);
-    const [notFoundedWord, setNotFoundedWord] = React.useState('');
+    const [notFoundWord, setNotFoundWord] = React.useState('');
 
 
     const updateWordParam = (_word) =>
@@ -88,7 +88,7 @@ const Dictionaries = () => {
         setmeanings(noMeanings);
         setWordTitle('');
         setNotFound(true);
-        setNotFoundedWord(word);
+        setNotFoundWord(word);
     }
 
     const handleSubmit = (e) => {
@@ -110,7 +110,7 @@ const Dictionaries = () => {
                 .finally(()=> setLoading(false));
     }
 
-    const NoResultFoundedLabel = () => (
+    const NoResultFoundLabel = () => (
         <Typography
             variant="h5"
             noWrap
@@ -124,7 +124,7 @@ const Dictionaries = () => {
                 component="div"
                 sx={{display: 'inline', fontWeight: 'bold'}}
             >
-                {notFoundedWord}
+                {notFoundWord}
             </Typography>
         </Typography>
     )
@@ -176,7 +176,7 @@ const Dictionaries = () => {
                     Search
                 </LoadingButton>
             </Box>
-            {!!notFound && NoResultFoundedLabel()}
+            {!!notFound && NoResultFoundLabel()}
             <Typography
                 variant="h3"
                 noWrap
