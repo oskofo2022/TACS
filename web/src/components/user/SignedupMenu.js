@@ -6,11 +6,14 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import {Container} from "@mui/material";
 import {Link} from "react-router-dom";
+import AuthContext from "../context/AuthContext";
+import {deepOrange} from "@mui/material/colors";
 
 const settings = ['Mis Torneos', 'Mis partidas', 'Logout'];
 
 const SignedupMenu = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const authContext = React.useContext(AuthContext);
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -25,7 +28,7 @@ const SignedupMenu = () => {
     return (
         <Container>
             <IconButton key={'avatar'} onClick={handleOpenUserMenu} sx={{p: 0}}>
-                <Avatar/>
+                <Avatar sx={{ bgcolor: deepOrange[500] }} >{authContext.name.match(/\b(\w)/g).join('').substring(0,2)} </Avatar>
             </IconButton>
             <Menu
                 key={'menu-user'}
