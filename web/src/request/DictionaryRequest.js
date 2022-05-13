@@ -1,5 +1,7 @@
 import {UrlConstants} from "../constants/UrlConstants";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
+import {DictionaryResponse} from "../response/DictionaryResponse";
+import {MeaningNotFoundException} from "../errors/MeaningNotFoundException";
 
 class DictionaryRequest{
     getURL;
@@ -26,6 +28,12 @@ class DictionaryRequest{
     async fetchAsJSON(){
         await this.fetch()
         return this.response.json();
+    }
+
+    async fetchMeanings(): Promise<DictionaryResponse>{
+        const response = await this.fetchAsJSON();
+        if(!!!response.meanings) throw new MeaningNotFoundException('NO MEANINGS EXCEPTION');
+        return new DictionaryResponse(response.meanings);
     }
 
 }

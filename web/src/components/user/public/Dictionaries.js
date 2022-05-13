@@ -1,10 +1,13 @@
 import React from 'react'
-import {Button, Divider, List, ListItem, ListItemText, MenuItem, SelectChangeEvent, TextField} from "@mui/material";
+import {Divider, List, ListItem, ListItemText, MenuItem, SelectChangeEvent, TextField} from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SearchIcon from '@mui/icons-material/Search';
 import {LanguagesConstants} from "../../../constants/LanguagesConstants";
+import LoadingButton from '@mui/lab/LoadingButton';
+import {DictionaryResponse} from "../../../response/DictionaryResponse";
+import {MeaningNotFoundException} from "../../../errors/MeaningNotFoundException";
 
 const _incorrect_word_msg = 'Sólo se admiten letras y espacios';
 const _empty_word_msg = 'Debe ingresar una palabra.';
@@ -12,6 +15,8 @@ const _incorrect_language_msg = 'Debe seleccionar un idioma';
 
 const Dictionaries = () => {
     const noMeanings=[];
+
+    const [loading, setLoading] = React.useState(false);
 
     const [language, setLanguage] = React.useState('');
     const [languageValid, setLanguageValid] = React.useState(true);
@@ -67,33 +72,62 @@ const Dictionaries = () => {
     };
 
     const handleWordOnChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.toLowerCase();
         validateWord(value);
         setWord(value);
         updateWordParam(value);
     };
 
-    const handleSubmit = async (e) => {
+    const handleGetMeanings = (): Promise<DictionaryResponse> => {
+        const dictionaryRequest = LanguagesConstants[language].getRequest(pathParam);
+        return dictionaryRequest.fetchMeanings();
+    }
+
+    const handleNoMeaningsFound = (e) => {
+        if(!e instanceof MeaningNotFoundException) throw e;
+        setmeanings(noMeanings);
+        setWordTitle('');
+        setNotFound(true);
+        setNotFoundedWord(word);
+    }
+
+    const handleSubmit = (e) => {
         e.preventDefault();
 
+        setNotFound(false);
+        setLoading(true);
+
         const isValid = allValidations.reduce((prev, validation) => validation.f(validation.v) && prev, true)
-        if(!isValid) return;
-
-        const dictionaryRequest = LanguagesConstants[language].getRequest(pathParam);
-        const responseJson = await dictionaryRequest.fetchAsJSON();
-
-        //TODO: response validation. Show some error message if server fails.
-        if (dictionaryRequest.response.status === 200 && responseJson["meanings"].length > 0) {
-            setNotFound(false);
-            setmeanings(responseJson["meanings"]);
-            setWordTitle(capitalizeFirstLetter(word));
-        } else {
-            setmeanings(noMeanings);
-            setWordTitle('');
-            setNotFound(true);
-            setNotFoundedWord(word);
+        if(!isValid) {
+            setLoading(false);
+            return;
         }
+
+        handleGetMeanings()
+                .then((r) => setmeanings(r.meanings))
+                .then(() => setWordTitle(capitalizeFirstLetter(word)))
+                .catch((e) => handleNoMeaningsFound(e))
+                .finally(()=> setLoading(false));
     }
+
+    const NoResultFoundedLabel = () => (
+        <Typography
+            variant="h5"
+            noWrap
+            component="div"
+            sx={{flexGrow: 1, color: 'black', marginTop: '8%', marginLeft: '5%'}}
+        >
+            No se encontraron resultados para la palabra:&nbsp;
+            <Typography
+                variant="h5"
+                noWrap
+                component="div"
+                sx={{display: 'inline', fontWeight: 'bold'}}
+            >
+                {notFoundedWord}
+            </Typography>
+        </Typography>
+    )
 
     return (
         <Container sx={{marginTop:'5%'}}>
@@ -128,27 +162,21 @@ const Dictionaries = () => {
                         <MenuItem key={key} value={key}>{value.label}</MenuItem>
                     ))}
                 </TextField>
-                <Button
+                <LoadingButton
                     type='Submit'
                     variant="contained"
                     size="medium"
                     endIcon={<SearchIcon fontSize='large'/>}
+                    loading={loading}
                     sx={[
                         {backgroundColor:'#BFE3B4', height:'50px', top:'2px'},
                         {'&:hover': {color:'gray', backgroundColor:'white', fontWeight: '700'}} //, textShadow: '2px 2px 4px #FF0000'
                     ]}
                 >
                     Search
-                </Button>
+                </LoadingButton>
             </Box>
-            {!!notFound && <Typography
-                variant="h5"
-                noWrap
-                component="div"
-                sx={{flexGrow: 1, color: 'black', marginTop: '8%', marginLeft: '5%'}}
-            >
-                No se encontraron resultados para la palabra {notFoundedWord}
-            </Typography>}
+            {!!notFound && NoResultFoundedLabel()}
             <Typography
                 variant="h3"
                 noWrap

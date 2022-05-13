@@ -30,7 +30,7 @@ const Tournaments = () => {
 
     const request = React.useRef(true);
 
-     const handleGetPublicTournaments = async (tournamentRequest): Promise<TournamentsResponse> =>  {
+    const handleGetPublicTournaments = async (tournamentRequest): Promise<TournamentsResponse> =>  {
         updateData("loading", true);
         return await tournamentRequest.fetchAsPaged();
     }
@@ -50,7 +50,6 @@ const Tournaments = () => {
         if (request.current === true) {
             const response = handleGetPublicTournaments(tournamentRequest);
             response.then( r => {
-                console.log(r);
                 const rows = r.pageItems;
                 const totalRows = r.totalCount;
                 updateData("totalRows", totalRows);

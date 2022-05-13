@@ -5,6 +5,7 @@ import {TournamentsResponse} from "../response/TournamentsResponse";
 
 export class TournamentsRequest {
     getURL = UrlConstants.PUBLIC_TOURNAMENTS;
+    response;
     request;
 
     buildRequest = (params) => {
@@ -22,7 +23,8 @@ export class TournamentsRequest {
     }
 
     async fetch(){
-        return await this.request.fetch();
+        this.response = await this.request.fetch();
+        return this.response;
     }
 
     async fetchAsJSON(){
@@ -30,7 +32,7 @@ export class TournamentsRequest {
         return await response.json();
     }
 
-    async fetchAsPaged(){
+    async fetchAsPaged(): Promise<TournamentsResponse>{
         const response = await this.fetchAsJSON();
         return new TournamentsResponse(response);
     }
