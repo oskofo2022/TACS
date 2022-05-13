@@ -9,10 +9,12 @@ $ docker run -d --name wordle wordle
 ```
 swagger: http://172.17.0.2:8080/api/swagger-ui/index.html#/
 
+
 ### Correr con docker-compose
 ```
 $ mvn clean install -Dmaven.test.skip=true
 $ docker-compose up -d
 ```
-swagger: http://localhost:8080/api/swagger-ui/index.html#/
+swagger: http://localhost:8080/api/swagger-ui/index.html#/ 
+
 front-end: http://localhost:3000/
