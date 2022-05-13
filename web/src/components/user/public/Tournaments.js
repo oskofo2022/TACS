@@ -2,7 +2,7 @@ import * as React from 'react'
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import {QueryParams} from "../../../httpUtils/QueryParams";
 import {TournamentsRequest} from "../../../request/TournamentsRequest"
-import {PagedResponse} from "../../../response/PagedResponse";
+import {TournamentsResponse} from "../../../response/TournamentsResponse";
 
 const Tournaments = () => {
 
@@ -25,28 +25,15 @@ const Tournaments = () => {
         { field: 'language', headerName: 'Language', width: 130, sortable: false, },
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
-        { field: 'state', headerName: 'State', width: 130, sortable: false, },
+        { field: 'tournamentState', headerName: 'State', width: 130, sortable: false, },
     ];
-    const _rows = [
-        { id: 1, name: 'Tournament', language: 'English', beginDate: '2022-05-23', endDate: '2022-06-24', state: 'READY' },
-        { id: 2, name: 'Tournament2', language: 'Spanish', beginDate: '2022-07-03', endDate: '2022-08-15', state: 'READY' },
-        { id: 3, name: 'Tournament3', language: 'English', beginDate: '2022-08-18', endDate: '2022-09-15', state: 'READY' },
-        { id: 4, name: 'Tournament4', language: 'English', beginDate: '2022-10-01', endDate: '2022-11-01', state: 'READY' },
-    ];
-
-    function createData(
-        id: number,
-        name: string,
-        language: string,
-        beginDate: string,
-        endDate: string,
-        state: string,
-    ) {
-        return { id, name, language, beginDate, endDate, state };
-    }
 
     const request = React.useRef(true);
 
+     const handleGetPublicTournaments = async (tournamentRequest): Promise<TournamentsResponse> =>  {
+        updateData("loading", true);
+        return await tournamentRequest.fetchAsPaged();
+    }
 
 
     React.useEffect(() => {
@@ -60,21 +47,18 @@ const Tournaments = () => {
             })
         )
 
-        async function handleGetPublicTournaments(): PagedResponse {
-            updateData("loading", true);
-            return await tournamentRequest.fetchAsPaged();
-        }
-        
         if (request.current === true) {
-            handleGetPublicTournaments().then(r => {
+            const response = handleGetPublicTournaments(tournamentRequest);
+            response.then( r => {
                 console.log(r);
-                const rows = r.pageItems.map((item) => createData(item.id, item.Name, item.language, item.startDate, item.endDate, item.tournamentState));
+                const rows = r.pageItems;
                 const totalRows = r.totalCount;
                 updateData("totalRows", totalRows);
                 updateData("rows", rows);
                 updateData("loading", false);
+
+                request.current = false
             });
-            request.current = false
         }
     }, [data.page, data.pageSize]);
 

@@ -1,8 +1,4 @@
 export class PagedResponse{
-    pageCount;
-    pageItems;
-    totalCount;
-
     constructor({
                     pageCount: pageCount,
                     pageItems: pageItems,

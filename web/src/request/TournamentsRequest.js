@@ -1,7 +1,7 @@
 import {QueryParams} from "../httpUtils/QueryParams";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
-import {PagedResponse} from "../response/PagedResponse";
 import {UrlConstants} from "../constants/UrlConstants";
+import {TournamentsResponse} from "../response/TournamentsResponse";
 
 export class TournamentsRequest {
     getURL = UrlConstants.PUBLIC_TOURNAMENTS;
@@ -26,12 +26,13 @@ export class TournamentsRequest {
     }
 
     async fetchAsJSON(){
-        let response = await this.fetch();
-        return response.json();
+        const response = await this.fetch();
+        return await response.json();
     }
 
-    fetchAsPaged(){
-        return this.fetchAsJSON().then(r => new PagedResponse(r));
+    async fetchAsPaged(){
+        const response = await this.fetchAsJSON();
+        return new TournamentsResponse(response);
     }
 
 }
