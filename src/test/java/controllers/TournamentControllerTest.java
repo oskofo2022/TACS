@@ -47,6 +47,9 @@ public class TournamentControllerTest {
     @Mock
     private WordleAuthenticationManager wordleAuthenticationManager;
 
+    @Mock
+    private InscriptionRepository inscriptionRepository;
+
     @InjectMocks
     private TournamentsController tournamentsController;
 
