@@ -40,7 +40,6 @@ public class JwtService implements SessionCreator {
                              .sameSite(this.cookieSameSite)
                              .secure(true)
                              .maxAge(this.cookieExpirationSeconds)
-                             .httpOnly(true)
                              .build();
     }
 

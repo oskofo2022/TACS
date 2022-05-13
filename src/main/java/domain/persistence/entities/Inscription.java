@@ -1,6 +1,5 @@
 package domain.persistence.entities;
 
-import constants.ClassConstants;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
 

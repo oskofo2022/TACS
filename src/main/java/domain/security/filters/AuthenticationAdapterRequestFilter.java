@@ -1,23 +1,18 @@
 package domain.security.filters;
 
 import constants.ApplicationProperties;
+import constants.HeadersConstants;
 import constants.UriConstants;
 import domain.security.JwtService;
 import domain.security.WordleUserDetails;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -49,13 +44,9 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
         final var requestURI = request.getRequestURI();
 
         if (Arrays.stream(UriConstants.AuthenticationAdapterRequestFilter.getPermitAllWhitelist()).noneMatch(requestURI::contains)) {
-            final var cookies = this.getCookies(request);
 
-            final var optionalClaims = Arrays.stream(cookies)
-                                                            .filter(c -> c.getName().equals(this.cookieName))
-                                                            .findFirst()
-                                                            .map(Cookie::getValue)
-                                                            .map(this::getClaims);
+            final var optionalClaims = this.getJwt(request)
+                                                          .map(this::getClaims);
 
             if (optionalClaims.isEmpty()) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -76,12 +67,26 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
 
-    private Cookie[] getCookies(HttpServletRequest request) {
+    private Optional<String> getJwt(HttpServletRequest request) {
+        final var authorizationHeader = request.getHeader(HeadersConstants.AUTHORIZATION);
+
+        return Optional.ofNullable(authorizationHeader)
+                       .map(s -> s.substring(HeadersConstants.Values.Bearer.length()))
+                       .or(() -> this.getJwtByCookies(request));
+    }
+
+    @Deprecated
+    //Will be removed after swagger is configured to send an authorization bearer
+    private Optional<String> getJwtByCookies(HttpServletRequest request) {
         var cookies = request.getCookies();
         if (cookies == null) {
             cookies = new Cookie[] {};
         }
-        return cookies;
+
+        return Arrays.stream(cookies)
+                     .filter(c -> c.getName().equals(this.cookieName))
+                     .findFirst()
+                     .map(Cookie::getValue);
     }
 
     private Claims getClaims(String jwt) {
