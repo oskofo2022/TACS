@@ -1,8 +1,9 @@
 import {QueryParams} from "../httpUtils/QueryParams";
 import {UrlConstants} from "../constants/UrlConstants";
-import {TournamentsRequest} from "./TournamentsRequest";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
 import {TournamentsResponse} from "../response/TournamentsResponse";
+import {InscriptionsResponse} from "../response/InscriptionsResponse";
+import {UnauthorizedException} from "../errors/UnauthorizedException";
 
 export class InscriptionsRequest {
     getURL = UrlConstants.INSCRIPTIONS;
@@ -25,6 +26,7 @@ export class InscriptionsRequest {
 
     async fetch(){
         this.response = await this.request.fetch();
+        if(this.response.status === 401) throw new UnauthorizedException('Unauthorized');
         return this.response;
     }
 
@@ -35,7 +37,7 @@ export class InscriptionsRequest {
 
     async fetchAsPaged(): Promise<TournamentsResponse>{
         const response = await this.fetchAsJSON();
-        return new TournamentsResponse(response);
+        return new InscriptionsResponse(response);
     }
 
 }

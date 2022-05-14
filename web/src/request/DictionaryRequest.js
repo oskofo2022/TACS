@@ -32,7 +32,7 @@ class DictionaryRequest{
 
     async fetchMeanings(): Promise<DictionaryResponse>{
         const response = await this.fetchAsJSON();
-        if(!!!response.meanings) throw new MeaningNotFoundException('NO MEANINGS EXCEPTION');
+        if(!response.meanings || !response.meanings.length) throw new MeaningNotFoundException('NO MEANINGS EXCEPTION');
         return new DictionaryResponse(response.meanings);
     }
 
