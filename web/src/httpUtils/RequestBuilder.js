@@ -15,12 +15,20 @@ export class RequestBuilder {
 
     static get(url) {
         let rb = this.from(url);
-        return rb.setRequestOptions(RequestOptions.get());
+        return rb.setRequestOptions(RequestOptions.get())
+            .setAuthorizationHeader();
     }
 
     static post(url, body) {
         let rb = this.from(url);
-        return rb.setRequestOptions(RequestOptions.post(body));
+        return rb.setRequestOptions(RequestOptions.post(body))
+            .setAuthorizationHeader();
+    }
+
+    static put(url, body) {
+        let rb = this.from(url);
+        return rb.setRequestOptions(RequestOptions.put(body))
+            .setAuthorizationHeader();
     }
 
     setRequestOptions(requestOptions: HttpMethod) {
@@ -40,6 +48,21 @@ export class RequestBuilder {
 
     setPathParms(...pathParms) {
         this.pathParams = pathParms;
+        return this;
+    }
+
+    setHeader({name: name, value:value}){
+        Object.assign(this.requestOptions.headers, {[name]: value});
+        return this;
+    }
+
+    setAuthorizationHeader(){
+        const cookieName = 'wordle-session';
+        const cookie = document.cookie.split('; ').find(c => c.indexOf(cookieName) === 0);
+        if(cookie){
+            const token = cookie.split('=')[1];
+            this.setHeader({name:'Authorization', value: 'Bearer '+token})
+        }
         return this;
     }
 
