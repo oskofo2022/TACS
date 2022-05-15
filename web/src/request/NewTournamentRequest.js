@@ -1,5 +1,6 @@
 import {UrlConstants} from "../constants/UrlConstants";
 import {RequestBuilder} from "../httpUtils/RequestBuilder";
+import {UnauthorizedException} from "../errors/UnauthorizedException";
 
 export class NewTournamentRequest {
     postURL = UrlConstants.TOURNAMENTS;
@@ -23,6 +24,7 @@ export class NewTournamentRequest {
 
     async fetch(){
         this.response = await this.request.fetch();
+        if(this.response.status === 401) throw new UnauthorizedException('Unauthorized');
         return this.response;
     }
 

@@ -36,7 +36,7 @@ const MyTournaments = () => {
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 70, sortable: false, },
-        { field: 'name', headerName: 'Name', width: 130, sortable: false, },
+        { field: 'name', headerName: 'Name', width: 200, sortable: false, },
         { field: 'language', headerName: 'Language', width: 130, sortable: false, },
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
