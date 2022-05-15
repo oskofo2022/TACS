@@ -4,6 +4,8 @@ public class ErrorMessageConstants {
     public static final String INVALID_CREDENTIALS = "Las credenciales ingresadas son inválidas";
     public static final String UNHANDLED_EXCEPTION = "Ocurrió un error al intentar procesar su petición. Intentelo nuevamente más tarde.";
     public static final String INVALID_TOURNAMENT_INSCRIPTION = "El torneo no se encuentra disponible para nuevas inscripciones";
+    public static final String TOURNAMENT_UNAUTHORIZED_USER_ACTION = "No está autorizado para realizar la acción intentada";
+
 
     private static final String INVALID_FIELD = "%s: %s.";
     private static final String ENTITY_NOT_FOUND = "La entidad %s no pudo ser encontrada";

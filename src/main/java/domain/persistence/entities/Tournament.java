@@ -1,6 +1,6 @@
 package domain.persistence.entities;
 
-import domain.errors.runtime.TournamentStateInvalidInscriptionRuntimeException;
+import domain.errors.runtime.TournamentUnauthorizedUserActionRuntimeException;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
 import domain.persistence.entities.enums.Language;
@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +136,8 @@ public class Tournament {
     }
 
     public Inscription inscribe(User user) {
-        this.state.validateInscriptionCreation();
+        this.getState()
+            .validateInscriptionCreation();
 
         final var inscriptionIdentifier = new InscriptionIdentifier();
         inscriptionIdentifier.setTournamentId(this.getId());
@@ -149,13 +151,17 @@ public class Tournament {
         return inscription;
     }
 
-    public void validateAuthority(WordleUser user) {
-        if (user.getId() != this.userCreator.getId()) {
-            throw new TournamentStateInvalidInscriptionRuntimeException();
+    public void validateAuthority(WordleUser wordleUser) {
+        if (wordleUser.getId() != this.userCreator.getId()) {
+            throw new TournamentUnauthorizedUserActionRuntimeException();
         }
     }
 
     public List<ResponseGetListTournamentPositionResult> listPositions() {
+        if (!this.hasStarted()) {
+            return Collections.emptyList();
+        }
+
         return this.inscriptions.stream()
                                 .map(Inscription::getUser)
                                 .map(this::getPosition)
@@ -189,5 +195,10 @@ public class Tournament {
 
     private int getScore(Map<LocalDate, Integer> localDateGuessesCountMap, LocalDate date) {
         return localDateGuessesCountMap.getOrDefault(date, 7);
+    }
+
+    private boolean hasStarted() {
+        return this.getState()
+                   .hasStarted();
     }
 }

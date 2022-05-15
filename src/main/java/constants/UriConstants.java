@@ -3,6 +3,10 @@ package constants;
 import domain.persistence.entities.enums.Language;
 import domain.security.filters.AuthenticationAdapterRequestFilter;
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
 public class UriConstants {
     public static class AntMatchers {
         public static String[] getAnonymousWhitelist() {
@@ -32,6 +36,12 @@ public class UriConstants {
                     "/dictionaries",
                     "/games"
             };
+        }
+
+        public static Stream<Pattern> getExcludeExceptionsWhitelist() {
+            return Arrays.stream(new String[] {
+                    "/api/tournaments/public/[^/]+/inscriptions/myself/?",
+            }).map(Pattern::compile);
         }
     }
 

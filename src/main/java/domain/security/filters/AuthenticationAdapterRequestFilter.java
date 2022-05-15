@@ -41,9 +41,7 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        final var requestURI = request.getRequestURI();
-
-        if (Arrays.stream(UriConstants.AuthenticationAdapterRequestFilter.getPermitAllWhitelist()).noneMatch(requestURI::contains)) {
+        if (this.needsAuthorization(request)) {
 
             final var optionalClaims = this.getJwt(request)
                                                           .map(this::getClaims);
@@ -96,5 +94,11 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
         catch (Exception exception) {
             return null;
         }
+    }
+
+    private boolean needsAuthorization(HttpServletRequest request) {
+        final var requestURI = request.getRequestURI();
+        return Arrays.stream(UriConstants.AuthenticationAdapterRequestFilter.getPermitAllWhitelist()).noneMatch(requestURI::contains)
+               || UriConstants.AuthenticationAdapterRequestFilter.getExcludeExceptionsWhitelist().anyMatch(p -> p.matcher(requestURI).matches());
     }
 }

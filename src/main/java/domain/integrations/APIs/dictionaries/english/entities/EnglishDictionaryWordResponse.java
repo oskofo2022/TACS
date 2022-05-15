@@ -4,6 +4,7 @@ import domain.integrations.APIs.dictionaries.DictionaryWordResponseSupplier;
 import domain.responses.gets.lists.ResponseGetDictionaryWordMeaning;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class EnglishDictionaryWordResponse implements DictionaryWordResponseSupplier {
@@ -19,6 +20,8 @@ public class EnglishDictionaryWordResponse implements DictionaryWordResponseSupp
 
     public Stream<ResponseGetDictionaryWordMeaning> listMeanings() {
         return this.meanings.stream()
-                            .map(edwm -> new ResponseGetDictionaryWordMeaning(edwm.getPartOfSpeech(), edwm.getDefinitions().get(0).getDefinition()));
+                            .map(EnglishDictionaryWordMeaning::getMeaning)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get);
     }
 }

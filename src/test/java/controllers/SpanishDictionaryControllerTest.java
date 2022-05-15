@@ -1,81 +1,102 @@
 package controllers;
 
-
-
-
+import constants.SuppressWarningsConstants;
 import domain.integrations.APIs.dictionaries.spanish.SpanishDictionaryAPI;
-import domain.integrations.APIs.dictionaries.spanish.entities.*;
 
+import domain.integrations.APIs.dictionaries.spanish.entities.SpanishDictionaryWordResponse;
+import domain.responses.gets.lists.ResponseGetDictionaryWordMeaning;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings(SuppressWarningsConstants.ALL)
 public class SpanishDictionaryControllerTest {
 
     @Mock
     private SpanishDictionaryAPI spanishDictionaryAPI;
 
     @InjectMocks
-    private SpanishDictionaryController spanishDictionaryController;
-
+    private SpanishDictionaryWordsController spanishDictionaryController;
 
     @Test
-    void getList() throws IOException {
+    void getWordResponse() throws Exception {
+        final var word = "palabra";
+        final var responsesGetDictionaryWordMeaning = new ArrayList<ResponseGetDictionaryWordMeaning>() {
+            {
+                add(new ResponseGetDictionaryWordMeaning("Sustantivo", "Algo que puede ser escrito o dicho"));
+            }
+        };
 
-        String word = "trato";
+        final var spanishDictionaryWordResponse = Mockito.mock(SpanishDictionaryWordResponse.class);
+        final Response<SpanishDictionaryWordResponse> response = Response.success(spanishDictionaryWordResponse);
+        final Call<SpanishDictionaryWordResponse> call = Mockito.mock(Call.class);
 
-        List<String> definitions = new ArrayList<>();
-        definitions.add("Relación de una persona con otra o con otras");
-        definitions.add("Forma o manera como se relaciona una persona con otras o con los animales");
-        definitions.add("Manera de usar o manejar cierta cosa");
-        definitions.add("Acuerdo al que llegan dos o más personas sobre un asunto");
+        Mockito.when(spanishDictionaryAPI.get(word)).thenReturn(call);
+        Mockito.when(call.execute()).thenReturn(response);
+        Mockito.when(spanishDictionaryWordResponse.listMeanings()).thenReturn(responsesGetDictionaryWordMeaning);
 
-        SpanishDictionaryWordSense spanishDictionaryWordSense = new SpanishDictionaryWordSense();
-        spanishDictionaryWordSense.setDefinitions(definitions);
-        List<SpanishDictionaryWordSense> senses = new ArrayList<>();
-        senses.add(spanishDictionaryWordSense);
+        final var responseEntity = this.spanishDictionaryController.list(word);
+        final var cacheControlHeader = responseEntity.getHeaders().get("Cache-Control");
 
-        SpanishDictionaryWordEntry spanishDictionaryWordEntry = new SpanishDictionaryWordEntry();
-        spanishDictionaryWordEntry.setSenses(senses);
-        List<SpanishDictionaryWordEntry> wordEntries = new ArrayList<>();
-        wordEntries.add(spanishDictionaryWordEntry);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(responsesGetDictionaryWordMeaning, responseEntity.getBody().meanings());
+        assertNotNull(cacheControlHeader);
+        assertEquals("max-age=9223372036854775807, no-transform, public", cacheControlHeader.get(0));
 
-        SpanishDictionaryWordLexicalEntry spanishDictionaryWordLexicalEntry = new SpanishDictionaryWordLexicalEntry();
-        spanishDictionaryWordLexicalEntry.setEntries(wordEntries);
-        List<SpanishDictionaryWordLexicalEntry> wordLexicalEntries = new ArrayList<>();
-        wordEntries.add(spanishDictionaryWordEntry);
-
-        SpanishDictionaryWordResponseResult spanishDictionaryWordResponseResult = new SpanishDictionaryWordResponseResult();
-        spanishDictionaryWordResponseResult.setLexicalEntries(wordLexicalEntries);
-        List<SpanishDictionaryWordResponseResult> wordResponseResults = new ArrayList<>();
-        wordResponseResults.add(spanishDictionaryWordResponseResult);
-
-        SpanishDictionaryWordResponse spanishDictionaryWordResponse = new SpanishDictionaryWordResponse();
-        spanishDictionaryWordResponse.setResults(wordResponseResults);
-
-        final var mockedCall = Mockito.mock(Call.class);
-        final var spaResponse = Response.success(spanishDictionaryWordResponse);
-
-        Mockito.when(mockedCall.execute()).thenReturn(spaResponse);
-        Mockito.when(this.spanishDictionaryController.tryGetResponse(mockedCall)).thenReturn(spanishDictionaryWordResponse);
-
-        final var response = this.spanishDictionaryController.tryGetResponse(this.spanishDictionaryAPI.get(word));
-
-        assertEquals(4, response.listMeanings().size());
-        assertEquals("Relación de una persona con otra o con otras", response.listMeanings().get(0));
-
+        Mockito.verify(spanishDictionaryAPI, Mockito.times(1)).get(word);
+        Mockito.verify(call, Mockito.times(1)).execute();
+        Mockito.verify(spanishDictionaryWordResponse, Mockito.times(1)).listMeanings();
     }
 
+    @Test
+    void getNullWordResponse() throws Exception {
+        final var word = "palabra";
+        final Response<SpanishDictionaryWordResponse> response = Response.success(null);
+        final Call<SpanishDictionaryWordResponse> call = Mockito.mock(Call.class);
+
+        Mockito.when(spanishDictionaryAPI.get(word)).thenReturn(call);
+        Mockito.when(call.execute()).thenReturn(response);
+
+        final var responseEntity = this.spanishDictionaryController.list(word);
+        final var cacheControlHeader = responseEntity.getHeaders().get("Cache-Control");
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(Collections.emptyList(), responseEntity.getBody().meanings());
+        assertNotNull(cacheControlHeader);
+        assertEquals("max-age=9223372036854775807, no-transform, public", cacheControlHeader.get(0));
+
+        Mockito.verify(spanishDictionaryAPI, Mockito.times(1)).get(word);
+        Mockito.verify(call, Mockito.times(1)).execute();
+    }
+
+    @Test
+    void getCallIOException() throws Exception {
+        final var word = "palabra";
+        final var iOException = new IOException();
+        final Response<SpanishDictionaryWordResponse> response = Response.success(null);
+        final Call<SpanishDictionaryWordResponse> call = Mockito.mock(Call.class);
+
+        Mockito.when(spanishDictionaryAPI.get(word)).thenReturn(call);
+        Mockito.when(call.execute()).thenThrow(iOException);
+
+        final var runtimeException = assertThrows(RuntimeException.class, () -> this.spanishDictionaryController.list(word));
+
+        assertEquals(iOException, runtimeException.getCause());
+
+        Mockito.verify(spanishDictionaryAPI, Mockito.times(1)).get(word);
+        Mockito.verify(call, Mockito.times(1)).execute();
+    }
 }

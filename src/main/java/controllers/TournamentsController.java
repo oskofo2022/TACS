@@ -28,6 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.URL)
@@ -48,15 +49,18 @@ public class TournamentsController extends PagedListController{
 
     // Only public's tournaments, was thinked for general usage without authentication
     @GetMapping(path = UriConstants.Tournaments.Public.SUBTYPE, produces = MediaTypeConstants.JSON)
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> listPublic(RequestGetListPublicTournament requestGetListPublicTournament) {
 
         var responseGetPagedList = this.list(this.tournamentRepository,
                                                                                     requestGetListPublicTournament,
                                                                                     t -> new ResponseGetListTournament(t.getId(), t.getName(), t.getLanguage(), t.getVisibility(), t.getState(), t.getStartDate(), t.getEndDate()));
+
         return ResponseEntity.ok(responseGetPagedList);
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> list(RequestGetListTournament requestGetListTournament) {
 
         var responseGetPagedList = this.list(this.tournamentRepository,

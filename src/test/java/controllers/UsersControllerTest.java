@@ -41,7 +41,6 @@ class UsersControllerTest {
     @InjectMocks
     private UsersController usersController;
 
-
     @Test
     void get() {
         final long userId = 1;
@@ -49,8 +48,6 @@ class UsersControllerTest {
         user.setId(userId);
         user.setName("name");
         user.setEmail("some@email.com");
-
-
 
         Mockito.when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
 

@@ -16,7 +16,6 @@ abstract class RequestGetPagedListTest<TRequestGetPagedList extends RequestGetPa
 
     abstract void setUp();
 
-
     @Test
     void getPageRequest() {
         final var sortBy = "column";
