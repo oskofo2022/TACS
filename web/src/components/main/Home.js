@@ -7,8 +7,9 @@ import Container from "@mui/material/Container";
 import MyTournaments from "../user/private/MyTournaments";
 import MyMatches from "../user/private/MyMatches";
 import AuthContext from "../context/AuthContext";
+import NewTournament from "../user/private/NewTournament";
 
-const Home = ({activeTab}) => {
+const Home = () => {
     const authContext = React.useContext(AuthContext);
     return (
         <Routes>
@@ -16,6 +17,8 @@ const Home = ({activeTab}) => {
             <Route path="/torneos" element={<Tournaments/>}/>
             <Route path="/diccionarios" element={<Dictionaries/>}/>
             <Route path="/mis-torneos" element={<MyTournaments/>} ></Route>
+            <Route path="/mis-torneos/:id/positions" element={<MyTournaments/>} ></Route>
+            <Route path="/nuevo-torneo" element={<NewTournament/>} ></Route>
             <Route path="/mis-partidas" element={<MyMatches/>}></Route>
             <Route path="/logout" element={<Signout/>} ></Route>
         </Routes>

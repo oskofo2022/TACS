@@ -97,7 +97,7 @@ const Dictionaries = () => {
         setNotFound(false);
         setLoading(true);
 
-        const isValid = allValidations.reduce((prev, validation) => validation.f(validation.v) && prev, true)
+        const isValid = allValidations.every((validation) => validation.f(validation.v))
         if(!isValid) {
             setLoading(false);
             return;
@@ -143,13 +143,13 @@ const Dictionaries = () => {
                     id="word"
                     label="Search definition"
                     variant="outlined"
-                    helperText={wordHelper}
                     onChange={handleWordOnChange}
+                    helperText={wordHelper}
                     error={!wordValid}
                     required={true}
                 />
                 <TextField
-                    id="outlined-select-language"
+                    id="select-language"
                     select
                     label="Language"
                     value={language}

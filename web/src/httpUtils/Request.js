@@ -7,6 +7,8 @@ export class Request {
     queryParams: QueryParams;
     completedURL: string;
     pathParams: [{name: string, value: string}];
+    header: string
+
     constructor({
                     url,
                     requestOptions,

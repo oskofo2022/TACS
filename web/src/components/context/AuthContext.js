@@ -6,6 +6,7 @@ const AuthContext = React.createContext({
     name:null,
     signin: () => {},
     signout: () => {},
+    handleUnauthorized: () => {},
 });
 
 export default AuthContext;
