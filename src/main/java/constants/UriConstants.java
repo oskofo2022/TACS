@@ -88,6 +88,10 @@ public class UriConstants {
                     }
                 }
             }
+
+            public static class Tournaments {
+                public static final String URL = Myself.URL + "/tournaments";
+            }
         }
     }
 

@@ -1,13 +1,14 @@
 package domain.requests.gets.lists;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import constants.RSQLConstants;
 import domain.persistence.entities.enums.Visibility;
 import domain.requests.common.gets.lists.RequestCommonGetListTournament;
 
-public class RequestGetListTournament extends RequestCommonGetListTournament {
-
+public class RequestGetListMyTournament extends RequestCommonGetListTournament {
     private Visibility visibility;
 
+    @JsonIgnore
     private Long userCreatorId;
 
     public Visibility getVisibility() {
