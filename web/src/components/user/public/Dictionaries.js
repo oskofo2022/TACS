@@ -97,7 +97,7 @@ const Dictionaries = () => {
         setNotFound(false);
         setLoading(true);
 
-        const isValid = allValidations.reduce((prev, validation) => validation.f(validation.v) && prev, true)
+        const isValid = allValidations.every((validation) => validation.f(validation.v))
         if(!isValid) {
             setLoading(false);
             return;

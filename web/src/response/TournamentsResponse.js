@@ -1,6 +1,6 @@
 import {PagedResponse} from "./PagedResponse";
 
-class Tournament {
+export class Tournament {
     constructor(id, name, language, startDate, endDate, tournamentState, visibility) {
         this.id = id;
         this.name = name;

@@ -3,8 +3,9 @@ import './App.css';
 import Header from './Header'
 import Home from './Home'
 import Footer from './Footer'
-import {BrowserRouter as Router} from 'react-router-dom'
+import {BrowserRouter as Router, Navigate} from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
+import {UnauthorizedException} from "../../errors/UnauthorizedException";
 
 const pages = ['diccionarios', 'torneos'];
 const defaultName = 'invitado';
@@ -33,6 +34,10 @@ function App() {
         sessionStorage.removeItem('userData');
     }
 
+    const handleUnauthorized = (e) => {
+        if (!e instanceof UnauthorizedException) throw e; else return (<Navigate to={'/logout'}/>);
+    };
+
     React.useEffect(() => {
         const storedData = JSON.parse(sessionStorage.getItem('userData'));
         if (storedData && storedData.name)
@@ -44,7 +49,7 @@ function App() {
         <main>
             <Router>
                 <AuthContext.Provider
-                    value={{authenticated: authenticated, signin: signin, signout: signout, name: name}}>
+                    value={{authenticated: authenticated, signin: signin, signout: signout, name: name, handleUnauthorized: handleUnauthorized}}>
                     <Header pages={pages} handleTab={handleTab}/>
                     <Home activeTab={activeTab}/>
                     <Footer/>

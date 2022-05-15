@@ -1,14 +1,18 @@
 import React from "react";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
-import {Navigate} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {QueryParams} from '../../../httpUtils/QueryParams'
 import {InscriptionsRequest} from "../../../request/InscriptionsRequest";
 import {TournamentsResponse} from "../../../response/TournamentsResponse";
-import {MeaningNotFoundException} from "../../../errors/MeaningNotFoundException";
-import {UnauthorizedException} from "../../../errors/UnauthorizedException";
+import {EmojiEventsTwoTone} from "@material-ui/icons";
+import IconButton from "@mui/material/IconButton";
+import AuthContext from "../../context/AuthContext";
 
 const MyTournaments = () => {
-    const [unauthorized, setUnauthorized] = React.useState(false);
+    const authContext = React.useContext(AuthContext);
+
+    const [redirectUnauthorized, setRedirectUnauthorized] = React.useState(null);
+
     const [data, setData] = React.useState({
         loading: true,
         rows: [],
@@ -21,14 +25,11 @@ const MyTournaments = () => {
     });
 
     function createData(
-        id: number,
-        name: string,
-        language: string,
-        beginDate: string,
-        endDate: string,
-        state: string,
+        inscription
     ) {
-        return { id, name, language, beginDate, endDate, state };
+        return {
+            ...inscription
+        };
     }
 
     const updateData = (k, v) => setData((prev) => ({ ...prev, [k]: v }));
@@ -40,6 +41,15 @@ const MyTournaments = () => {
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
         { field: 'tournamentState', headerName: 'State', width: 130, sortable: false, },
+        { field: 'positionURL', headerName: 'Positions', width: 130, sortable: false,
+            renderCell:
+                (positions) => (
+                    <NavLink to={positions.row.positionURL} style={{textDecoration: 'none', color: 'yellow'}}>
+                        <IconButton aria-label="Positions">
+                            <EmojiEventsTwoTone />
+                        </IconButton>
+                    </NavLink>
+                )},
     ];
 
     const handleGetInscriptions = async (inscriptionsRequest): Promise<TournamentsResponse> =>  {
@@ -47,9 +57,9 @@ const MyTournaments = () => {
         return await inscriptionsRequest.fetchAsPaged();
     }
 
-    const handleUnauthorized = (e) => {
-        if(!e instanceof UnauthorizedException) throw e;
-        setUnauthorized(true);
+    const handleSetRows = (_rows) => {
+        const rows = _rows.map(i => createData(i));
+        updateData("rows", rows);
     }
 
     React.useEffect(() => {
@@ -67,9 +77,9 @@ const MyTournaments = () => {
         handleGetInscriptions(inscriptionsRequest)
             .then(r => {
                 updateData("totalRows", r.totalCount);
-                updateData("rows", r.pageItems)
+                handleSetRows(r.pageItems);
             })
-            .catch(e => handleUnauthorized(e))
+            .catch(e => setRedirectUnauthorized(authContext.handleUnauthorized(e)))
             .finally( () => updateData("loading", false));
 
 
@@ -81,9 +91,13 @@ const MyTournaments = () => {
 
     return (
         <React.Fragment>
-            {unauthorized && <Navigate to={'/logout'}/>}
+            {redirectUnauthorized}
             <div style={{ height: '60%', width: '100%' }}>
                 <DataGrid
+                    disableSelectionOnClick
+                    disableColumnSelector={true}
+                    disableDensitySelector={true}
+                    dat
                     density="compact"
                     autoHeight
                     pagination
@@ -95,6 +109,7 @@ const MyTournaments = () => {
                     rowsPerPageOptions={data.rowsPerPageOptions}
                     rowCount={data.totalRows}
                     paginationMode='server'
+                    // onCellClick={handleCellClick}
                     onPageChange={ (p) => {updateData("page", p + 1);} }
                     onPageSizeChange={ (ps) => {updateData("page", 1); updateData("pageSize", ps);} }
                 />

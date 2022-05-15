@@ -3,7 +3,11 @@ const API_URL = `http://${API_DOMAIN}/api`;
 
 const LOGIN = `${API_URL}/logins`;
 
-const PUBLIC_TOURNAMENTS = `${API_URL}/tournaments/public`;
+const TOURNAMENTS = `${API_URL}/tournaments`;
+const TOURNAMENTS_USER_INSCRIPTION = `${TOURNAMENTS}/{tournamentId}/inscriptions`;
+const PUBLIC_TOURNAMENTS = `${TOURNAMENTS}/public`;
+const PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION = `${PUBLIC_TOURNAMENTS}/public/{tournamentId}/inscriptions/myself`;
+
 const INSCRIPTIONS = `${API_URL}/users/myself/inscriptions/tournaments`;
 const POSITIONS = `${API_URL}/users/myself/inscriptions/tournaments/positions`;
 
@@ -15,7 +19,10 @@ export const UrlConstants = Object.freeze({
     API_DOMAIN: API_DOMAIN,
     API_URL: API_URL,
     LOGIN: LOGIN,
+    TOURNAMENTS: TOURNAMENTS,
+    TOURNAMENTS_USER_INSCRIPTION: TOURNAMENTS_USER_INSCRIPTION,
     PUBLIC_TOURNAMENTS: PUBLIC_TOURNAMENTS,
+    PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION: PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION,
     INSCRIPTIONS: INSCRIPTIONS,
     POSITIONS: POSITIONS,
     DICTIONARIES: DICTIONARIES,

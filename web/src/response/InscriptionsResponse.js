@@ -1,14 +1,10 @@
 import {PagedResponse} from "./PagedResponse";
+import {Tournament} from "./TournamentsResponse";
 
-class Inscription {
-    constructor(id, name, language, startDate, endDate, tournamentState, visibility) {
-        this.id = id;
-        this.name = name;
-        this.language = language;
-        this.beginDate = startDate;
-        this.endDate = endDate;
-        this.tournamentState = tournamentState;
-        this.visibility = visibility;
+class Inscription extends Tournament{
+    constructor(...params) {
+        super(...params);
+        this.positionURL = '/mis-torneos/' + this.id + '/positions';
     }
 }
 

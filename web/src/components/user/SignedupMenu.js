@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import {deepOrange} from "@mui/material/colors";
 
-const settings = ['Mis Torneos', 'Mis partidas', 'Logout'];
+const settings = ['Mis Torneos', 'Nuevo Torneo', 'Mis partidas', 'Logout'];
 
 const SignedupMenu = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
