@@ -24,7 +24,7 @@ const AddGuess = ({open, onClose}) => {
     // const [open, setOpen] = React.useState(true);
     const [success, setSuccess] = React.useState(false);
 
-    const [guesses, setGuesses] = React.useState();
+    const [guess, setGuess] = React.useState();
     const [guessesValid, setGuessesValid] = React.useState(true);
     const [guessesHelper, setGuessesHelper] = React.useState('');
 
@@ -66,7 +66,7 @@ const AddGuess = ({open, onClose}) => {
     const handleGuessOnChange = (e) => {
         const value = e.target.value;
         validateGuess(value);
-        setGuesses(value);
+        setGuess(value);
     }
 
     const handleSuccess = () => {
@@ -79,7 +79,7 @@ const AddGuess = ({open, onClose}) => {
             results: [
                 {
                     language: language,
-                    guessesCount: guesses
+                    guessesCount: guess
                 }
             ]
         });
@@ -87,7 +87,14 @@ const AddGuess = ({open, onClose}) => {
         return await userGuessRequest.fetch();
     }
 
+    const allValidations = [
+        {f: validateLanguage, v: language},
+        {f: validateGuess, v: guess},
+    ];
+
     const handleCloseAddUserDialogSuccess = () => {
+        const isValid = allValidations.reduce((prev, validation) => validation.f(validation.v) && prev, true);
+        if (!isValid) return;
         handleGuessPost()
             .then((r) => {if (r.status === 200) handleSuccess();})
             .catch(e => setRedirect(authContext.handleUnauthorized(e)));
