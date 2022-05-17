@@ -20,11 +20,9 @@ const SignUpFormStyle = styled('form')(({theme}) => ({
 function SignUpForm({closeFunc}) {
     return (
     <SignUpFormStyle>
-        <TextField label="First Name" variant="filled" required/>
-        <TextField label="Last Name" variant="filled" required/>
+        <TextField label="Name" variant="filled" required/>
         <TextField label="Email" variant="filled" type="email" required/>
         <TextField label="Password" variant="filled" type="password" required/>
-
         <div>
         <Button variant="contained" onClick={closeFunc}>
             Cancel
