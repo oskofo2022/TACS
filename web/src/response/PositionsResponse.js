@@ -15,7 +15,6 @@ export class PositionsResponse extends PagedResponse {
         let positionList = []
         this.pageItems = this.pageItems.map(tournament => {
             let positionIndex = 0;
-            debugger;
             tournament.positions.map((position,idx,array) => {
                 if (idx === 0 || position.guessesCount !== array[idx-1].guessesCount) {
                     positionIndex += 1;

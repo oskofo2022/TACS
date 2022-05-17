@@ -9,7 +9,6 @@ import {PositionsRequest} from "../../../request/PositionsRequest";
 const MyPositions = () => {
     const authContext = React.useContext(AuthContext);
     const tournamentName = useParams();
-    // debugger;
     const [redirectUnauthorized, setRedirectUnauthorized] = React.useState(null);
     const [data, setData] = React.useState({
         loading: true,
