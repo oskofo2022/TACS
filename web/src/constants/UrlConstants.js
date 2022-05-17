@@ -6,7 +6,7 @@ const LOGIN = `${API_URL}/logins`;
 const TOURNAMENTS = `${API_URL}/tournaments`;
 const TOURNAMENTS_USER_INSCRIPTION = `${TOURNAMENTS}/{tournamentId}/inscriptions`;
 const PUBLIC_TOURNAMENTS = `${TOURNAMENTS}/public`;
-const PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION = `${PUBLIC_TOURNAMENTS}/public/{tournamentId}/inscriptions/myself`;
+const PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION = `${PUBLIC_TOURNAMENTS}/{tournamentId}/inscriptions/myself`;
 
 const INSCRIPTIONS = `${API_URL}/users/myself/inscriptions/tournaments`;
 const POSITIONS = `${API_URL}/users/myself/inscriptions/tournaments/positions`;

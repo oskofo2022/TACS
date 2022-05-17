@@ -4,7 +4,7 @@ import {Tournament} from "./TournamentsResponse";
 class Inscription extends Tournament{
     constructor(...params) {
         super(...params);
-        this.positionURL = '/mis-torneos/' + this.id + '/positions';
+        this.positionURL = '/inscripciones/' + this.name + '/positions';
     }
 }
 

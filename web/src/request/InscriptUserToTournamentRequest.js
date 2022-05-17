@@ -9,16 +9,17 @@ export class InscriptUserToTournamentRequest{
 
     buildRequest = () => {
         let rb = RequestBuilder.post(this.postURL, this.body);
-        this.request = rb.build();
+        this.request = rb.setPathParms(this.pathParams).build();
     }
 
-    constructor(body) {
+    constructor(pathParams, body) {
         this.body = body;
+        this.pathParams = pathParams;
         this.buildRequest();
     }
 
-    static from(body) {
-        return new InscriptUserToTournamentRequest(body);
+    static from(pathParams, body) {
+        return new InscriptUserToTournamentRequest(pathParams,body);
     }
 
     async fetch(){

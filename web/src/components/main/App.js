@@ -32,6 +32,7 @@ function App() {
         setAuthenticated(false);
         setName(defaultName);
         sessionStorage.removeItem('userData');
+        document.cookie = "wordle-session=";
     }
 
     const handleUnauthorized = (e) => {
@@ -48,8 +49,7 @@ function App() {
     return (
         <main>
             <Router>
-                <AuthContext.Provider
-                    value={{authenticated: authenticated, signin: signin, signout: signout, name: name, handleUnauthorized: handleUnauthorized}}>
+                <AuthContext.Provider value={{authenticated: authenticated, signin: signin, signout: signout, name: name, handleUnauthorized: handleUnauthorized}}>
                     <Header pages={pages} handleTab={handleTab}/>
                     <Home activeTab={activeTab}/>
                     <Footer/>

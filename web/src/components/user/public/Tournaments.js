@@ -7,13 +7,19 @@ import IconButton from "@mui/material/IconButton";
 import LoginIcon from '@mui/icons-material/Login';
 import {InscriptMyselfRequest} from "../../../request/InscriptMyselfRequest";
 import AuthContext from "../../context/AuthContext";
-import {Button, Dialog, DialogActions, DialogTitle, Typography} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography} from "@mui/material";
+import ReactNbsp from 'react-nbsp'
 
 const Tournaments = () => {
 
     const authContext = React.useContext(AuthContext);
     const [redirect, setRedirect] = React.useState(null);
     const [inscriptionSuccessDialogOpen, setInscriptionSuccessDialogOpen] = React.useState(false);
+    const [tournamentName, setTournamentName] = React.useState('');
+    const [tournamentLanguage, setTournamentLanguage] = React.useState('');
+    const [tournamentBeginDate, setTournamentBeginDate] = React.useState('');
+    const [tournamentEndDate, setTournamentEndDate] = React.useState('');
+
 
 
     const [data, setData] = React.useState({
@@ -42,7 +48,7 @@ const Tournaments = () => {
                         key={'tournamentInscriptButton'}
                         size="large"
                         aria-label="Inscript to tournament"
-                        onClick={handleTournamentInscription(t.row.id)}
+                        onClick={handleTournamentInscription(t.row)}
                         color="inherit"
                     >
                         <LoginIcon/>
@@ -60,8 +66,12 @@ const Tournaments = () => {
         return inscriptMyselfRequest.fetch();
     }
 
-    const handleTournamentInscription = (tournamentId) => () => {
-        handlePostInscription(tournamentId)
+    const handleTournamentInscription = (tournament) => () => {
+        setTournamentName(tournament.name);
+        setTournamentLanguage(tournament.language);
+        setTournamentBeginDate(tournament.beginDate);
+        setTournamentEndDate(tournament.endDate);
+        handlePostInscription(tournament.id)
             .then(_ => setInscriptionSuccessDialogOpen(true))
             .catch(e => setRedirect(authContext.handleUnauthorized(e)));
     }
@@ -102,14 +112,45 @@ const Tournaments = () => {
         }
     }, [data.page, data.pageSize]);
 
+    const tournamentLabel = (tournamentLabel, tournamentValue) => (
+        <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{flexGrow: 1, color: 'black'}}
+        >
+            {tournamentLabel}:
+            <ReactNbsp/>
+            <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{flexGrow: 1, color: 'gray', display: 'inline'}}
+            >
+                {tournamentValue}
+            </Typography>
+        </Typography>
+    )
+
+    const DialogContentLabels = () => (
+        <Stack noValidate spacing={2}>
+            {tournamentLabel('Tournament name', tournamentName)}
+            {tournamentLabel('Language', tournamentLanguage)}
+            {tournamentLabel('Begin date', tournamentBeginDate)}
+            {tournamentLabel('End date', tournamentEndDate)}
+        </Stack>
+    );
 
     return (
         <React.Fragment>
             {redirect}
-            <Dialog open={inscriptionSuccessDialogOpen} onClose={handleCloseSuccessDialog} className='signinmodal'>
+            <Dialog open={inscriptionSuccessDialogOpen} onClose={handleCloseSuccessDialog} className='signinmodal' fullWidth>
                 <DialogTitle>
-                    <Typography sx={{color: "#BFE3B4"}} textAlign="center">Inscription Success</Typography>
+                    <Typography variant="h5" sx={{color: "green"}} textAlign="center">Inscription Success</Typography>
                 </DialogTitle>
+                <DialogContent>
+                    {DialogContentLabels()}
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseSuccessDialog}>Close</Button>
                 </DialogActions>
