@@ -61,7 +61,7 @@ class EnglishDictionaryWordsControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(responsesGetDictionaryWordMeaning, responseEntity.getBody().meanings());
         assertNotNull(cacheControlHeader);
-        assertEquals("max-age=9223372036854775807, no-transform, public", cacheControlHeader.get(0));
+        assertEquals("max-age=86400, must-revalidate, no-transform, public", cacheControlHeader.get(0));
 
 
         Mockito.verify(englishDictionaryAPI, Mockito.times(1)).get(word);
@@ -89,7 +89,7 @@ class EnglishDictionaryWordsControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(Collections.emptyList(), responseEntity.getBody().meanings());
         assertNotNull(cacheControlHeader);
-        assertEquals("max-age=9223372036854775807, no-transform, public", cacheControlHeader.get(0));
+        assertEquals("max-age=86400, must-revalidate, no-transform, public", cacheControlHeader.get(0));
 
 
         Mockito.verify(englishDictionaryAPI, Mockito.times(1)).get(word);

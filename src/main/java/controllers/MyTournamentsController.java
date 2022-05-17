@@ -2,9 +2,7 @@ package controllers;
 
 import constants.UriConstants;
 import domain.persistence.repositories.TournamentRepository;
-import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListMyTournament;
-import domain.requests.gets.lists.RequestGetListTournament;
 import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.security.WordleAuthenticationManager;

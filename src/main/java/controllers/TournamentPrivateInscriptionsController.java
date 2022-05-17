@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.Inscriptions.URL)
 public class TournamentPrivateInscriptionsController extends TournamentInscriptionsController {
@@ -31,7 +33,7 @@ public class TournamentPrivateInscriptionsController extends TournamentInscripti
 
     @PostMapping(produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> post(@PathVariable long tournamentId, @RequestBody RequestPostTournamentInscription requestPostTournamentInscription) {
+    public ResponseEntity<Void> post(@PathVariable long tournamentId, @Valid @RequestBody RequestPostTournamentInscription requestPostTournamentInscription) {
         final var tournament = this.tournamentRepository.findById(tournamentId)
                                                                    .orElseThrow(() -> new EntityNotFoundRuntimeException(Tournament.class));
 

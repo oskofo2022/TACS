@@ -27,9 +27,10 @@ public abstract class DictionariesWordsController {
         final var responsesGetDictionaryWordMeaning = this.listMeanings(dictionaryWordResponse);
 
         final var responseGetDictionaryWord = new ResponseGetDictionaryWord(responsesGetDictionaryWordMeaning);
-        CacheControl cacheControl = CacheControl.maxAge(Long.MAX_VALUE, TimeUnit.DAYS)
+        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
                                                 .cachePublic()
-                                                .noTransform();
+                                                .noTransform()
+                                                .mustRevalidate();
 
         return ResponseEntity.ok()
                              .cacheControl(cacheControl)

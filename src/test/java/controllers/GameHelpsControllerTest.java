@@ -1,5 +1,6 @@
 package controllers;
 
+import constants.SuppressWarningsConstants;
 import domain.files.FileLinesStreamer;
 import domain.persistence.entities.enums.Language;
 import domain.requests.gets.lists.RequestGetListGameHelp;
@@ -12,15 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings(SuppressWarningsConstants.ALL)
 public class GameHelpsControllerTest {
 
     @Mock
@@ -29,7 +28,7 @@ public class GameHelpsControllerTest {
     private GameHelpsController gameHelpsController;
 
     @Test
-    void getListHelperWords(){
+    void list(){
 
         final var totalWordsResponse = 1;
 
@@ -53,7 +52,7 @@ public class GameHelpsControllerTest {
         assertNotNull(words);
         assertEquals(totalWordsResponse, words.size());
         assertEquals("ascua", words.get(0));
-        assertEquals("max-age=9223372036854775807, no-transform, public", responseEntity.getHeaders().getCacheControl());
+        assertEquals("max-age=86400, must-revalidate, no-transform, public", responseEntity.getHeaders().getCacheControl());
 
         Mockito.verify(this.fileLinesStreamer, Mockito.times(1)).list(Mockito.anyString());
         Mockito.verify(lines, Mockito.times(1)).filter(Mockito.any(Predicate.class));

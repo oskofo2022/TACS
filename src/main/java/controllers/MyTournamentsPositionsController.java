@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Positions.URL)
 public class MyTournamentsPositionsController {
@@ -26,7 +28,7 @@ public class MyTournamentsPositionsController {
 
     @GetMapping(produces = MediaTypeConstants.JSON)
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournamentPosition>> list(RequestGetListTournamentPosition requestGetListTournamentPosition) {
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournamentPosition>> list(@Valid RequestGetListTournamentPosition requestGetListTournamentPosition) {
         final var user = this.userContextService.get();
 
         final var responseGetPagedList = requestGetListTournamentPosition.paginate(() -> user.getInscriptions()

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import constants.RSQLConstants;
 import domain.persistence.entities.enums.Visibility;
 import domain.requests.common.gets.lists.RequestCommonGetListTournament;
+import domain.validators.RegexSortBy;
 
+@RegexSortBy(allowedValues = { "name", "state", "language", "id", "startDate", "endDate", "visibility" })
 public class RequestGetListMyTournament extends RequestCommonGetListTournament {
     private Visibility visibility;
 
