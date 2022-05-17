@@ -19,6 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.Inscriptions.URL)
 public class TournamentPrivateInscriptionsController extends TournamentInscriptionsController {
+
     private final TournamentRepository tournamentRepository;
     private final UserRepository userRepository;
     private final WordleAuthenticationManager wordleAuthenticationManager;

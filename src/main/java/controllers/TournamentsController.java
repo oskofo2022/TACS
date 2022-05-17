@@ -23,7 +23,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.URL)
-public class TournamentsController extends PagedListController{
+public class TournamentsController extends PagedListController {
 
     private final TournamentRepository tournamentRepository;
     private final UserContextService userContextService;

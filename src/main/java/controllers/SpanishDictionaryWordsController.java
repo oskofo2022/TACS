@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = UriConstants.Dictionaries.Spanish.Words.URL)
 public class SpanishDictionaryWordsController extends DictionariesWordsController {
+
     private final SpanishDictionaryAPI spanishDictionaryAPI;
 
     @Autowired

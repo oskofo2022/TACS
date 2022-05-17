@@ -32,7 +32,7 @@ public abstract class TournamentInscriptionsController {
                                                              .toUri();
 
         return ResponseEntity.created(location)
-                .build();
+                             .build();
     }
 
     private void validateDuplicate(User user, Tournament tournament) {

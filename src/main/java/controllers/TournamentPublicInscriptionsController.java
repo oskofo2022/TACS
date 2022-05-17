@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.Public.Inscriptions.URL)
 public class TournamentPublicInscriptionsController extends TournamentInscriptionsController {
+
     private final TournamentRepository tournamentRepository;
     private final UserContextService userContextService;
 

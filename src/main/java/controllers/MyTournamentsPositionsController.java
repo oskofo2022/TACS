@@ -19,6 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.Positions.URL)
 public class MyTournamentsPositionsController {
+
     private final UserContextService userContextService;
 
     @Autowired
