@@ -1,44 +1,38 @@
 import React from "react";
-import AuthContext from "../../context/AuthContext";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import IconButton from "@mui/material/IconButton";
+import {NavLink} from 'react-router-dom';
+import {QueryParams} from '../../../httpUtils/QueryParams'
+import {InscriptionsRequest} from "../../../request/InscriptionsRequest";
 import {TournamentsResponse} from "../../../response/TournamentsResponse";
-import {QueryParams} from "../../../httpUtils/QueryParams";
-import AddUser from "./AddUser";
-import {MyTournamentsRequest} from "../../../request/MyTournamentsRequest";
+import {EmojiEventsTwoTone} from "@material-ui/icons";
+import IconButton from "@mui/material/IconButton";
+import AuthContext from "../../context/AuthContext";
 
-const MyTournaments = () => {
+const MyInscriptions = () => {
     const authContext = React.useContext(AuthContext);
 
     const [redirectUnauthorized, setRedirectUnauthorized] = React.useState(null);
 
-    const [addUserDialogOpen, setAddUserDialogOpen] = React.useState(false);
-    const [tournamentId, setTournamentId] = React.useState(null);
-    const [tournamentName, setTournamentName] = React.useState(null);
-
     const [data, setData] = React.useState({
-       loading: true,
-       rows: [],
-       totalRows: 0,
-       pageSize: 2,
-       page: 1,
-       rowsPerPageOptions: [2, 5, 10, 20],
-       sortBy: 'name',
-       sortOrder:'ASCENDING',
-   });
+        loading: true,
+        rows: [],
+        totalRows: 0,
+        pageSize: 2,
+        page: 1,
+        rowsPerPageOptions: [2, 5, 10, 20],
+        sortBy: 'tournament.name',
+        sortOrder:'ASCENDING',
+    });
+
+    function createData(
+        inscription
+    ) {
+        return {
+            ...inscription
+        };
+    }
 
     const updateData = (k, v) => setData((prev) => ({ ...prev, [k]: v }));
-
-    const handleAddUserOnClick = (t) => () => {
-        setTournamentId(t.id);
-        setTournamentName(t.name);
-        setAddUserDialogOpen(true);
-    }
-
-    const handleCloseAddUserDialog = () => {
-        setAddUserDialogOpen(false);
-    }
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 70, sortable: false, },
@@ -47,25 +41,31 @@ const MyTournaments = () => {
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
         { field: 'tournamentState', headerName: 'State', width: 130, sortable: false, },
-        { field: 'addUser', headerName: 'Add User', width: 130, sortable: false,
+        { field: 'positionURL', headerName: 'Positions', width: 130, sortable: false,
             renderCell:
-                (t) => (
-                    <IconButton aria-label="Add User" onClick={handleAddUserOnClick(t.row)}>
-                        <PersonAddIcon />
-                    </IconButton>
+                (positions) => (
+                    <NavLink to={positions.row.positionURL} style={{textDecoration: 'none', color: 'yellow'}}>
+                        <IconButton aria-label="Positions">
+                            <EmojiEventsTwoTone />
+                        </IconButton>
+                    </NavLink>
                 )},
     ];
 
-    const handleGetTournaments = async (myTournamentsRequest): Promise<TournamentsResponse> =>  {
+    const handleGetInscriptions = async (inscriptionsRequest): Promise<TournamentsResponse> =>  {
         updateData("loading", true);
-        return await myTournamentsRequest.fetchAsPaged();
+        return await inscriptionsRequest.fetchAsPaged();
     }
 
+    const handleSetRows = (_rows) => {
+        const rows = _rows.map(i => createData(i));
+        updateData("rows", rows);
+    }
 
     React.useEffect(() => {
 
 
-        const myTournamentsRequest = MyTournamentsRequest.from(
+        const inscriptionsRequest = InscriptionsRequest.from(
             new QueryParams({
                 page: data.page,
                 pageSize: data.pageSize,
@@ -74,10 +74,10 @@ const MyTournaments = () => {
             })
         )
 
-        handleGetTournaments(myTournamentsRequest)
+        handleGetInscriptions(inscriptionsRequest)
             .then(r => {
                 updateData("totalRows", r.totalCount);
-                updateData("rows", r.pageItems);
+                handleSetRows(r.pageItems);
             })
             .catch(e => setRedirectUnauthorized(authContext.handleUnauthorized(e)))
             .finally( () => updateData("loading", false));
@@ -85,15 +85,19 @@ const MyTournaments = () => {
 
     }, [data.page, data.pageSize]);
 
+
+
+    // const [template, setTemplate] = React.useState(a());
+
     return (
         <React.Fragment>
             {redirectUnauthorized}
-            <AddUser open={addUserDialogOpen} tournamentId={tournamentId} tournamentName={tournamentName} onClose={handleCloseAddUserDialog}/>
             <div style={{ height: '60%', width: '100%' }}>
                 <DataGrid
                     disableSelectionOnClick
                     disableColumnSelector={true}
                     disableDensitySelector={true}
+                    dat
                     density="compact"
                     autoHeight
                     pagination
@@ -114,4 +118,4 @@ const MyTournaments = () => {
     );
 };
 
-export default MyTournaments;
+export default  MyInscriptions;

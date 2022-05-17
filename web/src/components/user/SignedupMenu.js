@@ -8,11 +8,15 @@ import {Container} from "@mui/material";
 import {Link} from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import {deepOrange} from "@mui/material/colors";
+import AddGuess from "./private/AddGuess";
 
-const settings = ['Nuevo Torneo', 'Mis Torneos', 'Mis partidas', 'Logout'];
+const settings = ['Nuevo Torneo', 'Inscripciones', 'Mis Torneos', 'Logout'];
 
 const SignedupMenu = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    const [nuevaJugadaOpen, setNuevaJugadaOpen] = React.useState(false);
+
     const authContext = React.useContext(AuthContext);
 
     const handleOpenUserMenu = (event) => {
@@ -22,6 +26,11 @@ const SignedupMenu = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleNuevaJugadaOnClick = () =>{
+        setNuevaJugadaOpen(true);
+    }
+    const handleNuevaJugadaOnClose = () => (setNuevaJugadaOpen(false));
 
     const handleMenuOnclick = () => { handleCloseUserMenu(); }
 
@@ -47,6 +56,9 @@ const SignedupMenu = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
             >
+                <MenuItem onClick={handleNuevaJugadaOnClick} style={{color: '#BFE3B4'}}>
+                    <Typography textAlign="center">Nueva Jugada</Typography>
+                </MenuItem>
                 {settings.map((setting) => (
                     <Link key={setting} to={'/' + setting.toLowerCase().replace(' ', '-')} style={{textDecoration: 'none'}}>
                         <MenuItem key={setting} onClick={handleMenuOnclick} style={{color: '#BFE3B4'}}>
@@ -55,6 +67,7 @@ const SignedupMenu = () => {
                     </Link>
                 ))}
             </Menu>
+            <AddGuess open={nuevaJugadaOpen} onClose={handleNuevaJugadaOnClose}/>
         </Container>
 
     )

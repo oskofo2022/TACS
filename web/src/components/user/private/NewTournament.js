@@ -175,7 +175,7 @@ const NewTournament = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const isValid = allValidations.every((validation) => validation.f(validation.v))
+        const isValid = allValidations.reduce((prev, validation) => validation.f(validation.v) && prev, true);
         if (!isValid) return;
 
         handlePostTournament()
