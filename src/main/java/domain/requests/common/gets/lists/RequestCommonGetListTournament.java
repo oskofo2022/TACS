@@ -6,12 +6,11 @@ import domain.persistence.entities.enums.TournamentState;
 import domain.requests.gets.lists.RequestGetPagedList;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.swing.plaf.nimbus.State;
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class RequestCommonGetListTournament extends RequestGetPagedList {
-    private Long tournamentId;
+    private Long id;
     private String name;
     private Language language;
     private TournamentState state;
@@ -74,12 +73,12 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
         this.state = state;
     }
 
-    public Long getTournamentId() {
-        return tournamentId;
+    public Long getId() {
+        return id;
     }
 
-    public void setTournamentId(Long tournamentId) {
-        this.tournamentId = tournamentId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -89,7 +88,7 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
 
     @Override
     protected void addRestrictions() {
-        this.addRestriction(RSQLConstants.Filters.getEqual("id"), this.tournamentId);
+        this.addRestriction(RSQLConstants.Filters.getEqual("id"), this.id);
         this.addRestriction(RSQLConstants.Filters.getLike("name"), this.name);
         this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("endDate"), this.tournamentBottomEndDate);
         this.addRestriction(RSQLConstants.Filters.getLowerThan("endDate"), Optional.ofNullable(this.tournamentTopEndDate).map(d -> d.plusDays(1)).orElse(null));

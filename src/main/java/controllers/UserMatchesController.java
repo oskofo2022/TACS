@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @RestController
@@ -28,7 +29,7 @@ public class UserMatchesController {
 
     @PostMapping(consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
     @Transactional
-    public ResponseEntity<Void> post(@RequestBody RequestPostUserMatchToday requestPostUserMatchToday) {
+    public ResponseEntity<Void> post(@Valid @RequestBody RequestPostUserMatchToday requestPostUserMatchToday) {
         final var user = this.userContextService.get();
 
         final var specificationBuilder = new SpecificationBuilder();

@@ -1,9 +1,9 @@
 package domain.requests.gets.lists;
 
 import constants.RSQLConstants;
+import domain.validators.RegexSortBy;
 
-import java.util.Optional;
-
+@RegexSortBy(allowedValues = { "name", "email" })
 public class RequestGetListUser extends RequestGetPagedList {
     private String name;
     private String email;

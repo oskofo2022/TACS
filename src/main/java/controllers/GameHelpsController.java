@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,15 +37,16 @@ public class GameHelpsController {
         final var requestsGetListGreenLetters = requestGetListGameHelp.getIndexedGreenLetters();
         final var lines = this.fileLinesStreamer.list(language.getPathWordsFile());
         final var words = lines.filter(s -> this.isValid(s, requestGetListGameHelp, requestsGetListGreenLetters))
-                                                .toList();
+                                          .toList();
 
         lines.close();
 
         final var responseGetListGameHelp = new ResponseGetListGameHelp(words);
 
-        CacheControl cacheControl = CacheControl.maxAge(Long.MAX_VALUE, TimeUnit.DAYS)
+        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
                                                 .cachePublic()
-                                                .noTransform();
+                                                .noTransform()
+                                                .mustRevalidate();
 
         return ResponseEntity.ok()
                              .cacheControl(cacheControl)

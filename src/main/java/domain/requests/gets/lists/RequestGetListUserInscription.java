@@ -5,11 +5,13 @@ import constants.RSQLConstants;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
+import domain.validators.RegexSortBy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+@RegexSortBy(allowedValues = { "tournament.name", "tournament.state", "tournament.language", "tournament.id", "tournament.startDate", "tournament.endDate", "tournament.visibility" })
 public class RequestGetListUserInscription extends RequestGetPagedList {
     @JsonIgnore
     private long userId;

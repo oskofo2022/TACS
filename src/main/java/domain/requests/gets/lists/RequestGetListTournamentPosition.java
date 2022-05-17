@@ -3,13 +3,12 @@ package domain.requests.gets.lists;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.enums.TournamentState;
+import domain.validators.RegexSortBy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
+@RegexSortBy(allowedValues = { "tournament.name", "tournament.state", "tournament.language", "tournament.id", "tournament.startDate", "tournament.endDate", "tournament.visibility" })
 public class RequestGetListTournamentPosition extends RequestGetListOnMemoryPagedList<Tournament> {
 
     private String tournamentName;

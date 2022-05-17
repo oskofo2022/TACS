@@ -1,9 +1,13 @@
 package constants;
 
 import domain.persistence.entities.enums.Language;
+import domain.security.UriComparer;
+import domain.security.UriWhitelist;
 import domain.security.filters.AuthenticationAdapterRequestFilter;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -21,20 +25,22 @@ public class UriConstants {
                 "/swagger-ui/**",
                 "/tournaments/public",
                 "/dictionaries/**",
-                "/games/**"
+                "/games/**",
+                "/users",
             };
         }
     }
 
     public static class AuthenticationAdapterRequestFilter {
-        public static String[] getPermitAllWhitelist() {
-            return new String[] {
-                    "/logins",
-                    "/v3/api-docs",
-                    "/swagger-ui",
-                    "/tournaments/public",
-                    "/dictionaries",
-                    "/games"
+        public static UriWhitelist[] getPermitAllWhitelist() {
+            return new UriWhitelist[] {
+                    new UriWhitelist("/logins"),
+                    new UriWhitelist("/v3/api-docs"),
+                    new UriWhitelist("/swagger-ui"),
+                    new UriWhitelist("/tournaments/public"),
+                    new UriWhitelist("/dictionaries"),
+                    new UriWhitelist("/games"),
+                    new UriWhitelist("/api/users", List.of(RequestMethod.POST), UriComparer.EQUAL)
             };
         }
 
@@ -56,6 +62,10 @@ public class UriConstants {
             }
         }
 
+    }
+
+    public static class Queries {
+        public static String ID = "id={id}";
     }
 
     public static class Users {

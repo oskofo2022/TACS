@@ -2,23 +2,16 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.persistence.entities.Inscription;
-import domain.persistence.entities.InscriptionIdentifier;
 import domain.persistence.entities.Tournament;
-import domain.persistence.entities.User;
-import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
-import domain.persistence.entities.enums.Visibility;
 import domain.persistence.repositories.InscriptionRepository;
 import domain.persistence.repositories.TournamentRepository;
-import domain.persistence.repositories.UserRepository;
+import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListPublicTournament;
-import domain.requests.gets.lists.RequestGetListTournament;
 import domain.requests.posts.RequestPostTournament;
 import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.responses.gets.lists.ResponseGetPagedList;
 import domain.responses.posts.ResponsePostEntityCreation;
-import domain.security.WordleAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,30 +20,26 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(path = UriConstants.Tournaments.URL)
 public class TournamentsController extends PagedListController{
 
     private final TournamentRepository tournamentRepository;
-    private final UserRepository userRepository;
-    private final WordleAuthenticationManager wordleAuthenticationManager;
+    private final UserContextService userContextService;
     private final InscriptionRepository inscriptionRepository;
 
     @Autowired
-    public TournamentsController(TournamentRepository tournamentRepository, UserRepository userRepository, WordleAuthenticationManager wordleAuthenticationManager, InscriptionRepository inscriptionRepository) {
+    public TournamentsController(TournamentRepository tournamentRepository, UserContextService userContextService, InscriptionRepository inscriptionRepository) {
         this.tournamentRepository = tournamentRepository;
-        this.userRepository = userRepository;
-        this.wordleAuthenticationManager = wordleAuthenticationManager;
+        this.userContextService = userContextService;
         this.inscriptionRepository = inscriptionRepository;
     }
 
     // Only public's tournaments, was thinked for general usage without authentication
     @GetMapping(path = UriConstants.Tournaments.Public.SUBTYPE, produces = MediaTypeConstants.JSON)
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> listPublic(RequestGetListPublicTournament requestGetListPublicTournament) {
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> listPublic(@Valid RequestGetListPublicTournament requestGetListPublicTournament) {
 
         var responseGetPagedList = this.list(this.tournamentRepository,
                                                                                     requestGetListPublicTournament,
@@ -59,23 +48,12 @@ public class TournamentsController extends PagedListController{
         return ResponseEntity.ok(responseGetPagedList);
     }
 
-    @GetMapping(produces = MediaTypeConstants.JSON)
-    @Transactional(readOnly = true)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournament>> list(RequestGetListTournament requestGetListTournament) {
-
-        var responseGetPagedList = this.list(this.tournamentRepository,
-                                                                                    requestGetListTournament,
-                                                                                    t -> new ResponseGetListTournament(t.getId(), t.getName(), t.getLanguage(), t.getVisibility(), t.getState(), t.getStartDate(), t.getEndDate()));
-        return ResponseEntity.ok(responseGetPagedList);
-    }
-
     @PostMapping(produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostTournament requestPostTournament) {
 
-        final var user = this.userRepository.findById(this.wordleAuthenticationManager.getCurrentUser().getId())
-                                                  .get();
+        final var user = this.userContextService.get();
 
         var tournament = new Tournament();
         tournament.setName(requestPostTournament.getName());
@@ -92,8 +70,9 @@ public class TournamentsController extends PagedListController{
 
         this.inscriptionRepository.save(inscription);
 
-        final var location = ServletUriComponentsBuilder.fromCurrentRequest()
-                                                             .path(UriConstants.Tournaments.ID)
+        final var location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                                                             .path(UriConstants.DELIMITER + UriConstants.Users.Myself.Tournaments.URL)
+                                                             .query(UriConstants.Queries.ID)
                                                              .buildAndExpand(tournament.getId())
                                                              .toUri();
 

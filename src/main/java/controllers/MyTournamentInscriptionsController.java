@@ -3,13 +3,14 @@ package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
 import domain.persistence.repositories.InscriptionRepository;
-import domain.persistence.repositories.TournamentRepository;
 import domain.requests.gets.lists.RequestGetListUserInscription;
 import domain.responses.gets.lists.*;
 import domain.security.WordleAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.URL)
@@ -25,7 +26,7 @@ public class MyTournamentInscriptionsController extends PagedListController{
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListUserInscription>> list(RequestGetListUserInscription requestGetListUserInscription)
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListUserInscription>> list(@Valid RequestGetListUserInscription requestGetListUserInscription)
     {
         final var userId = this.wordleAuthenticationManager.getCurrentUser()
                                                                  .getId();

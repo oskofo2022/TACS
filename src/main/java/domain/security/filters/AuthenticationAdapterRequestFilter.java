@@ -98,7 +98,8 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
 
     private boolean needsAuthorization(HttpServletRequest request) {
         final var requestURI = request.getRequestURI();
-        return Arrays.stream(UriConstants.AuthenticationAdapterRequestFilter.getPermitAllWhitelist()).noneMatch(requestURI::contains)
+        // TODO: Unify URI constants using uri whitelist only
+        return Arrays.stream(UriConstants.AuthenticationAdapterRequestFilter.getPermitAllWhitelist()).noneMatch(uw -> uw.match(request))
                || UriConstants.AuthenticationAdapterRequestFilter.getExcludeExceptionsWhitelist().anyMatch(p -> p.matcher(requestURI).matches());
     }
 }
