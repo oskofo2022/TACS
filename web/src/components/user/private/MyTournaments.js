@@ -4,9 +4,9 @@ import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import IconButton from "@mui/material/IconButton";
 import {TournamentsResponse} from "../../../response/TournamentsResponse";
-import {InscriptionsRequest} from "../../../request/InscriptionsRequest";
 import {QueryParams} from "../../../httpUtils/QueryParams";
 import AddUser from "./AddUser";
+import {MyTournamentsRequest} from "../../../request/MyTournamentsRequest";
 
 const MyTournaments = () => {
     const authContext = React.useContext(AuthContext);
@@ -24,7 +24,7 @@ const MyTournaments = () => {
        pageSize: 2,
        page: 1,
        rowsPerPageOptions: [2, 5, 10, 20],
-       sortBy: 'tournament.id',
+       sortBy: 'name',
        sortOrder:'ASCENDING',
    });
 
@@ -65,7 +65,7 @@ const MyTournaments = () => {
     React.useEffect(() => {
 
 
-        const inscriptionsRequest = InscriptionsRequest.from(
+        const myTournamentsRequest = MyTournamentsRequest.from(
             new QueryParams({
                 page: data.page,
                 pageSize: data.pageSize,
@@ -74,7 +74,7 @@ const MyTournaments = () => {
             })
         )
 
-        handleGetTournaments(inscriptionsRequest)
+        handleGetTournaments(myTournamentsRequest)
             .then(r => {
                 updateData("totalRows", r.totalCount);
                 updateData("rows", r.pageItems);

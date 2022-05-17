@@ -3,10 +3,9 @@ import {RequestBuilder} from "../httpUtils/RequestBuilder";
 import {QueryParams} from "../httpUtils/QueryParams";
 import {UnauthorizedException} from "../errors/UnauthorizedException";
 import {TournamentsResponse} from "../response/TournamentsResponse";
-import {InscriptionsResponse} from "../response/InscriptionsResponse";
 
 export class MyTournamentsRequest {
-    getURL = UrlConstants.TOURNAMENTS;
+    getURL = UrlConstants.MYSELF_TOURNAMENTS;
     response;
     request;
 
@@ -21,7 +20,7 @@ export class MyTournamentsRequest {
     }
 
     static from(params: QueryParams) {
-        return new TournamentsResponse(params);
+        return new MyTournamentsRequest(params);
     }
 
     async fetch(){
@@ -37,6 +36,6 @@ export class MyTournamentsRequest {
 
     async fetchAsPaged(): Promise<TournamentsResponse>{
         const response = await this.fetchAsJSON();
-        return new InscriptionsResponse(response);
+        return new TournamentsResponse(response);
     }
 }
