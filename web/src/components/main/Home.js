@@ -5,7 +5,7 @@ import {Route, Routes} from 'react-router-dom';
 import Signout from "../user/private/Signout";
 import Container from "@mui/material/Container";
 import MyInscriptions from "../user/private/MyInscriptions";
-import MyMatches from "../user/private/MyMatches";
+import AddGuess from "../user/private/AddGuess";
 import AuthContext from "../context/AuthContext";
 import NewTournament from "../user/private/NewTournament";
 import MyTournaments from "../user/private/MyTournaments";
@@ -21,7 +21,7 @@ const Home = () => {
             <Route path="/inscripciones" element={authContext.authenticated && <MyInscriptions/>} ></Route>
             <Route path="/inscripciones/:id/positions" element={authContext.authenticated && <MyInscriptions/>} ></Route>
             <Route path="/nuevo-torneo" element={authContext.authenticated && <NewTournament/>} ></Route>
-            <Route path="/mis-partidas" element={authContext.authenticated && <MyMatches/>}></Route>
+            <Route path="/nueva-jugada" element={authContext.authenticated && <AddGuess/>}></Route>
             <Route path="/logout" element={<Signout/>} ></Route>
         </Routes>
     );

@@ -20,7 +20,7 @@ const MyInscriptions = () => {
         pageSize: 2,
         page: 1,
         rowsPerPageOptions: [2, 5, 10, 20],
-        sortBy: 'tournament.id',
+        sortBy: 'tournament.name',
         sortOrder:'ASCENDING',
     });
 
