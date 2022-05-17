@@ -17,11 +17,11 @@ import {UserGuessRequest} from "../../../request/UserGuessRequest";
 const _incorrect_language_msg = 'Debe seleccionar un idioma';
 const _incorrect_guesses_msg = 'Debe ingresar un numero entre 1 y 7';
 
-const AddGuess = () => {
+const AddGuess = ({open, onClose}) => {
     const authContext = React.useContext(AuthContext);
     const [redirect, setRedirect] = React.useState(null);
 
-    const [open, setOpen] = React.useState(true);
+    // const [open, setOpen] = React.useState(true);
     const [success, setSuccess] = React.useState(false);
 
     const [guesses, setGuesses] = React.useState();
@@ -32,9 +32,9 @@ const AddGuess = () => {
     const [languageValid, setLanguageValid] = React.useState(true);
     const [languageHelper, setLanguageHelper] = React.useState('');
 
-    const onClose = () => {
-        setOpen(false);
-    }
+    // const onClose = () => {
+    //     setOpen(false);
+    // }
 
     const validateLanguage = (value) => {
         const isValid = !!LanguagesConstants[value];
@@ -70,8 +70,8 @@ const AddGuess = () => {
     }
 
     const handleSuccess = () => {
+        setSuccess(true);
         onClose();
-        setSuccess(true)
     }
 
     const handleGuessPost = async () => {
