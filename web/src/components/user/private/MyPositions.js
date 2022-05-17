@@ -31,7 +31,7 @@ const MyPositions = () => {
     const updateData = (k, v) => setData((prev) => ({ ...prev, [k]: v }));
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'Position', width: 70, sortable: false, },
+        { field: 'position', headerName: 'Position', width: 70, sortable: false, },
         { field: 'name', headerName: 'Name', width: 200, sortable: false, },
         { field: 'points', headerName: 'Points', width: 130, sortable: false, },
     ];
