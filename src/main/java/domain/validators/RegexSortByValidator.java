@@ -1,6 +1,7 @@
 package domain.validators;
 
 import constants.PatternConstants;
+import domain.requests.common.gets.lists.RequestCommonGetPagedList;
 import domain.requests.gets.lists.RequestGetPagedList;
 
 import javax.validation.ConstraintValidator;
@@ -9,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class RegexSortByValidator implements ConstraintValidator<RegexSortBy, RequestGetPagedList> {
+public class RegexSortByValidator implements ConstraintValidator<RegexSortBy, RequestCommonGetPagedList> {
 
     private List<String> allowedValues;
 
@@ -20,7 +21,7 @@ public class RegexSortByValidator implements ConstraintValidator<RegexSortBy, Re
     }
 
     @Override
-    public boolean isValid(RequestGetPagedList value, ConstraintValidatorContext context) {
+    public boolean isValid(RequestCommonGetPagedList value, ConstraintValidatorContext context) {
         final var regex = this.allowedValues.stream()
                                                    .reduce((accumulator, seed) -> accumulator + PatternConstants.OR_OPERATOR + seed)
                                                    .orElseThrow(() -> new IllegalArgumentException("allowedValues debe poseer al menos 1 elemento"));

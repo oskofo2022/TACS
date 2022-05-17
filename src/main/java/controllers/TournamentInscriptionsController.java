@@ -39,8 +39,8 @@ public abstract class TournamentInscriptionsController {
 
         final var specificationBuilder = new SpecificationBuilder();
 
-        specificationBuilder.andEqual("userId", user.getId())
-                            .andEqual("tournamentId", tournament.getId());
+        specificationBuilder.andEqual("identifier.userId", user.getId())
+                            .andEqual("identifier.tournamentId", tournament.getId());
 
         this.inscriptionRepository.findAll(specificationBuilder.build())
                                   .stream()
