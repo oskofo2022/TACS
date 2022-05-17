@@ -1,6 +1,7 @@
 const API_DOMAIN = 'localhost:8080';
 const API_URL = `http://${API_DOMAIN}/api`;
 
+const USERS = `${API_URL}/users`;
 const LOGIN = `${API_URL}/logins`;
 
 const TOURNAMENTS = `${API_URL}/tournaments`;
@@ -19,6 +20,7 @@ const ENGLISH_DICTIONARY = `${DICTIONARIES}/ENGLISH/words/{word}`;
 const SPANISH_DICTIONARY = `${DICTIONARIES}/SPANISH/words/{word}`;
 
 export const UrlConstants = Object.freeze({
+    USERS:USERS,
     LOGIN: LOGIN,
 
     TOURNAMENTS: TOURNAMENTS,
