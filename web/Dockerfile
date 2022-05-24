@@ -1,10 +1,13 @@
 FROM node:18-alpine AS build
-WORKDIR /usr/local/www/tacs
-COPY ./ /usr/local/www/tacs
-CMD ["npm", "install"]
-# CMD ["npm","run", "build"]
-# CMD ["npm", "install", "-g", "serve"]
-# ENTRYPOINT["serve", "-s", "build"]
-ENTRYPOINT ["npm", "start"]
+WORKDIR /app/tacs
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci
+COPY . ./
+RUN npm run build
+
+FROM nginx:stable-alpine
+COPY --from=build /app/tacs/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]
 EXPOSE 3000
 
