@@ -9,9 +9,9 @@ WORKDIR /usr/local/webapps
 ARG JAR_FILE=target/*.war
 COPY ${JAR_FILE} /wordle.war
 
-COPY /start.sh ./scripts/start.sh
-RUN ["chmod", "+x", "./scripts/start.sh"]
+COPY /entrypoint.sh ./entrypoint.sh
+RUN ["chmod", "+x", "./entrypoint.sh"]
 
-ENTRYPOINT ["./scripts/start.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 8080
 
