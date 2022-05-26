@@ -3,6 +3,7 @@ services:
   web-app-db:
     image: mysql
     container_name: wordle-db
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=wordle
@@ -13,6 +14,12 @@ services:
       - "8080:8080"
     depends_on:
       - web-app-db
+    environment:
+      WAIT_HOSTS: "web-app-db:3306"
+      WAIT_BEFORE: 10
+      WAIT_TIMEOUT: 120
+      WAIT_SLEEP_INTERVAL: 10
+      WAIT_HOST_CONNECT_TIMEOUT: 30
   wordle-front:
     build: ./web
     container_name: wordle-web-front
