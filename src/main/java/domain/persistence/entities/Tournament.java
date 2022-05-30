@@ -1,13 +1,16 @@
 package domain.persistence.entities;
 
+import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.errors.runtime.TournamentUnauthorizedUserActionRuntimeException;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
+import domain.persistence.constants.TypeConstants;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
 import domain.responses.gets.lists.ResponseGetListTournamentPositionResult;
 import domain.security.users.WordleUser;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -15,10 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -26,7 +26,8 @@ import java.util.stream.Collectors;
 public class Tournament {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private long id;
+    @Type(type = TypeConstants.UUID)
+    private UUID id;
 
     @Column(unique = true)
     @Size(max = 60)
@@ -51,21 +52,17 @@ public class Tournament {
     @NotNull
     private LocalDate endDate;
 
-    @OneToMany
-    @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID)
-    private List<Inscription> inscriptions;
+    @ManyToMany
+    @JoinTable(
+            name = TableConstants.Names.INSCRIPTIONS,
+            joinColumns = { @JoinColumn(name = ColumnConstants.Names.TOURNAMENT_ID) },
+            inverseJoinColumns = { @JoinColumn(name = ColumnConstants.Names.USER_ID) }
+    )
+    private List<User> players;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = ColumnConstants.Names.USER_CREATOR_ID)
     private User userCreator;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -115,14 +112,6 @@ public class Tournament {
         this.endDate = endDate;
     }
 
-    public List<Inscription> getInscriptions() {
-        return inscriptions;
-    }
-
-    public void setInscriptions(List<Inscription> inscriptions) {
-        this.inscriptions = inscriptions;
-    }
-
     public User getUserCreator() {
         return userCreator;
     }
@@ -131,28 +120,20 @@ public class Tournament {
         this.userCreator = userCreator;
     }
 
-    public void addInscription(Inscription inscription){
-        inscriptions.add(inscription);
-    }
-
-    public Inscription inscribe(User user) {
+    public void inscribe(User user) {
         this.getState()
             .validateInscriptionCreation();
 
-        final var inscriptionIdentifier = new InscriptionIdentifier();
-        inscriptionIdentifier.setTournamentId(this.getId());
-        inscriptionIdentifier.setUserId(user.getId());
+        if (this.players.stream()
+                        .anyMatch(p -> p.equals(user))) {
+            throw new DuplicateEntityFoundRuntimeException("Inscription");
+        }
 
-        final var inscription = new Inscription();
-        inscription.setTournament(this);
-        inscription.setUser(user);
-        inscription.setIdentifier(inscriptionIdentifier);
-
-        return inscription;
+        this.players.add(user);
     }
 
     public void validateAuthority(WordleUser wordleUser) {
-        if (wordleUser.getId() != this.userCreator.getId()) {
+        if (!wordleUser.getId().equals(this.userCreator.getId())) {
             throw new TournamentUnauthorizedUserActionRuntimeException();
         }
     }
@@ -162,11 +143,10 @@ public class Tournament {
             return Collections.emptyList();
         }
 
-        return this.inscriptions.stream()
-                                .map(Inscription::getUser)
-                                .map(this::getPosition)
-                                .sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
-                                .toList();
+        return this.players.stream()
+                           .map(this::getPosition)
+                           .sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
+                           .toList();
 
     }
 
@@ -200,5 +180,21 @@ public class Tournament {
     private boolean hasStarted() {
         return this.getState()
                    .hasStarted();
+    }
+
+    public List<User> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<User> players) {
+        this.players = players;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

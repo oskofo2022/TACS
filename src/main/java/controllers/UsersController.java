@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = UriConstants.Users.URL)
@@ -36,7 +38,8 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(path = UriConstants.Users.ID, produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetUser> get(@PathVariable Long userId) {
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseGetUser> get(@PathVariable UUID userId) {
 
         final var user = this.userRepository.findById(userId)
                                                   .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
@@ -46,6 +49,7 @@ public class UsersController extends PagedListController {
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseGetPagedList<ResponseGetListUser>> list(@Valid RequestGetListUser requestGetListUser)
     {
         final var responseGetPagedList = this.list(this.userRepository, requestGetListUser, u -> new ResponseGetListUser(u.getId(), u.getName(), u.getEmail()));
@@ -54,6 +58,7 @@ public class UsersController extends PagedListController {
 
     @PostMapping(consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public ResponseEntity<ResponsePostEntityCreation> post(@Valid @RequestBody RequestPostUser requestPostUser)
     {
         final var specificationBuilder = new SpecificationBuilder();

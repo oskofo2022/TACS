@@ -45,7 +45,7 @@ public abstract class RequestCommonGetPagedList {
 
     public String getSortBy() {
         return Optional.ofNullable(sortBy)
-                .orElseGet(this::defaultSortBy);
+                       .orElseGet(this::defaultSortBy);
     }
 
     public void setSortBy(String sortBy) {
@@ -53,7 +53,8 @@ public abstract class RequestCommonGetPagedList {
     }
 
     public SortOrder getSortOrder() {
-        return sortOrder;
+        return Optional.ofNullable(sortOrder)
+                       .orElse(SortOrder.ASCENDING);
     }
 
     public void setSortOrder(SortOrder sortOrder) {

@@ -7,15 +7,10 @@ import domain.persistence.entities.User;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
-import domain.persistence.repositories.InscriptionRepository;
 import domain.persistence.repositories.TournamentRepository;
-import domain.persistence.repositories.UserRepository;
 import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListPublicTournament;
 import domain.requests.posts.RequestPostTournament;
-import domain.security.WordleAuthenticationManager;
-import domain.security.users.WordleUser;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -30,7 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,9 +40,6 @@ public class TournamentControllerTest {
 
     @Mock
     private UserContextService userContextService;
-
-    @Mock
-    private InscriptionRepository inscriptionRepository;
 
     @InjectMocks
     private TournamentsController tournamentsController;
@@ -104,8 +96,9 @@ public class TournamentControllerTest {
         assertEquals(totalPages, responseGetPagedList.pageCount());
 
         for(int i = 0; i < tournaments.size(); i++){
-            assertEquals(tournaments.get(i).getName(), responseGetListTournament.get(i).Name());
-            assertEquals(tournaments.get(i).getState(), responseGetListTournament.get(i).tournamentState());
+            assertEquals(tournaments.get(i).getId(), responseGetListTournament.get(i).id());
+            assertEquals(tournaments.get(i).getName(), responseGetListTournament.get(i).name());
+            assertEquals(tournaments.get(i).getState(), responseGetListTournament.get(i).state());
             assertEquals(tournaments.get(i).getVisibility(), responseGetListTournament.get(i).visibility());
             assertEquals(tournaments.get(i).getStartDate(), responseGetListTournament.get(i).startDate());
             assertEquals(tournaments.get(i).getEndDate(), responseGetListTournament.get(i).endDate());
@@ -120,8 +113,8 @@ public class TournamentControllerTest {
 
     @Test
     void post() {
-        final var idTournament = 4;
-        final long idUserCreator = 1;
+        final var tournamentId = UUID.randomUUID();
+        final var userCreatorId = UUID.randomUUID();
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setRequestURI(UriConstants.DELIMITER + UriConstants.Tournaments.URL);
@@ -135,20 +128,19 @@ public class TournamentControllerTest {
         requestPostTournament.setVisibility(Visibility.PUBLIC);
 
         final var user = new User();
-        user.setId(idUserCreator);
+        user.setId(userCreatorId);
         user.setName("someName");
         user.setEmail("some@email.com");
         user.setPassword("someKindOfHardcorePassword");
 
         final Supplier<Tournament> getArgumentMatcherTournament = () -> Mockito.argThat((Tournament t) -> t.getName().equals(requestPostTournament.getName())
-        && t.getLanguage().equals(requestPostTournament.getLanguage()) && t.getVisibility().equals(requestPostTournament.getVisibility()) && t.getStartDate().equals(requestPostTournament.getStartDate())
-        && t.getEndDate().equals(requestPostTournament.getEndDate()) && t.getVisibility().equals(requestPostTournament.getVisibility()));
+                                                                        && t.getLanguage().equals(requestPostTournament.getLanguage()) && t.getVisibility().equals(requestPostTournament.getVisibility()) && t.getStartDate().equals(requestPostTournament.getStartDate())
+                                                                        && t.getEndDate().equals(requestPostTournament.getEndDate()) && t.getVisibility().equals(requestPostTournament.getVisibility()));
 
         Mockito.when(this.userContextService.get()).thenReturn(user);
         Mockito.when(this.tournamentRepository.save(getArgumentMatcherTournament.get())).then((iom) -> {
             final var tournament = iom.getArgument(0, Tournament.class);
-            tournament.setId(idTournament);
-            tournament.inscribe(user);
+            tournament.setId(tournamentId);
             return tournament;
         });
 
@@ -156,13 +148,11 @@ public class TournamentControllerTest {
         final var headerLocation = responseEntity.getHeaders().get("Location");
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertEquals(idTournament, responseEntity.getBody().getId());
+        assertEquals(tournamentId, responseEntity.getBody().getId());
         assertNotNull(headerLocation);
-        assertEquals("http://localhost/users/myself/tournaments?id=4", headerLocation.get(0));
+        assertEquals("http://localhost/users/myself/tournaments?id=%s".formatted(tournamentId), headerLocation.get(0));
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();
         Mockito.verify(this.tournamentRepository, Mockito.times(1)).save(getArgumentMatcherTournament.get());
-
     }
-
 }

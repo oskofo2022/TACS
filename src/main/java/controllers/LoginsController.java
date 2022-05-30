@@ -9,6 +9,7 @@ import domain.security.contracts.SessionCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,8 +28,8 @@ public class LoginsController {
     }
 
     @PostMapping(consumes = MediaTypeConstants.JSON, produces = MediaTypeConstants.JSON)
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponsePostUserLogin> post(@Valid @RequestBody RequestPostLogin requestPostLogin) {
-
         final var user = this.wordleAuthenticationManager.authenticate(requestPostLogin.getEmail(), requestPostLogin.getPassword());
 
         final var responseCookie = this.sessionCreator.generateResponseCookie(user);

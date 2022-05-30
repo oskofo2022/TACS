@@ -1,13 +1,15 @@
 package domain.responses.posts;
 
-public class ResponsePostEntityCreation {
-    private final long id;
+import java.util.UUID;
 
-    public ResponsePostEntityCreation(long id) {
+public class ResponsePostEntityCreation {
+    private final UUID id;
+
+    public ResponsePostEntityCreation(UUID id) {
         this.id = id;
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 }

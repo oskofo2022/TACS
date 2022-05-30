@@ -2,12 +2,14 @@ package domain.persistence.entities;
 
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
+import domain.persistence.constants.TypeConstants;
 import domain.persistence.entities.enums.Language;
-import domain.persistence.entities.enums.TournamentState;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = TableConstants.Names.MATCHES)
@@ -15,7 +17,8 @@ public class Match {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @Type(type = TypeConstants.UUID)
+    private UUID id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = ColumnConstants.Names.USER_ID, referencedColumnName = ColumnConstants.Names.ID)
@@ -30,14 +33,6 @@ public class Match {
     @NotNull
     @Enumerated(EnumType.STRING)
     private Language language;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public User getUser() {
         return user;
@@ -69,5 +64,13 @@ public class Match {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

@@ -1,13 +1,15 @@
 package domain.requests.posts;
 
-public class RequestPostTournamentInscription {
-    public long userId;
+import java.util.UUID;
 
-    public long getUserId() {
+public class RequestPostTournamentInscription {
+    public UUID userId;
+
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 }

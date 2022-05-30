@@ -1,5 +1,6 @@
 package controllers;
 
+import constants.SuppressWarningsConstants;
 import domain.persistence.entities.Match;
 import domain.persistence.entities.User;
 import domain.persistence.entities.enums.Language;
@@ -18,10 +19,12 @@ import org.springframework.http.HttpStatus;
 
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings(SuppressWarningsConstants.ALL)
 public class UserMatchesControllerTest {
 
     @Mock
@@ -35,8 +38,7 @@ public class UserMatchesControllerTest {
 
     @Test
     void postWithoutDuplicatedFound(){
-
-        final long idUser = 1;
+        final var idUser = UUID.randomUUID();
 
         final var user = new User();
         user.setId(idUser);
@@ -70,6 +72,5 @@ public class UserMatchesControllerTest {
         Mockito.verify(this.matchRepository,Mockito.times(1)).findAll(Mockito.any(Specification.class));
         Mockito.verify(this.matchRepository,Mockito.times(1)).saveAll(matchList);
         Mockito.verify(this.userContextService,Mockito.times(1)).get();
-
     }
 }

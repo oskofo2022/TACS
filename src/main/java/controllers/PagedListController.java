@@ -7,10 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 public abstract class PagedListController {
-    protected <TEntity, TResponseGetList> ResponseGetPagedList<TResponseGetList> list(JpaRepositoryImplementation<TEntity, Long> abstractRepository, RequestGetPagedList requestGetPagedList, Function<TEntity, TResponseGetList> mapping) {
+    protected <TEntity, TResponseGetList> ResponseGetPagedList<TResponseGetList> list(JpaRepositoryImplementation<TEntity, UUID> abstractRepository, RequestGetPagedList requestGetPagedList, Function<TEntity, TResponseGetList> mapping) {
         final Optional<Specification<TEntity>> filter = requestGetPagedList.getFilter()
                                                                            .map(RSQLJPASupport::toSpecification);
         final var pageRequest = requestGetPagedList.getPageRequest();

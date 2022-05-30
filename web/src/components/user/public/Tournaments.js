@@ -41,7 +41,7 @@ const Tournaments = () => {
         { field: 'language', headerName: 'Language', width: 130, sortable: false, },
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
-        { field: 'tournamentState', headerName: 'State', width: 130, sortable: false, },
+        { field: 'state', headerName: 'State', width: 130, sortable: false, },
         { field: 'inscription', headerName: 'Inscript', width: 130, sortable: false, hide: !authContext.authenticated, renderCell:
                 (t) => (
                     <IconButton

@@ -1,7 +1,6 @@
 package controllers;
 
-import domain.persistence.entities.Inscription;
-import domain.persistence.entities.InscriptionIdentifier;
+import constants.SuppressWarningsConstants;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.User;
 import domain.persistence.entities.enums.Language;
@@ -9,26 +8,25 @@ import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
 import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListTournamentPosition;
-import domain.responses.gets.lists.ResponseGetPagedList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings(SuppressWarningsConstants.ALL)
 public class MyTournamentsPositionsControllerTest {
 
     @Mock
@@ -38,90 +36,56 @@ public class MyTournamentsPositionsControllerTest {
     private MyTournamentsPositionsController myTournamentsPositionsController;
 
     @Test
-    void getList(){
+    void list() {
 
-        final long idUser = 1;
-        final long idTournamentOne = 4;
-        final long idTournamentTwo = 5;
+        final var user = new User();
+        user.setMatches(Collections.emptyList());
 
-        final var user = Mockito.mock(User.class);
-        user.setId(idUser);
-        user.setName("someName");
-        user.setEmail("some@email.com");
-        user.setPassword("someKindOfHardcorePassword");
+        final var firstTournament = new Tournament();
+        firstTournament.setId(UUID.randomUUID());
+        firstTournament.setName("First Tournament");
+        firstTournament.setVisibility(Visibility.PUBLIC);
+        firstTournament.setStartDate(LocalDate.now());
+        firstTournament.setEndDate(LocalDate.now().plusDays(5));
+        firstTournament.setState(TournamentState.READY);
+        firstTournament.setLanguage(Language.SPANISH);
+        firstTournament.setPlayers(List.of(user));
 
-        final var tournamentOne = new Tournament();
-        tournamentOne.setName("Tournament One");
-        tournamentOne.setState(TournamentState.READY);
-        tournamentOne.setVisibility(Visibility.PUBLIC);
-        tournamentOne.setStartDate(LocalDate.now());
-        tournamentOne.setEndDate(LocalDate.now().plusMonths(1));
-        tournamentOne.setLanguage(Language.SPANISH);
-        tournamentOne.setUserCreator(user);
+        final var secondTournament = new Tournament();
+        secondTournament.setId(UUID.randomUUID());
+        secondTournament.setName("Second Tournament");
+        secondTournament.setVisibility(Visibility.PRIVATE);
+        secondTournament.setStartDate(LocalDate.now().minusDays(60));
+        secondTournament.setEndDate(LocalDate.now().minusDays(55));
+        secondTournament.setState(TournamentState.ENDED);
+        secondTournament.setLanguage(Language.ENGLISH);
+        secondTournament.setPlayers(List.of(user));
 
-        final var tournamentTwo = new Tournament();
-        tournamentTwo.setName("Tournament Two");
-        tournamentTwo.setState(TournamentState.READY);
-        tournamentTwo.setVisibility(Visibility.PUBLIC);
-        tournamentTwo.setStartDate(LocalDate.now());
-        tournamentTwo.setEndDate(LocalDate.now().plusMonths(2));
-        tournamentTwo.setLanguage(Language.SPANISH);
-        tournamentTwo.setUserCreator(user);
+        final var inscribedTournaments = Arrays.asList(firstTournament, secondTournament);
 
-        final var requestGetListTournamentPosition = new RequestGetListTournamentPosition();
-        requestGetListTournamentPosition.setTournamentName("Tournament One");
-        requestGetListTournamentPosition.setTournamentState(TournamentState.READY);
+        user.setInscribedTournaments(inscribedTournaments);
 
-        final var inscriptions = new ArrayList<Inscription>();
-
-        InscriptionIdentifier inscriptionIdentifierOne = new InscriptionIdentifier();
-        inscriptionIdentifierOne.setTournamentId(idTournamentOne);
-        inscriptionIdentifierOne.setUserId(user.getId());
-
-        Inscription inscriptionOne = new Inscription();
-        inscriptionOne.setIdentifier(inscriptionIdentifierOne);
-        inscriptionOne.setTournament(tournamentOne);
-        inscriptionOne.setUser(user);
-
-        tournamentOne.setInscriptions(new ArrayList<>());
-        tournamentOne.addInscription(inscriptionOne);
-
-        InscriptionIdentifier inscriptionIdentifierTwo = new InscriptionIdentifier();
-        inscriptionIdentifierTwo.setTournamentId(idTournamentTwo);
-        inscriptionIdentifierTwo.setUserId(user.getId());
-
-        Inscription inscriptionTwo = new Inscription();
-        inscriptionTwo.setIdentifier(inscriptionIdentifierTwo);
-        inscriptionTwo.setTournament(tournamentTwo);
-        inscriptionTwo.setUser(user);
-
-        tournamentTwo.setInscriptions(new ArrayList<>());
-        tournamentTwo.addInscription(inscriptionTwo);
-
-        inscriptions.add(inscriptionOne);
-        inscriptions.add(inscriptionTwo);
-
-        final long totalElements = 1;
-        final long totalPages = 1;
+        var requestGetListTournamentPosition = new RequestGetListTournamentPosition();
 
         Mockito.when(this.userContextService.get()).thenReturn(user);
-        Mockito.when(user.getInscriptions()).thenReturn(inscriptions);
 
         final var responseEntity = this.myTournamentsPositionsController.list(requestGetListTournamentPosition);
         final var responseGetPagedList = responseEntity.getBody();
-        final var responseGetListTournamentPosition = responseGetPagedList.pageItems();
+        final var responsesGetListTournamentPosition = responseGetPagedList.pageItems();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(totalElements, responseGetPagedList.totalCount());
-        assertEquals(totalPages, responseGetPagedList.pageCount());
+        assertEquals(inscribedTournaments.size(), responseGetPagedList.totalCount());
+        assertEquals(1, responseGetPagedList.pageCount());
 
-        for(int i = 0; i < tournamentOne.getInscriptions().size(); i++){
-            assertEquals(inscriptions.get(i).getTournament().getEndDate(), responseGetListTournamentPosition.get(i).endDate());
-            assertEquals(inscriptions.get(i).getTournament().getStartDate(), responseGetListTournamentPosition.get(i).startDate());
-        }
-        for(int i = 0; i < tournamentTwo.getInscriptions().size(); i++){
-            assertEquals(inscriptions.get(i).getTournament().getEndDate(), responseGetListTournamentPosition.get(i).endDate());
-            assertEquals(inscriptions.get(i).getTournament().getStartDate(), responseGetListTournamentPosition.get(i).startDate());
+        for(int i = 0; i < inscribedTournaments.size(); i++){
+            assertEquals(inscribedTournaments.get(i).getId(), responsesGetListTournamentPosition.get(i).id());
+            assertEquals(inscribedTournaments.get(i).getName(), responsesGetListTournamentPosition.get(i).name());
+            assertEquals(inscribedTournaments.get(i).getState(), responsesGetListTournamentPosition.get(i).state());
+            assertEquals(inscribedTournaments.get(i).getVisibility(), responsesGetListTournamentPosition.get(i).visibility());
+            assertEquals(inscribedTournaments.get(i).getStartDate(), responsesGetListTournamentPosition.get(i).startDate());
+            assertEquals(inscribedTournaments.get(i).getEndDate(), responsesGetListTournamentPosition.get(i).endDate());
+            assertEquals(inscribedTournaments.get(i).getLanguage(), responsesGetListTournamentPosition.get(i).language());
+            assertEquals(inscribedTournaments.get(i).listPositions(), responsesGetListTournamentPosition.get(i).positions());
         }
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();

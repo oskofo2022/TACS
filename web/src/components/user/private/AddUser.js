@@ -48,7 +48,7 @@ const AddUser = ({open, tournamentId, tournamentName, onClose}) => {
 
     const validateUserId = (value) => {
         const empty_re = new RegExp("^$");
-        const correct_re = /^\d+$/;
+        const correct_re = /^.{35-255}$/;
         const isCorrect = correct_re.test(value);
         const isEmpty = empty_re.test(value);
         const isValid = (isCorrect && !isEmpty);

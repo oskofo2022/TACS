@@ -20,7 +20,7 @@ const MyInscriptions = () => {
         pageSize: 2,
         page: 1,
         rowsPerPageOptions: [2, 5, 10, 20],
-        sortBy: 'tournament.name',
+        sortBy: 'name',
         sortOrder:'ASCENDING',
     });
 
@@ -40,7 +40,7 @@ const MyInscriptions = () => {
         { field: 'language', headerName: 'Language', width: 130, sortable: false, },
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
-        { field: 'tournamentState', headerName: 'State', width: 130, sortable: false, },
+        { field: 'state', headerName: 'State', width: 130, sortable: false, },
         { field: 'positionURL', headerName: 'Positions', width: 130, sortable: false,
             renderCell:
                 (positions) => (

@@ -45,7 +45,7 @@ public class JwtService implements SessionCreator {
 
     private String generate(WordleUser wordleUser) {
         return Jwts.builder()
-                   .setId(Long.toString(wordleUser.getId()))
+                   .setId(wordleUser.getId().toString())
                    .setSubject(wordleUser.getEmail())
                    .setIssuedAt(new Date(System.currentTimeMillis()))
                    .setExpiration(new Date(System.currentTimeMillis() + this.jwtExpirationMilliseconds))

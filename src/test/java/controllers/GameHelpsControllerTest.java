@@ -28,8 +28,7 @@ public class GameHelpsControllerTest {
     private GameHelpsController gameHelpsController;
 
     @Test
-    void list(){
-
+    void list() {
         final var totalWordsResponse = 1;
 
         final var requestGetListGameHelp = new RequestGetListGameHelp();

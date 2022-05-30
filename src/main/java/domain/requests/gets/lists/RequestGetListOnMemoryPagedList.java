@@ -5,6 +5,8 @@ import domain.persistence.entities.Tournament;
 import domain.requests.common.gets.lists.RequestCommonGetPagedList;
 import domain.responses.gets.lists.ResponseGetPagedList;
 
+import java.util.Comparator;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -22,9 +24,14 @@ public abstract class RequestGetListOnMemoryPagedList<T> extends RequestCommonGe
                                                    .count();
         final var pageCount = ((totalCount - 1) / this.getPageSize()) + 1;
 
-        // TODO: Implement sorting
+        final var comparator = this.getComparatorMap()
+                                                 .get(this.getSortBy());
+
+        final var sortOrder = this.getSortOrder();
+
         final var pageElements = streamSupplier.get()
                                                                  .filter(this::isValid)
+                                                                 .sorted(sortOrder.getComparator(comparator))
                                                                  .skip(this.getElementsToSkip())
                                                                  .limit(this.getPageSize())
                                                                  .map(mapping)
@@ -33,4 +40,6 @@ public abstract class RequestGetListOnMemoryPagedList<T> extends RequestCommonGe
     }
 
     public abstract boolean isValid(T instance);
+
+    public abstract Map<String, Comparator<T>> getComparatorMap();
 }

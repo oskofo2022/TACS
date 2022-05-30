@@ -49,7 +49,7 @@ public class UserMatchesController {
 
         this.matchRepository.saveAll(matches);
 
-         return ResponseEntity.ok()
-                              .build();
+        return ResponseEntity.ok()
+                             .build();
     }
 }

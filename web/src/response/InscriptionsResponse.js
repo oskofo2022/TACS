@@ -19,7 +19,7 @@ export class InscriptionsResponse extends PagedResponse {
                     t.language,
                     t.startDate,
                     t.endDate,
-                    t.tournamentState,
+                    t.state,
                     t.visibility
                 )
         });

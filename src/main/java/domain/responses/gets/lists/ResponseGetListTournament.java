@@ -5,11 +5,12 @@ import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-public record ResponseGetListTournament(long id,
-                                        String Name,
+public record ResponseGetListTournament(UUID id,
+                                        String name,
                                         Language language,
                                         Visibility visibility,
-                                        TournamentState tournamentState,
+                                        TournamentState state,
                                         LocalDate startDate,
                                         LocalDate endDate) { }

@@ -22,6 +22,10 @@ public class ErrorMessageConstants {
         return INVALID_FILE_PATH.formatted(filePath);
     }
     public static <T> String getDuplicateEntityFound(Class<T> specificClass) {
-        return DUPLICATE_ENTITY_FOUND.formatted(specificClass.getSimpleName());
+        return getDuplicateEntityFound(specificClass.getSimpleName());
+    }
+
+    public static <T> String getDuplicateEntityFound(String duplicateName) {
+        return DUPLICATE_ENTITY_FOUND.formatted(duplicateName);
     }
 }

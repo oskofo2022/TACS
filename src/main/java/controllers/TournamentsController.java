@@ -4,7 +4,6 @@ import constants.MediaTypeConstants;
 import constants.UriConstants;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.enums.TournamentState;
-import domain.persistence.repositories.InscriptionRepository;
 import domain.persistence.repositories.TournamentRepository;
 import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListPublicTournament;
@@ -27,13 +26,11 @@ public class TournamentsController extends PagedListController {
 
     private final TournamentRepository tournamentRepository;
     private final UserContextService userContextService;
-    private final InscriptionRepository inscriptionRepository;
 
     @Autowired
-    public TournamentsController(TournamentRepository tournamentRepository, UserContextService userContextService, InscriptionRepository inscriptionRepository) {
+    public TournamentsController(TournamentRepository tournamentRepository, UserContextService userContextService) {
         this.tournamentRepository = tournamentRepository;
         this.userContextService = userContextService;
-        this.inscriptionRepository = inscriptionRepository;
     }
 
     // Only public's tournaments, was thinked for general usage without authentication
@@ -55,20 +52,9 @@ public class TournamentsController extends PagedListController {
 
         final var user = this.userContextService.get();
 
-        var tournament = new Tournament();
-        tournament.setName(requestPostTournament.getName());
-        tournament.setEndDate(requestPostTournament.getEndDate());
-        tournament.setStartDate(requestPostTournament.getStartDate());
-        tournament.setLanguage(requestPostTournament.getLanguage());
-        tournament.setVisibility(requestPostTournament.getVisibility());
-        tournament.setState(TournamentState.READY);
-        tournament.setUserCreator(user);
+        var tournament = user.createTournament(requestPostTournament);
 
         this.tournamentRepository.save(tournament);
-
-        final var inscription = tournament.inscribe(user);
-
-        this.inscriptionRepository.save(inscription);
 
         final var location = ServletUriComponentsBuilder.fromCurrentContextPath()
                                                              .path(UriConstants.DELIMITER + UriConstants.Users.Myself.Tournaments.URL)

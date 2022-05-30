@@ -16,6 +16,10 @@ public class ErrorCodeConstants {
     }
 
     public static <T> String getDuplicateEntityFound(Class<T> specificClass) {
-        return DUPLICATE_ENTITY_FOUND.formatted(specificClass.getSimpleName().toUpperCase());
+        return getDuplicateEntityFound(specificClass.getSimpleName());
+    }
+
+    public static <T> String getDuplicateEntityFound(String duplicateName) {
+        return DUPLICATE_ENTITY_FOUND.formatted(duplicateName.toUpperCase());
     }
 }

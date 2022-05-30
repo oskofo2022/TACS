@@ -2,7 +2,6 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
-import domain.persistence.entities.Inscription;
 import domain.persistence.sessions.UserContextService;
 import domain.requests.gets.lists.RequestGetListTournamentPosition;
 import domain.responses.gets.lists.ResponseGetListTournamentPosition;
@@ -32,10 +31,9 @@ public class MyTournamentsPositionsController {
     public ResponseEntity<ResponseGetPagedList<ResponseGetListTournamentPosition>> list(@Valid RequestGetListTournamentPosition requestGetListTournamentPosition) {
         final var user = this.userContextService.get();
 
-        final var responseGetPagedList = requestGetListTournamentPosition.paginate(() -> user.getInscriptions()
-                                                                                                                                         .stream()
-                                                                                                                                         .map(Inscription::getTournament),
-                                                                                                                               t -> new ResponseGetListTournamentPosition(t.getName(), t.getState(), t.getStartDate(), t.getEndDate(), t.listPositions()));
+        final var responseGetPagedList = requestGetListTournamentPosition.paginate(() -> user.getInscribedTournaments()
+                                                                                                                                         .stream(),
+                                                                                                                               t -> new ResponseGetListTournamentPosition(t.getId(), t.getName(), t.getState(), t.getStartDate(), t.getEndDate(), t.getVisibility(), t.getLanguage(), t.listPositions()));
         return ResponseEntity.ok(responseGetPagedList);
     }
 }

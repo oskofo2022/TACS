@@ -2,21 +2,21 @@ package domain.requests.gets.lists;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import constants.RSQLConstants;
+import domain.persistence.entities.Tournament;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
+import domain.requests.common.gets.lists.RequestCommonGetPagedList;
+import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.validators.RegexSortBy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.*;
 
-@RegexSortBy(allowedValues = { "tournament.name", "tournament.state", "tournament.language", "tournament.id", "tournament.startDate", "tournament.endDate", "tournament.visibility" })
-public class RequestGetListUserInscription extends RequestGetPagedList {
-    @JsonIgnore
-    private long userId;
-
-    private Long tournamentId;
+@RegexSortBy(allowedValues = { "name", "state", "language", "id", "startDate", "endDate", "visibility" })
+public class RequestGetListUserInscription extends RequestGetListOnMemoryPagedList<Tournament> {
+    private UUID tournamentId;
 
     private String tournamentName;
 
@@ -37,14 +37,6 @@ public class RequestGetListUserInscription extends RequestGetPagedList {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate tournamentTopEndDate;
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 
     public String getTournamentName() {
         return tournamentName;
@@ -110,30 +102,42 @@ public class RequestGetListUserInscription extends RequestGetPagedList {
         this.tournamentTopEndDate = tournamentTopEndDate;
     }
 
-    public long getTournamentId() {
+    public UUID getTournamentId() {
         return tournamentId;
     }
 
-    public void setTournamentId(long tournamentId) {
+    public void setTournamentId(UUID tournamentId) {
         this.tournamentId = tournamentId;
     }
 
+    @JsonIgnore
     @Override
-    protected void addRestrictions() {
-        this.addRestriction(RSQLConstants.Filters.getEqual("user.id"), this.userId);
-        this.addRestriction(RSQLConstants.Filters.getLike("tournament.name"), this.tournamentName);
-        this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("tournament.endDate"), this.tournamentBottomEndDate);
-        this.addRestriction(RSQLConstants.Filters.getLowerThan("tournament.endDate"), Optional.ofNullable(this.tournamentTopEndDate).map(d -> d.plusDays(1)).orElse(null));
-        this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("tournament.startDate"), this.tournamentBottomStartDate);
-        this.addRestriction(RSQLConstants.Filters.getLowerThan("tournament.startDate"), Optional.ofNullable(this.tournamentTopStartDate).map(d -> d.plusDays(1)).orElse(null));
-        this.addRestriction(RSQLConstants.Filters.getEqual("tournament.id"), this.tournamentId);
-        this.addRestriction(RSQLConstants.Filters.getEqual("tournament.state"), this.tournamentState);
-        this.addRestriction(RSQLConstants.Filters.getEqual("tournament.language"), this.tournamentLanguage);
-        this.addRestriction(RSQLConstants.Filters.getEqual("tournament.visibility"), this.tournamentVisibility);
+    public boolean isValid(Tournament tournament) {
+        return (this.tournamentName == null || this.tournamentName.isBlank() || tournament.getName().contains(this.tournamentName))
+                && (this.tournamentState == null || tournament.getState() == this.tournamentState)
+                && (this.tournamentBottomEndDate == null || this.tournamentBottomEndDate.compareTo(tournament.getEndDate()) >= 0)
+                && (this.tournamentTopEndDate == null || this.tournamentTopEndDate.compareTo(tournament.getEndDate()) <= 0)
+                && (this.tournamentBottomStartDate == null || this.tournamentBottomStartDate.compareTo(tournament.getStartDate()) >= 0)
+                && (this.tournamentTopStartDate == null || this.tournamentTopStartDate.compareTo(tournament.getStartDate()) <= 0);
+    }
+
+    @Override
+    public Map<String, Comparator<Tournament>> getComparatorMap() {
+        return new HashMap<>() {
+            {
+                put("name", Comparator.comparing(Tournament::getName));
+                put("state", Comparator.comparing(Tournament::getState));
+                put("language", Comparator.comparing(Tournament::getLanguage));
+                put("id", Comparator.comparing(Tournament::getId));
+                put("startDate", Comparator.comparing(Tournament::getStartDate));
+                put("endDate", Comparator.comparing(Tournament::getEndDate));
+                put("visibility", Comparator.comparing(Tournament::getVisibility));
+            }
+        };
     }
 
     @Override
     protected String defaultSortBy() {
-        return "tournament.name";
+        return "name";
     }
 }

@@ -1,5 +1,6 @@
 package domain.persistence.entities;
 
+import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.errors.runtime.TournamentStateInvalidInscriptionRuntimeException;
 import domain.errors.runtime.TournamentUnauthorizedUserActionRuntimeException;
 import domain.persistence.entities.enums.Language;
@@ -26,42 +27,42 @@ class TournamentTest {
     @Test
     void inscribe() {
         final var user = new User();
-        user.setId(1);
-        this.tournament.setId(2);
+        user.setId(UUID.randomUUID());
+        this.tournament.setId(UUID.randomUUID());
+        this.tournament.setPlayers(new ArrayList<>());
+        this.tournament.setState(TournamentState.READY);
 
-        final var tournamentState = TournamentState.READY;
-
-        this.tournament.setState(tournamentState);
-
-        final var inscription = this.tournament.inscribe(user);
-
-        assertEquals(user, inscription.getUser());
-        assertEquals(user.getId(), inscription.getIdentifier().getUserId());
-        assertEquals(tournament, inscription.getTournament());
-        assertEquals(tournament.getId(), inscription.getIdentifier().getTournamentId());
-        assertEquals(tournament, inscription.getTournament());
+        assertDoesNotThrow(() -> this.tournament.inscribe(user));
     }
 
     @Test
     void inscribeInvalidState() {
         final var user = new User();
-        user.setId(1);
-        this.tournament.setId(2);
-
-        final var tournamentState = TournamentState.STARTED;
-
-        this.tournament.setState(tournamentState);
+        user.setId(UUID.randomUUID());
+        this.tournament.setId(UUID.randomUUID());
+        this.tournament.setState(TournamentState.STARTED);
 
         assertThrows(TournamentStateInvalidInscriptionRuntimeException.class, () -> this.tournament.inscribe(user));
     }
 
     @Test
+    void inscribeDuplicate() {
+        final var user = new User();
+        user.setId(UUID.randomUUID());
+        this.tournament.setId(UUID.randomUUID());
+        this.tournament.setPlayers(List.of(user));
+        this.tournament.setState(TournamentState.READY);
+
+        assertThrows(DuplicateEntityFoundRuntimeException.class, () -> this.tournament.inscribe(user));
+    }
+
+    @Test
     void validateAuthority() {
         final var user = new User();
-        user.setId(1);
+        user.setId(UUID.randomUUID());
         this.tournament.setUserCreator(user);
 
-        assertThrows(TournamentUnauthorizedUserActionRuntimeException.class, () -> this.tournament.validateAuthority(new WordleUser("username", "password", "some@email.com", 2)));
+        assertThrows(TournamentUnauthorizedUserActionRuntimeException.class, () -> this.tournament.validateAuthority(new WordleUser("username", "password", "some@email.com", UUID.randomUUID())));
     }
 
     @Test
@@ -92,20 +93,11 @@ class TournamentTest {
         final var thirdUser = new User();
         thirdUser.setMatches(Arrays.asList(firstMatchThirdUser, secondMatchThirdUser, thirdMatchThirdUser));
 
-        final var firstUserInscription = new Inscription();
-        firstUserInscription.setUser(firstUser);
-
-        final var secondUserInscription = new Inscription();
-        secondUserInscription.setUser(secondUser);
-
-        final var thirdUserInscription = new Inscription();
-        thirdUserInscription.setUser(thirdUser);
-
         this.tournament.setStartDate(tournamentStartDate);
         this.tournament.setState(TournamentState.STARTED);
         this.tournament.setEndDate(tournamentStartDate.plusDays(5));
         this.tournament.setLanguage(tournamentLanguage);
-        this.tournament.setInscriptions(Arrays.asList(firstUserInscription, secondUserInscription, thirdUserInscription));
+        this.tournament.setPlayers(Arrays.asList(firstUser, secondUser, thirdUser));
 
         final var positions = this.tournament.listPositions();
         final var sortedPositions = positions.stream()

@@ -1,12 +1,10 @@
 package controllers;
 
-import constants.UriConstants;
+import constants.SuppressWarningsConstants;
 import domain.requests.posts.RequestPostLogin;
-import domain.responses.posts.ResponsePostUserLogin;
 import domain.security.WordleAuthenticationManager;
 import domain.security.contracts.SessionCreator;
 import domain.security.users.WordleUser;
-import org.hibernate.sql.MckoiCaseFragment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,15 +13,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings(SuppressWarningsConstants.ALL)
 public class LoginControllerTest {
 
     @Mock
@@ -36,15 +33,14 @@ public class LoginControllerTest {
     private LoginsController loginsController;
 
     @Test
-    void post(){
-
-        final long idUser = 1;
+    void post() {
+        final var userId = UUID.randomUUID();
 
         RequestPostLogin requestPostLogin = new RequestPostLogin();
         requestPostLogin.setEmail("someEmail@email.com");
         requestPostLogin.setPassword("somePassword");
 
-        final var wordleUser = new WordleUser("someName", "pass", "someEmail@email.com", idUser);
+        final var wordleUser = new WordleUser("someName", "pass", "someEmail@email.com", userId);
         final var responseCookie = ResponseCookie.from("someName", "valueCookie").build();
 
         Mockito.when(this.wordleAuthenticationManager.authenticate(requestPostLogin.getEmail(),requestPostLogin.getPassword())).thenReturn(wordleUser);

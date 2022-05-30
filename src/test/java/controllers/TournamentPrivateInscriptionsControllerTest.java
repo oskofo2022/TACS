@@ -2,14 +2,9 @@ package controllers;
 
 import constants.SuppressWarningsConstants;
 import constants.UriConstants;
-import domain.persistence.entities.Inscription;
-import domain.persistence.entities.InscriptionIdentifier;
+import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.User;
-import domain.persistence.entities.enums.Language;
-import domain.persistence.entities.enums.TournamentState;
-import domain.persistence.entities.enums.Visibility;
-import domain.persistence.repositories.InscriptionRepository;
 import domain.persistence.repositories.TournamentRepository;
 import domain.persistence.repositories.UserRepository;
 import domain.requests.posts.RequestPostTournamentInscription;
@@ -26,9 +21,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,9 +38,6 @@ class TournamentPrivateInscriptionsControllerTest {
     @Mock
     private TournamentRepository tournamentRepository;
 
-    @Mock
-    private InscriptionRepository inscriptionRepository;
-
     @InjectMocks
     private TournamentPrivateInscriptionsController tournamentPrivateInscriptionsController;
 
@@ -57,60 +47,98 @@ class TournamentPrivateInscriptionsControllerTest {
         mockHttpServletRequest.setRequestURI(UriConstants.DELIMITER + UriConstants.Tournaments.Inscriptions.URL);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
-        final long idUserCreator = 1;
-        final long idTournament = 4;
+        final var userCreatorId = UUID.randomUUID();
+        final var tournamentId = UUID.randomUUID();
 
         final var user = new User();
-        user.setId(idUserCreator);
+        user.setId(userCreatorId);
         user.setName("someName");
         user.setEmail("some@email.com");
         user.setPassword("pass");
 
-        final var tournament = new Tournament();
-        tournament.setName("Private Example Tournament");
-        tournament.setState(TournamentState.READY);
-        tournament.setVisibility(Visibility.PRIVATE);
-        tournament.setStartDate(LocalDate.now().plusMonths(2));
-        tournament.setEndDate(LocalDate.now().plusMonths(4));
-        tournament.setLanguage(Language.SPANISH);
-        tournament.setId(idTournament);
-        tournament.setUserCreator(user);
+        final var tournament = Mockito.mock(Tournament.class);
 
         var requestPostTournamentInscription = new RequestPostTournamentInscription();
-        requestPostTournamentInscription.setUserId(idUserCreator);
+        requestPostTournamentInscription.setUserId(userCreatorId);
 
-        var wordleUser = new WordleUser("someName", "pass", "some@email.com", idUserCreator);
+        var wordleUser = new WordleUser("someName", "pass", "some@email.com", userCreatorId);
 
-        final Supplier<Inscription> getArgumentMatcherInscription = () -> Mockito.argThat((Inscription i) -> i.getTournament().equals(tournament)
-                && i.getUser().getId() == requestPostTournamentInscription.getUserId());
-
-        var inscriptionIdentifier = new InscriptionIdentifier();
-        inscriptionIdentifier.setTournamentId(idTournament);
-        inscriptionIdentifier.setUserId(idUserCreator);
-
+        Mockito.when(tournament.getId()).thenReturn(tournamentId);
         Mockito.when(this.wordleAuthenticationManager.getCurrentUser()).thenReturn(wordleUser);
-        Mockito.when(this.userRepository.findById(idUserCreator)).thenReturn(Optional.of(user));
-        Mockito.when(this.tournamentRepository.findById(idTournament)).thenReturn(Optional.of(tournament));
-        Mockito.when(this.inscriptionRepository.save(getArgumentMatcherInscription.get())).then((iom -> {
-            final var inscription = iom.getArgument(0,Inscription.class);
-            inscription.setTournament(tournament);
-            inscription.setUser(user);
-            inscription.setIdentifier(inscriptionIdentifier);
-            return inscription;
-        }));
+        Mockito.when(this.userRepository.findById(userCreatorId)).thenReturn(Optional.of(user));
+        Mockito.when(this.tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
 
-        var responseEntity = this.tournamentPrivateInscriptionsController.post(idTournament, requestPostTournamentInscription);
+        var responseEntity = this.tournamentPrivateInscriptionsController.post(tournamentId, requestPostTournamentInscription);
         final var headerLocation = responseEntity.getHeaders().get("Location");
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(headerLocation);
-        assertEquals("http://localhost/users/myself/inscriptions/tournaments?tournamentId=4", headerLocation.get(0));
+        assertEquals("http://localhost/users/myself/inscriptions/tournaments?tournamentId=%s".formatted(tournamentId.toString()), headerLocation.get(0));
 
+        Mockito.verify(tournament, Mockito.times(1)).getId();
+        Mockito.verify(tournament, Mockito.times(1)).validateAuthority(Mockito.any());
+        Mockito.verify(tournament, Mockito.times(1)).inscribe(user);
         Mockito.verify(this.wordleAuthenticationManager, Mockito.times(1)).getCurrentUser();
-        Mockito.verify(this.userRepository, Mockito.times(1)).findById(idUserCreator);
-        Mockito.verify(this.tournamentRepository, Mockito.times(1)).findById(idTournament);
-        Mockito.verify(this.inscriptionRepository, Mockito.times(1)).save(getArgumentMatcherInscription.get());
+        Mockito.verify(this.userRepository, Mockito.times(1)).findById(userCreatorId);
+        Mockito.verify(this.tournamentRepository, Mockito.times(1)).findById(tournamentId);
+        Mockito.verify(this.tournamentRepository, Mockito.times(1)).save(tournament);
     }
 
-    //TODO: Test duplicate case
+    @Test
+    void postTournamentNotFound() {
+        final var userCreatorId = UUID.randomUUID();
+        final var tournamentId = UUID.randomUUID();
+
+        var requestPostTournamentInscription = new RequestPostTournamentInscription();
+        requestPostTournamentInscription.setUserId(userCreatorId);
+
+        Mockito.when(this.tournamentRepository.findById(tournamentId)).thenReturn(Optional.empty());
+
+        var entityNotFoundRuntimeException = assertThrows(EntityNotFoundRuntimeException.class, () -> this.tournamentPrivateInscriptionsController.post(tournamentId, requestPostTournamentInscription));
+
+        assertEquals(entityNotFoundRuntimeException.getCode(), "TOURNAMENT_NOT_FOUND");
+        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad Tournament no pudo ser encontrada");
+
+        Mockito.verify(this.tournamentRepository, Mockito.times(1)).findById(tournamentId);
+        Mockito.verify(this.userRepository, Mockito.never()).findById(Mockito.any());
+        Mockito.verify(this.wordleAuthenticationManager, Mockito.never()).getCurrentUser();
+        Mockito.verify(this.tournamentRepository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void postUserNotFound() {
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.setRequestURI(UriConstants.DELIMITER + UriConstants.Tournaments.Inscriptions.URL);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
+
+        final var userCreatorId = UUID.randomUUID();
+        final var tournamentId = UUID.randomUUID();
+
+        final var user = new User();
+        user.setId(userCreatorId);
+        user.setName("someName");
+        user.setEmail("some@email.com");
+        user.setPassword("pass");
+
+        final var tournament = Mockito.mock(Tournament.class);
+
+        var requestPostTournamentInscription = new RequestPostTournamentInscription();
+        requestPostTournamentInscription.setUserId(userCreatorId);
+
+        Mockito.when(this.userRepository.findById(userCreatorId)).thenReturn(Optional.empty());
+        Mockito.when(this.tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
+
+        var entityNotFoundRuntimeException = assertThrows(EntityNotFoundRuntimeException.class, () -> this.tournamentPrivateInscriptionsController.post(tournamentId, requestPostTournamentInscription));
+
+        assertEquals(entityNotFoundRuntimeException.getCode(), "USER_NOT_FOUND");
+        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad User no pudo ser encontrada");
+
+        Mockito.verify(tournament, Mockito.never()).getId();
+        Mockito.verify(tournament, Mockito.never()).validateAuthority(Mockito.any());
+        Mockito.verify(tournament, Mockito.never()).inscribe(user);
+        Mockito.verify(this.wordleAuthenticationManager, Mockito.never()).getCurrentUser();
+        Mockito.verify(this.userRepository, Mockito.times(1)).findById(userCreatorId);
+        Mockito.verify(this.tournamentRepository, Mockito.times(1)).findById(tournamentId);
+        Mockito.verify(this.tournamentRepository, Mockito.never()).save(Mockito.any());
+    }
 }

@@ -25,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +44,7 @@ class UsersControllerTest {
 
     @Test
     void get() {
-        final long userId = 1;
+        final var userId = UUID.randomUUID();
         final var user = new User();
         user.setId(userId);
         user.setName("name");
@@ -62,7 +63,7 @@ class UsersControllerTest {
 
     @Test
     void getUserNotFound() {
-        final long userId = 1;
+        final var userId = UUID.randomUUID();
 
         Mockito.when(this.userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -79,12 +80,12 @@ class UsersControllerTest {
         final var firstUser = new User();
         firstUser.setEmail("some@email.com");
         firstUser.setName("name");
-        firstUser.setId(1);
+        firstUser.setId(UUID.randomUUID());
 
         final var secondUser = new User();
         secondUser.setEmail("some2@email.com");
         secondUser.setName("name 2");
-        secondUser.setId(2);
+        secondUser.setId(UUID.randomUUID());
 
         final var users = new ArrayList<User>() {
             {
@@ -134,12 +135,12 @@ class UsersControllerTest {
         final var firstUser = new User();
         firstUser.setEmail("some@email.com");
         firstUser.setName("name");
-        firstUser.setId(1);
+        firstUser.setId(UUID.randomUUID());
 
         final var secondUser = new User();
         secondUser.setEmail("some2@email.com");
         secondUser.setName("name 2");
-        secondUser.setId(2);
+        secondUser.setId(UUID.randomUUID());
 
         final var users = new ArrayList<User>() {
             {
@@ -180,7 +181,7 @@ class UsersControllerTest {
 
     @Test
     void post() {
-        final long userId = 1;
+        final var userId = UUID.randomUUID();
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setRequestURI(UriConstants.DELIMITER + UriConstants.Users.URL);
@@ -208,7 +209,7 @@ class UsersControllerTest {
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getHeaders().get("Location"));
-        assertEquals("http://localhost/users/1", responseEntity.getHeaders().get("Location").get(0));
+        assertEquals("http://localhost/users/%s".formatted(userId), responseEntity.getHeaders().get("Location").get(0));
         assertEquals(userId, responseEntity.getBody().getId());
 
         Mockito.verify(this.passwordEncoder, Mockito.times(1)).encode(requestPostUser.getPassword());

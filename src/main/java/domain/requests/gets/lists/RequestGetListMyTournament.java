@@ -6,12 +6,14 @@ import domain.persistence.entities.enums.Visibility;
 import domain.requests.common.gets.lists.RequestCommonGetListTournament;
 import domain.validators.RegexSortBy;
 
+import java.util.UUID;
+
 @RegexSortBy(allowedValues = { "name", "state", "language", "id", "startDate", "endDate", "visibility" })
 public class RequestGetListMyTournament extends RequestCommonGetListTournament {
     private Visibility visibility;
 
     @JsonIgnore
-    private Long userCreatorId;
+    private UUID userCreatorId;
 
     public Visibility getVisibility() {
         return visibility;
@@ -21,11 +23,11 @@ public class RequestGetListMyTournament extends RequestCommonGetListTournament {
         this.visibility = visibility;
     }
 
-    public Long getUserCreatorId() {
+    public UUID getUserCreatorId() {
         return userCreatorId;
     }
 
-    public void setUserCreatorId(Long userCreatorId) {
+    public void setUserCreatorId(UUID userCreatorId) {
         this.userCreatorId = userCreatorId;
     }
 
