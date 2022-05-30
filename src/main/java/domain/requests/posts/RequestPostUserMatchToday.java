@@ -7,19 +7,18 @@ import domain.persistence.entities.User;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RequestPostUserMatchToday {
     @NotNull
     @Size(min = 1)
-    private ArrayList<RequestPostUserMatchTodayResult> results;
+    private List<RequestPostUserMatchTodayResult> results;
 
-    public ArrayList<RequestPostUserMatchTodayResult> getResults() {
+    public List<RequestPostUserMatchTodayResult> getResults() {
         return results;
     }
 
-    public void setResults(ArrayList<RequestPostUserMatchTodayResult> results) {
+    public void setResults(List<RequestPostUserMatchTodayResult> results) {
         this.results = results;
     }
 

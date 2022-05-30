@@ -2,7 +2,6 @@ package domain.validators;
 
 import constants.PatternConstants;
 import domain.requests.common.gets.lists.RequestCommonGetPagedList;
-import domain.requests.gets.lists.RequestGetPagedList;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

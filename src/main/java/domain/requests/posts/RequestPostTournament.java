@@ -1,17 +1,19 @@
 package domain.requests.posts;
 
+import domain.interfaces.LocalDateInterval;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.Visibility;
+import domain.validators.ConsistentLocalDateInterval;
 
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-public class RequestPostTournament {
+@ConsistentLocalDateInterval
+public class RequestPostTournament implements LocalDateInterval {
     @Size(min = 4, max = 60)
-    @NotBlank
+    @NotNull
     private String name;
 
     @NotNull
@@ -23,7 +25,6 @@ public class RequestPostTournament {
     @FutureOrPresent
     private LocalDate startDate;
 
-    @FutureOrPresent
     private LocalDate endDate;
 
     public String getName() {

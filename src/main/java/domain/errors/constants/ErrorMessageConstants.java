@@ -7,13 +7,13 @@ public class ErrorMessageConstants {
     public static final String TOURNAMENT_UNAUTHORIZED_USER_ACTION = "No está autorizado para realizar la acción intentada";
 
 
-    private static final String INVALID_FIELD = "%s: %s.";
+    private static final String INVALID_REQUEST = "%s: %s.";
     private static final String ENTITY_NOT_FOUND = "La entidad %s no pudo ser encontrada";
     private static final String INVALID_FILE_PATH = "El path %s no posee el archivo buscado";
     private static final String DUPLICATE_ENTITY_FOUND = "La entidad %s que intenta crear ya se encuentra presente";
 
-    public static String getInvalidField(String field, String error) {
-        return INVALID_FIELD.formatted(field, error);
+    public static String getInvalidRequest(String wrapperName, String error) {
+        return INVALID_REQUEST.formatted(wrapperName, error);
     }
     public static <T> String getEntityNotFound(Class<T> specificClass) {
         return ENTITY_NOT_FOUND.formatted(specificClass.getSimpleName());

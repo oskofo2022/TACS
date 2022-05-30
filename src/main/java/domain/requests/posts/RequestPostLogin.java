@@ -3,6 +3,7 @@ package domain.requests.posts;
 import constants.PatternConstants;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -10,7 +11,7 @@ public class RequestPostLogin {
 
     @Size(max = 100)
     @Pattern(regexp = PatternConstants.EMAIL)
-    @NotBlank
+    @NotNull
     private String email;
 
     @Size(min = 8, max = 32)
@@ -18,7 +19,7 @@ public class RequestPostLogin {
     @Pattern(regexp = PatternConstants.AT_LEAST_ONE_LOWERCASE_LETTER)
     @Pattern(regexp = PatternConstants.AT_LEAST_ONE_UPPERCASE_LETTER)
     @Pattern(regexp = PatternConstants.AT_LEAST_ONE_SPECIAL_CHARACTER)
-    @NotBlank
+    @NotNull
     private String password;
 
     public String getEmail() {
