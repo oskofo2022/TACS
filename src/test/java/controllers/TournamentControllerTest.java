@@ -45,29 +45,26 @@ public class TournamentControllerTest {
     private TournamentsController tournamentsController;
 
     @Test
-    void listPublic(){
+    void listPublic() {
 
         final var tournamentOne = new Tournament();
         tournamentOne.setName("Tournament One");
-        tournamentOne.setState(TournamentState.READY);
         tournamentOne.setVisibility(Visibility.PUBLIC);
-        tournamentOne.setStartDate(LocalDate.now());
+        tournamentOne.setStartDate(LocalDate.now().plusDays(1));
         tournamentOne.setEndDate(LocalDate.now().plusMonths(1));
         tournamentOne.setLanguage(Language.SPANISH);
 
         final var tournamentTwo = new Tournament();
         tournamentTwo.setName("Tournament Two");
-        tournamentTwo.setState(TournamentState.READY);
         tournamentTwo.setVisibility(Visibility.PUBLIC);
-        tournamentTwo.setStartDate(LocalDate.now());
+        tournamentTwo.setStartDate(LocalDate.now().plusDays(1));
         tournamentTwo.setEndDate(LocalDate.now().plusMonths(3));
         tournamentTwo.setLanguage(Language.ENGLISH);
 
         final var tournamentThree = new Tournament();
         tournamentThree.setName("Tournament Three");
-        tournamentThree.setState(TournamentState.READY);
         tournamentThree.setVisibility(Visibility.PRIVATE);
-        tournamentThree.setStartDate(LocalDate.now());
+        tournamentThree.setStartDate(LocalDate.now().plusDays(1));
         tournamentThree.setEndDate(LocalDate.now().plusMonths(2));
         tournamentThree.setLanguage(Language.SPANISH);
 

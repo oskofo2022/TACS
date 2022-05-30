@@ -48,9 +48,8 @@ class MyTournamentsControllerTest {
         firstTournament.setName("tournament 1");
         firstTournament.setVisibility(Visibility.PRIVATE);
         firstTournament.setLanguage(Language.ENGLISH);
-        firstTournament.setState(TournamentState.READY);
-        firstTournament.setStartDate(LocalDate.of(2022, 12, 1));
-        firstTournament.setEndDate(LocalDate.of(2022, 12, 31));
+        firstTournament.setStartDate(LocalDate.now().plusDays(255));
+        firstTournament.setEndDate(LocalDate.now().plusDays(280));
         firstTournament.setId(UUID.randomUUID());
         firstTournament.setUserCreator(userCreator);
 
@@ -58,7 +57,6 @@ class MyTournamentsControllerTest {
         secondTournament.setName("tournament 2");
         secondTournament.setVisibility(Visibility.PUBLIC);
         secondTournament.setLanguage(Language.SPANISH);
-        secondTournament.setState(TournamentState.ENDED);
         secondTournament.setStartDate(LocalDate.of(2022, 3, 1));
         secondTournament.setEndDate(LocalDate.of(2022, 3, 31));
         secondTournament.setId(UUID.randomUUID());
@@ -121,9 +119,8 @@ class MyTournamentsControllerTest {
         firstTournament.setName("tournament 1");
         firstTournament.setVisibility(Visibility.PRIVATE);
         firstTournament.setLanguage(Language.ENGLISH);
-        firstTournament.setState(TournamentState.READY);
-        firstTournament.setStartDate(LocalDate.of(2022, 12, 1));
-        firstTournament.setEndDate(LocalDate.of(2022, 12, 31));
+        firstTournament.setStartDate(LocalDate.now().plusDays(255));
+        firstTournament.setEndDate(LocalDate.now().plusDays(280));
         firstTournament.setId(UUID.randomUUID());
         firstTournament.setUserCreator(userCreator);
 
@@ -131,7 +128,6 @@ class MyTournamentsControllerTest {
         secondTournament.setName("tournament 2");
         secondTournament.setVisibility(Visibility.PUBLIC);
         secondTournament.setLanguage(Language.SPANISH);
-        secondTournament.setState(TournamentState.ENDED);
         secondTournament.setStartDate(LocalDate.of(2022, 3, 1));
         secondTournament.setEndDate(LocalDate.of(2022, 3, 31));
         secondTournament.setId(UUID.randomUUID());

@@ -89,7 +89,6 @@ public class User {
 
     public Tournament createTournament(RequestPostTournament requestPostTournament) {
         final var tournament = new Tournament();
-        tournament.setState(TournamentState.READY);
         tournament.setUserCreator(this);
         tournament.setPlayers(List.of(this));
         tournament.setName(requestPostTournament.getName());

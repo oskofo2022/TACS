@@ -44,9 +44,8 @@ public class MyTournamentsInscriptionsControllerTest {
         firstTournament.setId(UUID.randomUUID());
         firstTournament.setName("First Tournament");
         firstTournament.setVisibility(Visibility.PUBLIC);
-        firstTournament.setStartDate(LocalDate.now());
-        firstTournament.setEndDate(LocalDate.now().plusDays(5));
-        firstTournament.setState(TournamentState.READY);
+        firstTournament.setStartDate(LocalDate.now().plusDays(1));
+        firstTournament.setEndDate(LocalDate.now().plusDays(6));
         firstTournament.setLanguage(Language.SPANISH);
 
         final var secondTournament = new Tournament();
@@ -55,7 +54,6 @@ public class MyTournamentsInscriptionsControllerTest {
         secondTournament.setVisibility(Visibility.PRIVATE);
         secondTournament.setStartDate(LocalDate.now().minusDays(60));
         secondTournament.setEndDate(LocalDate.now().minusDays(55));
-        secondTournament.setState(TournamentState.ENDED);
         secondTournament.setLanguage(Language.ENGLISH);
 
         final var inscribedTournaments = Arrays.asList(firstTournament, secondTournament);

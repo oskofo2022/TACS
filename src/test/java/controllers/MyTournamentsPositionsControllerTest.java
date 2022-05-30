@@ -45,9 +45,8 @@ public class MyTournamentsPositionsControllerTest {
         firstTournament.setId(UUID.randomUUID());
         firstTournament.setName("First Tournament");
         firstTournament.setVisibility(Visibility.PUBLIC);
-        firstTournament.setStartDate(LocalDate.now());
+        firstTournament.setStartDate(LocalDate.now().plusDays(1));
         firstTournament.setEndDate(LocalDate.now().plusDays(5));
-        firstTournament.setState(TournamentState.READY);
         firstTournament.setLanguage(Language.SPANISH);
         firstTournament.setPlayers(List.of(user));
 
@@ -57,7 +56,6 @@ public class MyTournamentsPositionsControllerTest {
         secondTournament.setVisibility(Visibility.PRIVATE);
         secondTournament.setStartDate(LocalDate.now().minusDays(60));
         secondTournament.setEndDate(LocalDate.now().minusDays(55));
-        secondTournament.setState(TournamentState.ENDED);
         secondTournament.setLanguage(Language.ENGLISH);
         secondTournament.setPlayers(List.of(user));
 

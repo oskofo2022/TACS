@@ -30,7 +30,7 @@ class TournamentTest {
         user.setId(UUID.randomUUID());
         this.tournament.setId(UUID.randomUUID());
         this.tournament.setPlayers(new ArrayList<>());
-        this.tournament.setState(TournamentState.READY);
+        this.tournament.setStartDate(LocalDate.now().plusDays(1));
 
         assertDoesNotThrow(() -> this.tournament.inscribe(user));
     }
@@ -40,7 +40,8 @@ class TournamentTest {
         final var user = new User();
         user.setId(UUID.randomUUID());
         this.tournament.setId(UUID.randomUUID());
-        this.tournament.setState(TournamentState.STARTED);
+        this.tournament.setStartDate(LocalDate.now());
+        this.tournament.setEndDate(LocalDate.now().plusDays(2));
 
         assertThrows(TournamentStateInvalidInscriptionRuntimeException.class, () -> this.tournament.inscribe(user));
     }
@@ -51,7 +52,7 @@ class TournamentTest {
         user.setId(UUID.randomUUID());
         this.tournament.setId(UUID.randomUUID());
         this.tournament.setPlayers(List.of(user));
-        this.tournament.setState(TournamentState.READY);
+        this.tournament.setStartDate(LocalDate.now().plusDays(1));
 
         assertThrows(DuplicateEntityFoundRuntimeException.class, () -> this.tournament.inscribe(user));
     }
@@ -94,7 +95,6 @@ class TournamentTest {
         thirdUser.setMatches(Arrays.asList(firstMatchThirdUser, secondMatchThirdUser, thirdMatchThirdUser));
 
         this.tournament.setStartDate(tournamentStartDate);
-        this.tournament.setState(TournamentState.STARTED);
         this.tournament.setEndDate(tournamentStartDate.plusDays(5));
         this.tournament.setLanguage(tournamentLanguage);
         this.tournament.setPlayers(Arrays.asList(firstUser, secondUser, thirdUser));

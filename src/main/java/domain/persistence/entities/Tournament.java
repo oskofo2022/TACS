@@ -43,10 +43,6 @@ public class Tournament {
     private Language language;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private TournamentState state;
-
-    @NotNull
     private LocalDate startDate;
 
     @NotNull
@@ -89,11 +85,7 @@ public class Tournament {
     }
 
     public TournamentState getState() {
-        return state;
-    }
-
-    public void setState(TournamentState state) {
-        this.state = state;
+        return TournamentState.READY.getState(this);
     }
 
     public LocalDate getStartDate() {
