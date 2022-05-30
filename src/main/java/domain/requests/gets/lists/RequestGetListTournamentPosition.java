@@ -111,6 +111,7 @@ public class RequestGetListTournamentPosition extends RequestGetListOnMemoryPage
 
     }
 
+    @JsonIgnore
     @Override
     public Map<String, Comparator<Tournament>> getComparatorMap() {
         return new HashMap<>() {

@@ -1,13 +1,10 @@
 package domain.requests.gets.lists;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import constants.RSQLConstants;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.enums.Language;
 import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
-import domain.requests.common.gets.lists.RequestCommonGetPagedList;
-import domain.responses.gets.lists.ResponseGetListTournament;
 import domain.validators.RegexSortBy;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,6 +14,8 @@ import java.util.*;
 @RegexSortBy(allowedValues = { "name", "state", "language", "id", "startDate", "endDate", "visibility" })
 public class RequestGetListUserInscription extends RequestGetListOnMemoryPagedList<Tournament> {
     private UUID tournamentId;
+
+    private List<UUID> tournamentIds;
 
     private String tournamentName;
 
@@ -110,6 +109,14 @@ public class RequestGetListUserInscription extends RequestGetListOnMemoryPagedLi
         this.tournamentId = tournamentId;
     }
 
+    public List<UUID> getTournamentIds() {
+        return tournamentIds;
+    }
+
+    public void setTournamentIds(List<UUID> tournamentIds) {
+        this.tournamentIds = tournamentIds;
+    }
+
     @JsonIgnore
     @Override
     public boolean isValid(Tournament tournament) {
@@ -118,9 +125,11 @@ public class RequestGetListUserInscription extends RequestGetListOnMemoryPagedLi
                 && (this.tournamentBottomEndDate == null || this.tournamentBottomEndDate.compareTo(tournament.getEndDate()) >= 0)
                 && (this.tournamentTopEndDate == null || this.tournamentTopEndDate.compareTo(tournament.getEndDate()) <= 0)
                 && (this.tournamentBottomStartDate == null || this.tournamentBottomStartDate.compareTo(tournament.getStartDate()) >= 0)
-                && (this.tournamentTopStartDate == null || this.tournamentTopStartDate.compareTo(tournament.getStartDate()) <= 0);
+                && (this.tournamentTopStartDate == null || this.tournamentTopStartDate.compareTo(tournament.getStartDate()) <= 0)
+                && (this.tournamentIds == null || this.tournamentIds.contains(tournament.getId()));
     }
 
+    @JsonIgnore
     @Override
     public Map<String, Comparator<Tournament>> getComparatorMap() {
         return new HashMap<>() {
