@@ -1,6 +1,5 @@
 package domain.integrations.APIs.dictionaries.english.entities;
 
-import domain.integrations.APIs.dictionaries.spanish.entities.SpanishDictionaryWordLexicalCategory;
 import domain.responses.gets.lists.ResponseGetDictionaryWordMeaning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +24,12 @@ class EnglishDictionaryWordResponseTest {
     private EnglishDictionaryWordResponse englishDictionaryWordResponse;
 
     @BeforeEach
-    private void setUp() {
+    public void setUp() {
         this.englishDictionaryWordResponse.setMeanings(List.of(this.englishDictionaryWordMeaning));
     }
 
     @Test
-    void listMeanings() {
+    public void listMeanings() {
         final var responseGetDictionaryWordMeaning = new ResponseGetDictionaryWordMeaning("type", "definition");
         final var responsesGetDictionaryWordMeaning = new ArrayList<ResponseGetDictionaryWordMeaning>() {
             {

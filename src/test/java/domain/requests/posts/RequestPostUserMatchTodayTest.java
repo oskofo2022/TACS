@@ -18,14 +18,14 @@ class RequestPostUserMatchTodayTest extends RequestAnnotationTest<RequestPostUse
     public void resultsNotSet() {
         this.request.setResults(null);
 
-        super.invalid("results", "NotNull");
+        this.invalid("results", "NotNull");
     }
 
     @Test
     public void resultsEmpty() {
         this.request.setResults(Collections.emptyList());
 
-        super.invalid("results", "Size");
+        this.invalid("results", "Size");
     }
 
     @Test

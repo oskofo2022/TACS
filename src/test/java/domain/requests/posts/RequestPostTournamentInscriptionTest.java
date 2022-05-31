@@ -11,7 +11,7 @@ class RequestPostTournamentInscriptionTest extends RequestAnnotationTest<Request
     public void userIdNotSet() {
         this.request.setUserId(null);
 
-        super.invalid("userId", "NotNull");
+        this.invalid("userId", "NotNull");
     }
 
     @Override

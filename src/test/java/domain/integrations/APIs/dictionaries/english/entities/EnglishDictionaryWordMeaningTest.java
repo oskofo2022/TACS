@@ -25,14 +25,14 @@ class EnglishDictionaryWordMeaningTest {
     private EnglishDictionaryWordMeaning englishDictionaryWordMeaning;
 
     @BeforeEach
-    private void setUp() {
+    public void setUp() {
         this.partOfSpeech = "type";
         this.englishDictionaryWordMeaning.setDefinitions(List.of(this.englishDictionaryWordMeaningDefinition));
         this.englishDictionaryWordMeaning.setPartOfSpeech(this.partOfSpeech);
     }
 
     @Test
-    void getMeaning() {
+    public void getMeaning() {
         final var definition = "definition";
 
         Mockito.when(this.englishDictionaryWordMeaningDefinition.getDefinition()).thenReturn(definition);

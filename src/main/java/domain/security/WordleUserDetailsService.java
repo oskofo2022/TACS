@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import static io.github.perplexhub.rsql.RSQLJPASupport.toSpecification;
 
 @Service
-public class WordleUserDetails implements UserDetailsService {
+public class WordleUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Autowired
-    public WordleUserDetails(UserRepository userRepository) {
+    public WordleUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

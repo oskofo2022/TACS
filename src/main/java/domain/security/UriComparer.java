@@ -1,7 +1,5 @@
 package domain.security;
 
-import java.util.Objects;
-
 public enum UriComparer {
     CONTAINS {
         @Override
@@ -12,7 +10,7 @@ public enum UriComparer {
     EQUAL {
         @Override
         public boolean match(String expectedUri, String actualUri) {
-            return Objects.equals(expectedUri, actualUri);
+            return expectedUri.equals(actualUri);
         }
     };
 

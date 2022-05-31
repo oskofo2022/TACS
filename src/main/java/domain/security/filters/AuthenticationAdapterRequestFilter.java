@@ -4,7 +4,7 @@ import constants.ApplicationProperties;
 import constants.HeadersConstants;
 import constants.UriConstants;
 import domain.security.JwtService;
-import domain.security.WordleUserDetails;
+import domain.security.WordleUserDetailsService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,13 +30,13 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
     @Value(ApplicationProperties.Wordle.Cookie.Arguments.NAME)
     public String cookieName;
 
-    private final WordleUserDetails wordleUserDetails;
+    private final WordleUserDetailsService wordleUserDetailsService;
     private final JwtService jwtService;
 
     @Autowired
-    public AuthenticationAdapterRequestFilter(JwtService jwtService, WordleUserDetails wordleUserDetails) {
+    public AuthenticationAdapterRequestFilter(JwtService jwtService, WordleUserDetailsService wordleUserDetailsService) {
         this.jwtService = jwtService;
-        this.wordleUserDetails = wordleUserDetails;
+        this.wordleUserDetailsService = wordleUserDetailsService;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AuthenticationAdapterRequestFilter extends OncePerRequestFilter {
     }
 
     private void authenticate(Claims claims, HttpServletRequest request) {
-        final var userDetails = this.wordleUserDetails.loadUserByUsername(claims.getSubject());
+        final var userDetails = this.wordleUserDetailsService.loadUserByUsername(claims.getSubject());
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

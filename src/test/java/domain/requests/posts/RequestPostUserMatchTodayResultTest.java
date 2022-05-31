@@ -10,21 +10,21 @@ class RequestPostUserMatchTodayResultTest extends RequestAnnotationTest<RequestP
     public void languageNotSet() {
         this.request.setLanguage(null);
 
-        super.invalid("language", "NotNull");
+        this.invalid("language", "NotNull");
     }
 
     @Test
     public void guessesCountBelowRange() {
         this.request.setGuessesCount(0);
 
-        super.invalid("guessesCount", "Min");
+        this.invalid("guessesCount", "Min");
     }
 
     @Test
-    public void guessesCountOverRange() {
+    public void guessesCountAboveRange() {
         this.request.setGuessesCount(8);
 
-        super.invalid("guessesCount", "Max");
+        this.invalid("guessesCount", "Max");
     }
 
     @Override

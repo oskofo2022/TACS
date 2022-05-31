@@ -13,49 +13,49 @@ class RequestPostTournamentTest extends RequestAnnotationTest<RequestPostTournam
     public void nameNotSet() {
         this.request.setName(null);
 
-        super.invalid("name", "NotNull");
+        this.invalid("name", "NotNull");
     }
 
     @Test
     public void nameOverSized() {
         this.request.setName("a".repeat(61));
 
-        super.invalid("name", "Size");
+        this.invalid("name", "Size");
     }
 
     @Test
     public void nameDownSized() {
         this.request.setName("nam");
 
-        super.invalid("name", "Size");
+        this.invalid("name", "Size");
     }
 
     @Test
     public void LanguageNotSet() {
         this.request.setLanguage(null);
 
-        super.invalid("language", "NotNull");
+        this.invalid("language", "NotNull");
     }
 
     @Test
     public void VisibilityNotSet() {
         this.request.setVisibility(null);
 
-        super.invalid("visibility", "NotNull");
+        this.invalid("visibility", "NotNull");
     }
 
     @Test
     public void startDateIsBeforePresent() {
         this.request.setStartDate(LocalDate.now().minusDays(1));
 
-        super.invalid("startDate", "FutureOrPresent");
+        this.invalid("startDate", "FutureOrPresent");
     }
 
     @Test
     public void inconsistentLocalDateInterval() {
         this.request.setEndDate(LocalDate.now().minusDays(1));
 
-        super.invalid("", "ConsistentLocalDateInterval");
+        this.invalid("", "ConsistentLocalDateInterval");
     }
 
     @Override

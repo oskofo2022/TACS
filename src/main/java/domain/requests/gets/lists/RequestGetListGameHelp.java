@@ -1,7 +1,7 @@
 package domain.requests.gets.lists;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.swing.text.html.Option;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +10,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class RequestGetListGameHelp {
+
+    @Size(max = 20)
     private String goodLetters;
+    @Size(max = 20)
     private String badLetters;
+    @Size(max = 20)
     private String greenLetters;
 
     public String getGoodLetters() {

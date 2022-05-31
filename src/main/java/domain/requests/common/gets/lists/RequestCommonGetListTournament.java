@@ -8,9 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 public class RequestCommonGetListTournament extends RequestGetPagedList {
-    private Long id;
+    private UUID id;
     private String name;
     private Language language;
     private TournamentState state;
@@ -73,11 +74,11 @@ public class RequestCommonGetListTournament extends RequestGetPagedList {
         this.state = state;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
