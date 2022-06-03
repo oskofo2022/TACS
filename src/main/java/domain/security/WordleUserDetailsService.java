@@ -23,8 +23,11 @@ public class WordleUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final var user = this.userRepository.findAll(toSpecification(RSQLConstants.Filters.getLike("email").formatted(username)))
+
+
+        final var user = this.userRepository.findAll()
                                                   .stream()
+                                                  .filter(u -> u.getEmail().equals(username))
                                                   .findFirst()
                                                   .orElseThrow(LoginCredentialsRuntimeException::new);
 
