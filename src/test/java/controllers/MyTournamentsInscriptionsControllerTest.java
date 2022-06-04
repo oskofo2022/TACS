@@ -39,7 +39,6 @@ public class MyTournamentsInscriptionsControllerTest {
 
     @Test
     void list() {
-
         final var firstTournament = new Tournament();
         firstTournament.setId(UUID.randomUUID());
         firstTournament.setName("First Tournament");

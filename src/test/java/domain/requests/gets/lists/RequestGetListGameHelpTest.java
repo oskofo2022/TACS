@@ -1,11 +1,10 @@
 package domain.requests.gets.lists;
 
-import domain.requests.RequestAnnotationTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RequestGetListGameHelpTest extends RequestAnnotationTest<RequestGetListGameHelp> {
+public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListTest<RequestGetListGameHelp> {
 
     @Test
     public void badLettersOverSized() {
@@ -28,24 +27,10 @@ public class RequestGetListGameHelpTest extends RequestAnnotationTest<RequestGet
         this.invalid("goodLetters", "Size");
     }
 
-
-    @Test
-    void getIndexedGreenLetters() {
-        this.request.setGreenLetters("--b-r");
-
-        final var requestsGetListGreenLetter = this.request.getIndexedGreenLetters();
-
-        assertEquals('b', requestsGetListGreenLetter.get(0).letter());
-        assertEquals(2, requestsGetListGreenLetter.get(0).position());
-        assertEquals('r', requestsGetListGreenLetter.get(1).letter());
-        assertEquals(4, requestsGetListGreenLetter.get(1).position());
-    }
-
     @Test
     void isValid() {
         this.request.setBadLetters("aw");
         this.request.setGoodLetters("el");
-
 
         assertTrue(this.request.isValid("eel"));
     }
@@ -62,5 +47,11 @@ public class RequestGetListGameHelpTest extends RequestAnnotationTest<RequestGet
     @Override
     protected RequestGetListGameHelp createValidRequest() {
         return new RequestGetListGameHelp();
+    }
+
+    @Test
+    @Override
+    public void defaultSortBy() {
+        assertEquals("identity", this.request.defaultSortBy());
     }
 }

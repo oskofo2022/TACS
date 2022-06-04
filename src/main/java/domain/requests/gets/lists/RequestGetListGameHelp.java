@@ -1,15 +1,14 @@
 package domain.requests.gets.lists;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import domain.validators.RegexSortBy;
 
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class RequestGetListGameHelp {
+@RegexSortBy(allowedValues = { "identity" })
+public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<String> {
 
     @Size(max = 20)
     private String goodLetters;
@@ -17,6 +16,9 @@ public class RequestGetListGameHelp {
     private String badLetters;
     @Size(max = 20)
     private String greenLetters;
+
+    @JsonIgnore
+    private List<RequestGetListGreenLetter> indexedGreenLetters;
 
     public String getGoodLetters() {
         return Optional.ofNullable(this.goodLetters).orElse("");
@@ -44,30 +46,64 @@ public class RequestGetListGameHelp {
 
 
     @JsonIgnore
-    public List<RequestGetListGreenLetter> getIndexedGreenLetters() {
-        final var greenLetters = this.getGreenLetters();
-
-        if (greenLetters.isBlank()) {
-            return new ArrayList<>();
+    private List<RequestGetListGreenLetter> getIndexedGreenLetters() {
+        if (this.indexedGreenLetters == null) {
+            this.setIndexedGreenLetters();
         }
 
-        return IntStream.range(0, greenLetters.length())
-                        .filter(i -> greenLetters.charAt(i) != '-')
-                        .mapToObj(i -> new RequestGetListGreenLetter(i, this.greenLetters.charAt(i)))
-                        .collect(Collectors.toList());
+        return this.indexedGreenLetters;
     }
 
     @JsonIgnore
     public boolean isValid(String word) {
-      final var badLetters = this.getBadLetters();
-      final var goodLetters = this.getGoodLetters();
+      return !this.hasBadLetters(word) && this.hasGoodLetters(word) && this.hasGreenLetters(word);
+    }
 
-      final var hasBadLetters = !badLetters.isBlank() && Arrays.stream(badLetters.split(""))
-                                                                                 .anyMatch(word::contains);
+    @JsonIgnore
+    @Override
+    public Map<String, Comparator<String>> getComparatorMap() {
+        return new HashMap<>() {
+            {
+                put("identity", Comparator.comparing(String::toString));
+            }
+        };
+    }
 
-      final var hasGoodLetters = Arrays.stream(goodLetters.split(""))
-                                                                  .allMatch(word::contains);
+    private void setIndexedGreenLetters() {
+        final var greenLetters = this.getGreenLetters();
+        this.indexedGreenLetters = Collections.emptyList();
 
-      return !hasBadLetters && hasGoodLetters;
+        if (!greenLetters.isBlank()) {
+            this.indexedGreenLetters = IntStream.range(0, greenLetters.length())
+                                                .filter(i -> greenLetters.charAt(i) != '-')
+                                                .mapToObj(i -> new RequestGetListGreenLetter(i, this.greenLetters.charAt(i)))
+                                                .collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    protected String defaultSortBy() {
+        return "identity";
+    }
+
+    private boolean hasBadLetters(String word) {
+        final var badLetters = this.getBadLetters();
+
+        return !badLetters.isBlank() && Arrays.stream(badLetters.split(""))
+                                                                .anyMatch(word::contains);
+    }
+
+    private boolean hasGoodLetters(String word) {
+        final var goodLetters = this.getGoodLetters();
+
+        return Arrays.stream(goodLetters.split(""))
+                     .allMatch(word::contains);
+    }
+
+    private boolean hasGreenLetters(String word) {
+        final var requestsGetListGreenLetter = this.getIndexedGreenLetters();
+
+        return requestsGetListGreenLetter.stream()
+                                         .allMatch(rglgl -> rglgl.isValid(word));
     }
 }

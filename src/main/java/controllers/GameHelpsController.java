@@ -5,8 +5,8 @@ import constants.UriConstants;
 import domain.files.FileLinesStreamer;
 import domain.persistence.entities.enums.Language;
 import domain.requests.gets.lists.RequestGetListGameHelp;
-import domain.requests.gets.lists.RequestGetListGreenLetter;
 import domain.responses.gets.lists.ResponseGetListGameHelp;
+import domain.responses.gets.lists.ResponseGetPagedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(path = UriConstants.Games.Language.Helps.URL)
@@ -30,18 +31,11 @@ public class GameHelpsController {
     }
 
     @GetMapping(produces = MediaTypeConstants.JSON)
-    public ResponseEntity<ResponseGetListGameHelp> list(@PathVariable Language language, RequestGetListGameHelp requestGetListGameHelp)
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListGameHelp>> list(@PathVariable Language language, RequestGetListGameHelp requestGetListGameHelp)
     {
-        //TODO: Validate pagination.
+        final Supplier<Stream<String>> linesSupplier = () -> this.fileLinesStreamer.list(language.getPathWordsFile());
 
-        final var requestsGetListGreenLetters = requestGetListGameHelp.getIndexedGreenLetters();
-        final var lines = this.fileLinesStreamer.list(language.getPathWordsFile());
-        final var words = lines.filter(s -> this.isValid(s, requestGetListGameHelp, requestsGetListGreenLetters))
-                                          .toList();
-
-        lines.close();
-
-        final var responseGetListGameHelp = new ResponseGetListGameHelp(words);
+        final var responseGetPagedList = requestGetListGameHelp.paginate(linesSupplier, ResponseGetListGameHelp::new);
 
         CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
                                                 .cachePublic()
@@ -50,10 +44,6 @@ public class GameHelpsController {
 
         return ResponseEntity.ok()
                              .cacheControl(cacheControl)
-                             .body(responseGetListGameHelp);
-    }
-
-    private boolean isValid(String word, RequestGetListGameHelp requestGetListGameHelp, List<RequestGetListGreenLetter> requestsGetListGreenLetter) {
-        return requestGetListGameHelp.isValid(word) && requestsGetListGreenLetter.stream().allMatch(rglgl -> rglgl.isValid(word));
+                             .body(responseGetPagedList);
     }
 }
