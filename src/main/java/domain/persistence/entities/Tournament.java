@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = TableConstants.Names.TOURNAMENTS)
@@ -130,16 +131,13 @@ public class Tournament {
         }
     }
 
-    public List<ResponseGetListTournamentPositionResult> listPositions() {
+    public Stream<ResponseGetListTournamentPositionResult> listPositions() {
         if (!this.hasStarted()) {
-            return Collections.emptyList();
+            return Stream.empty();
         }
 
         return this.players.stream()
-                           .map(this::getPosition)
-                           .sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
-                           .toList();
-
+                           .map(this::getPosition);
     }
 
     private ResponseGetListTournamentPositionResult getPosition(User user) {

@@ -99,20 +99,14 @@ class TournamentTest {
         this.tournament.setLanguage(tournamentLanguage);
         this.tournament.setPlayers(Arrays.asList(firstUser, secondUser, thirdUser));
 
-        final var positions = this.tournament.listPositions();
-        final var sortedPositions = positions.stream()
-                                                                                .sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
-                                                                                .toList();
-        assertEquals(sortedPositions, positions);
-        assertEquals(thirdUser.getName(), positions.get(0).name());
-        assertEquals(30, positions.get(0).guessesCount());
+        final var positions = this.tournament.listPositions().toList();
+        assertEquals(firstUser.getName(), positions.get(0).name());
+        assertEquals(32, positions.get(0).guessesCount());
         assertEquals(secondUser.getName(), positions.get(1).name());
         assertEquals(31, positions.get(1).guessesCount());
-        assertEquals(firstUser.getName(), positions.get(2).name());
-        assertEquals(32, positions.get(2).guessesCount());
+        assertEquals(thirdUser.getName(), positions.get(2).name());
+        assertEquals(30, positions.get(2).guessesCount());
     }
-
-    //TODO: Evaluate the creation of tests for positions on more cumbersome dates ranges
 
     private Match createMatch(LocalDate localDate, int guessesCount, Language language) {
         final var match = new Match();

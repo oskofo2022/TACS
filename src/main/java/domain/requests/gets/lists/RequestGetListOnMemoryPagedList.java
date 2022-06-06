@@ -1,7 +1,6 @@
 package domain.requests.gets.lists;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import domain.persistence.entities.Tournament;
 import domain.requests.common.gets.lists.RequestCommonGetPagedList;
 import domain.responses.gets.lists.ResponseGetPagedList;
 
@@ -37,6 +36,11 @@ public abstract class RequestGetListOnMemoryPagedList<T> extends RequestCommonGe
                                                                  .map(mapping)
                                                                  .toList();
         return new ResponseGetPagedList<>(pageCount, pageElements, totalCount);
+    }
+
+    @JsonIgnore
+    public ResponseGetPagedList<T> paginate(Supplier<Stream<T>> streamSupplier) {
+        return this.paginate(streamSupplier, Function.identity());
     }
 
     public abstract boolean isValid(T instance);

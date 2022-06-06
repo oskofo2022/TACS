@@ -122,10 +122,11 @@ public class RequestGetListUserInscription extends RequestGetListOnMemoryPagedLi
     public boolean isValid(Tournament tournament) {
         return (this.tournamentName == null || this.tournamentName.isBlank() || tournament.getName().contains(this.tournamentName))
                 && (this.tournamentState == null || tournament.getState() == this.tournamentState)
-                && (this.tournamentBottomEndDate == null || this.tournamentBottomEndDate.compareTo(tournament.getEndDate()) >= 0)
-                && (this.tournamentTopEndDate == null || this.tournamentTopEndDate.compareTo(tournament.getEndDate()) <= 0)
-                && (this.tournamentBottomStartDate == null || this.tournamentBottomStartDate.compareTo(tournament.getStartDate()) >= 0)
-                && (this.tournamentTopStartDate == null || this.tournamentTopStartDate.compareTo(tournament.getStartDate()) <= 0)
+                && (this.tournamentBottomEndDate == null || this.tournamentBottomEndDate.compareTo(tournament.getEndDate()) <= 0)
+                && (this.tournamentTopEndDate == null || this.tournamentTopEndDate.compareTo(tournament.getEndDate()) >= 0)
+                && (this.tournamentBottomStartDate == null || this.tournamentBottomStartDate.compareTo(tournament.getStartDate()) <= 0)
+                && (this.tournamentTopStartDate == null || this.tournamentTopStartDate.compareTo(tournament.getStartDate()) >= 0)
+                && (this.tournamentId == null || this.tournamentId.equals(tournament.getId()))
                 && (this.tournamentIds == null || this.tournamentIds.contains(tournament.getId()));
     }
 

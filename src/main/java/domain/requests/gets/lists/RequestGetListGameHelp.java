@@ -4,6 +4,7 @@ import domain.validators.RegexSortBy;
 
 import javax.validation.constraints.Size;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -55,6 +56,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
     }
 
     @JsonIgnore
+    @Override
     public boolean isValid(String word) {
       return !this.hasBadLetters(word) && this.hasGoodLetters(word) && this.hasGreenLetters(word);
     }
@@ -64,7 +66,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
     public Map<String, Comparator<String>> getComparatorMap() {
         return new HashMap<>() {
             {
-                put("identity", Comparator.comparing(String::toString));
+                put("identity", Comparator.comparing(Function.identity()));
             }
         };
     }

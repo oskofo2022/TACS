@@ -89,6 +89,14 @@ public class UriConstants {
                     public static final String URL = Inscriptions.URL + "/tournaments";
                     public static final String ID = "/{tournamentId}";
 
+                    public static class One {
+                        private static final String URL = Tournaments.URL + Tournaments.ID;
+
+                        public static class Positions {
+                            public static final String URL = One.URL + "/positions";
+                        }
+                    }
+
                     public static class Positions {
                         public static final String URL = Tournaments.URL + "/positions";
                     }

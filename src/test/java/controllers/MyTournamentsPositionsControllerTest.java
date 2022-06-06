@@ -83,7 +83,7 @@ public class MyTournamentsPositionsControllerTest {
             assertEquals(inscribedTournaments.get(i).getStartDate(), responsesGetListTournamentPosition.get(i).startDate());
             assertEquals(inscribedTournaments.get(i).getEndDate(), responsesGetListTournamentPosition.get(i).endDate());
             assertEquals(inscribedTournaments.get(i).getLanguage(), responsesGetListTournamentPosition.get(i).language());
-            assertEquals(inscribedTournaments.get(i).listPositions(), responsesGetListTournamentPosition.get(i).positions());
+            assertEquals(inscribedTournaments.get(i).listPositions().toList(), responsesGetListTournamentPosition.get(i).positions());
         }
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();
