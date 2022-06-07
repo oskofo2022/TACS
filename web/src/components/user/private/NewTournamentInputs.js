@@ -7,7 +7,6 @@ import {
     validateTextAlpha,
     validateVisibility
 } from "../../formValidations/formValidations";
-import {formReducer} from "../../formValidations/reducer";
 import {MenuItem, Stack} from "@mui/material";
 import {LanguagesConstants} from "../../../constants/LanguagesConstants";
 import WordleTextField from "../WordleInput";
@@ -15,8 +14,6 @@ import WordleTextField from "../WordleInput";
 const today = new Date().toISOString().substring(0, 10);
 
 const inputDateProps = {min: minDate, max: maxDate}
-
-const reducer = (state, action) => formReducer(state, action);
 
 const NewTournamentInputs = ({formData: formData}) => {
 
