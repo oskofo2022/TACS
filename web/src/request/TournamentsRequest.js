@@ -1,35 +1,16 @@
 import {QueryParams} from "../httpUtils/QueryParams";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
 import {UrlConstants} from "../constants/UrlConstants";
 import {TournamentsResponse} from "../response/TournamentsResponse";
+import { GetRequest } from "./GetRequest";
 
-export class TournamentsRequest {
-    getURL = UrlConstants.PUBLIC_TOURNAMENTS;
-    response;
-    request;
+export class TournamentsRequest extends GetRequest{
 
-    buildRequest = (params) => {
-        let rb = RequestBuilder.get(this.getURL);
-        this.request = rb.setQueryParams(params)
-            .build();
-    }
-
-    constructor(params: QueryParams) {
-        this.buildRequest(params);
+    constructor(queryParams: QueryParams) {
+        super({url: UrlConstants.PUBLIC_TOURNAMENTS, queryParams: queryParams})
     }
 
     static from(params: QueryParams) {
         return new TournamentsRequest(params);
-    }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        return this.response;
-    }
-
-    async fetchAsJSON(){
-        const response = await this.fetch();
-        return await response.json();
     }
 
     async fetchAsPaged(): Promise<TournamentsResponse>{

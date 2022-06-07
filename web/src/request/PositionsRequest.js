@@ -1,38 +1,17 @@
 import {QueryParams} from "../httpUtils/QueryParams";
 import {UrlConstants} from "../constants/UrlConstants";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
 import {TournamentsResponse} from "../response/TournamentsResponse";
-import {UnauthorizedException} from "../errors/UnauthorizedException";
 import {PositionsResponse} from "../response/PositionsResponse";
+import {GetRequest} from "./GetRequest";
 
-export class PositionsRequest {
-    getURL = UrlConstants.POSITIONS;
-    response;
-    request;
+export class PositionsRequest extends GetRequest{
 
-    buildRequest = (params) => {
-        let rb = RequestBuilder.get(this.getURL);
-        this.request = rb.setQueryParams(params)
-            .build();
-    }
-
-    constructor(params: QueryParams) {
-        this.buildRequest(params);
+    constructor(queryParams: QueryParams) {
+        super({url: UrlConstants.POSITIONS, queryParams: queryParams})
     }
 
     static from(params: QueryParams) {
         return new PositionsRequest(params);
-    }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        if(this.response.status === 401) throw new UnauthorizedException('Unauthorized');
-        return this.response;
-    }
-
-    async fetchAsJSON(){
-        const response = await this.fetch();
-        return await response.json();
     }
 
     async fetchAsPaged(): Promise<TournamentsResponse>{

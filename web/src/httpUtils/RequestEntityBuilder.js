@@ -1,15 +1,15 @@
 import {QueryParams} from "./QueryParams";
 import {HttpMethod, RequestOptions} from "./RequestOptions";
-import {Request} from "./Request";
+import {RequestEntity} from "./RequestEntity";
 
-export class RequestBuilder {
+export class RequestEntityBuilder {
     pathParams: [{ name: string, value: string }];
     url: string;
     requestOptions: HttpMethod;
     queryParams: QueryParams;
 
     static from(url: string) {
-        let rb = new RequestBuilder()
+        let rb = new RequestEntityBuilder()
         return rb.setURL(url);
     }
 
@@ -67,7 +67,7 @@ export class RequestBuilder {
     }
 
     build() {
-        return new Request({
+        return new RequestEntity({
             url: this.url,
             requestOptions: this.requestOptions,
             pathParams: this.pathParams,
