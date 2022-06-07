@@ -20,12 +20,6 @@ services:
     depends_on:
       web-app-db:
           condition: service_healthy
-    environment:
-      WAIT_HOSTS: "web-app-db:3306"
-      WAIT_BEFORE: 20
-      WAIT_TIMEOUT: 120
-      WAIT_SLEEP_INTERVAL: 10
-      WAIT_HOST_CONNECT_TIMEOUT: 30
   wordle-front:
     build: ./web
     container_name: wordle-web-front
