@@ -2,6 +2,7 @@ package controllers;
 
 import constants.SuppressWarningsConstants;
 import constants.UriConstants;
+import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
@@ -212,7 +213,25 @@ class UsersControllerTest {
         assertEquals("http://localhost/users/%s".formatted(userId), responseEntity.getHeaders().get("Location").get(0));
         assertEquals(userId, responseEntity.getBody().getId());
 
+        Mockito.verify(this.userRepository, Mockito.times(1)).findAll(Mockito.any(Specification.class));
         Mockito.verify(this.passwordEncoder, Mockito.times(1)).encode(requestPostUser.getPassword());
         Mockito.verify(this.userRepository, Mockito.times(1)).save(getArgumentMatcherUser.get());
+    }
+
+    @Test
+    void postDuplicateUser() {
+        final var requestPostUser = new RequestPostUser();
+
+        Mockito.when(this.userRepository.findAll(Mockito.any(Specification.class))).thenReturn(new ArrayList() {
+            {
+                add(new User());
+            }
+        });
+
+        assertThrows(DuplicateEntityFoundRuntimeException.class, () -> this.usersController.post(requestPostUser));
+
+        Mockito.verify(this.userRepository, Mockito.times(1)).findAll(Mockito.any(Specification.class));
+        Mockito.verify(this.passwordEncoder, Mockito.never()).encode(Mockito.any());
+        Mockito.verify(this.userRepository, Mockito.never()).save(Mockito.any());
     }
 }

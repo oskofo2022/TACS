@@ -37,13 +37,9 @@ public class UserMatchesController {
         specificationBuilder.andEqual("user.id", user.getId())
                             .andEqual("date", LocalDate.now());
 
-        final var duplicatesFound = this.matchRepository.findAll(specificationBuilder.build())
-                                                                .stream()
-                                                                .anyMatch(requestPostUserMatchToday::hasLanguage);
-
-        if (duplicatesFound) {
-            throw new DuplicateEntityFoundRuntimeException(Match.class);
-        }
+        this.matchRepository.findOne(specificationBuilder.build())
+                            .filter(requestPostUserMatchToday::hasLanguage)
+                            .ifPresent(m -> { throw new DuplicateEntityFoundRuntimeException(Match.class); });
 
         final var matches = requestPostUserMatchToday.listMatches(user);
 
