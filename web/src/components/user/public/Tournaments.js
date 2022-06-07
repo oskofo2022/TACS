@@ -1,13 +1,15 @@
 import * as React from 'react'
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import {QueryParams} from "../../../httpUtils/QueryParams";
-import {TournamentsRequest} from "../../../request/TournamentsRequest"
-import {TournamentsResponse} from "../../../response/TournamentsResponse";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { QueryParams } from "../../../httpUtils/QueryParams";
+import { TournamentsRequest } from "../../../request/TournamentsRequest";
+import { InscriptionsRequest } from "../../../request/InscriptionsRequest";
+import { TournamentsResponse } from "../../../response/TournamentsResponse";
 import IconButton from "@mui/material/IconButton";
 import LoginIcon from '@mui/icons-material/Login';
-import {InscriptMyselfRequest} from "../../../request/InscriptMyselfRequest";
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import { InscriptMyselfRequest } from "../../../request/InscriptMyselfRequest";
 import AuthContext from "../../context/AuthContext";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import ReactNbsp from 'react-nbsp'
 
 const Tournaments = () => {
@@ -20,8 +22,6 @@ const Tournaments = () => {
     const [tournamentBeginDate, setTournamentBeginDate] = React.useState('');
     const [tournamentEndDate, setTournamentEndDate] = React.useState('');
 
-
-
     const [data, setData] = React.useState({
         loading: true,
         rows: [],
@@ -30,30 +30,55 @@ const Tournaments = () => {
         page: 1,
         rowsPerPageOptions: [2, 5, 10, 20],
         sortBy: 'id',
-        sortOrder:'ASCENDING',
-      });
-    
+        sortOrder: 'ASCENDING',
+    });
+
     const updateData = (k, v) => setData((prev) => ({ ...prev, [k]: v }));
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 70, sortable: false, },
         { field: 'name', headerName: 'Name', width: 200, sortable: false, },
         { field: 'language', headerName: 'Language', width: 130, sortable: false, },
         { field: 'beginDate', headerName: 'Begin date', width: 130, sortable: false, },
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
         { field: 'state', headerName: 'State', width: 130, sortable: false, },
-        { field: 'inscription', headerName: 'Inscript', width: 130, sortable: false, hide: !authContext.authenticated, renderCell:
-                (t) => (
-                    <IconButton
-                        key={'tournamentInscriptButton'}
-                        size="large"
-                        aria-label="Inscript to tournament"
-                        onClick={handleTournamentInscription(t.row)}
-                        color="inherit"
-                    >
-                        <LoginIcon/>
-                    </IconButton>
-                )},
+        {
+            field: 'inscription', headerName: 'Inscription', width: 130, sortable: false, hide: !authContext.authenticated, renderCell:
+                (t) => {
+                    const row = t.row
+                    const inscripted = !!row.inscripted
+                    // console.log({inscripted});
+                    // if(!inscripted) console.log(JSON.stringify(row))
+                    return  (
+                            <React.Fragment>
+                                {inscripted ? (
+                                <IconButton
+                                    key={'tournamentInscripted'}
+                                    size="large"
+                                    aria-label="Inscripted"
+                                    title="Inscripted"
+                                    onClick={e => e.preventDefault()}
+                                    color='info'
+                                    disableRipple={true}
+                                    sx={{ cursor: 'default' }}
+                                >
+                                    <HowToRegIcon />
+                                </IconButton>
+                                ) :
+                                (<IconButton
+                                    key={'tournamentInscriptButton'}
+                                    size="large"
+                                    aria-label="Inscript to tournament"
+                                    title="Press for sign to the tournament"
+                                    onClick={handleTournamentInscription(t.row)}
+                                    color="inherit"
+                                >
+                                    <LoginIcon />
+                                </IconButton>
+                                )}
+                            </React.Fragment>
+                        )
+                }
+        },
     ];
 
     const handleCloseSuccessDialog = () => {
@@ -61,7 +86,7 @@ const Tournaments = () => {
     };
 
     const handlePostInscription = (tournamentId) => {
-        const pathParams = {name: 'tournamentId', value: tournamentId}
+        const pathParams = { name: 'tournamentId', value: tournamentId }
         const inscriptMyselfRequest = InscriptMyselfRequest.from(pathParams);
         return inscriptMyselfRequest.fetch();
     }
@@ -78,14 +103,13 @@ const Tournaments = () => {
 
     const request = React.useRef(true);
 
-    const handleGetPublicTournaments = async (tournamentRequest): Promise<TournamentsResponse> =>  {
+    const handleGetPublicTournaments = async (tournamentRequest): Promise<TournamentsResponse> => {
         updateData("loading", true);
         return await tournamentRequest.fetchAsPaged();
     }
 
-
     React.useEffect(() => {
-
+        // console.log({auth: authContext.authenticated, current: request.current})
         // if(authContext.authenticated) columns.push(inscriptionColumn);
 
         const tournamentRequest = TournamentsRequest.from(
@@ -98,34 +122,51 @@ const Tournaments = () => {
         )
 
 
-        if (request.current === true) {
-            const response = handleGetPublicTournaments(tournamentRequest);
-            response.then( r => {
-                const rows = r.pageItems;
-                const totalRows = r.totalCount;
-                updateData("totalRows", totalRows);
-                updateData("rows", rows);
-                updateData("loading", false);
-
-                request.current = false
-            });
-        }
-    }, [data.page, data.pageSize]);
+        const response = handleGetPublicTournaments(tournamentRequest);
+        response.then(r => {
+            const rows = r.pageItems;
+            const totalRows = r.totalCount;
+            updateData("totalRows", totalRows);
+            request.current = false
+            return rows;
+        }).then(rows => {
+            let filteredRows;
+            const inscriptionsRequest = InscriptionsRequest.from(
+                new QueryParams({
+                    sortBy: 'name',
+                    sortOrder: data.sortOrder,
+                    tournamentIds: rows.map(r => r.id),
+                })
+            )
+            inscriptionsRequest.fetchAsPaged()
+                .then(r => {
+                    const inscriptionIds = r.pageItems.map(t => t.id);
+                    filteredRows = rows.map(t => { (inscriptionIds.includes(t.id)) ? t.inscripted = true : t.inscripted = false; return t; })
+                    updateData("rows", filteredRows);
+                    updateData("loading", false);
+                })
+                .catch(e => { })
+            return rows;
+        }).then(_rows => {
+            updateData("rows", _rows);
+            updateData("loading", false);
+        });
+    }, [authContext.authenticated, data.page, data.pageSize]);
 
     const tournamentLabel = (tournamentLabel, tournamentValue) => (
         <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{flexGrow: 1, color: 'black'}}
+            sx={{ flexGrow: 1, color: 'black' }}
         >
             {tournamentLabel}:
-            <ReactNbsp/>
+            <ReactNbsp />
             <Typography
                 variant="h6"
                 noWrap
                 component="div"
-                sx={{flexGrow: 1, color: 'gray', display: 'inline'}}
+                sx={{ flexGrow: 1, color: 'gray', display: 'inline' }}
             >
                 {tournamentValue}
             </Typography>
@@ -146,7 +187,7 @@ const Tournaments = () => {
             {redirect}
             <Dialog open={inscriptionSuccessDialogOpen} onClose={handleCloseSuccessDialog} className='signinmodal' fullWidth>
                 <DialogTitle>
-                    <Typography variant="h5" sx={{color: "green"}} textAlign="center">Inscription Success</Typography>
+                    <Typography variant="h5" sx={{ color: "green" }} textAlign="center">Inscription Success</Typography>
                 </DialogTitle>
                 <DialogContent>
                     {DialogContentLabels()}
@@ -163,13 +204,13 @@ const Tournaments = () => {
                     loading={data.loading}
                     rows={data.rows}
                     columns={columns}
-                    page={data.page-1}
+                    page={data.page - 1}
                     pageSize={data.pageSize}
                     rowsPerPageOptions={data.rowsPerPageOptions}
                     rowCount={data.totalRows}
                     paginationMode='server'
-                    onPageChange={ (p) => {updateData("page", p + 1); request.current = true;} }
-                    onPageSizeChange={ (ps) => {updateData("page", 1); updateData("pageSize", ps); request.current = true;} }
+                    onPageChange={(p) => { updateData("page", p + 1); request.current = true; }}
+                    onPageSizeChange={(ps) => { updateData("page", 1); updateData("pageSize", ps); request.current = true; }}
                 />
             </div>
         </React.Fragment>

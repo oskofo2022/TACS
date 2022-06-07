@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.9"
 services:
   web-app-db:
     image: mysql
@@ -7,13 +7,19 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=wordle
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
   web-app:
     build: .
     container_name: wordle-web-app
+    restart: on-failure
     ports:
       - "8080:8080"
     depends_on:
-      - web-app-db
+      web-app-db:
+          condition: service_healthy
     environment:
       WAIT_HOSTS: "web-app-db:3306"
       WAIT_BEFORE: 20

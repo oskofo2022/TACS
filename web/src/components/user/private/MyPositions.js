@@ -49,8 +49,8 @@ const MyPositions = () => {
                 page: data.page,
                 pageSize: data.pageSize,
                 sortOrder: data.sortOrder,
-                tournament: tournamentName.torneoName,
-                sortBy: "tournament.name"
+                tournamentName: tournamentName.torneoName,
+                sortBy: "name"
             })
         )
         handleGetPositions(positionsRequest)

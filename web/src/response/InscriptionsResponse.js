@@ -15,7 +15,7 @@ export class InscriptionsResponse extends PagedResponse {
             const t = i.tournament;
             return new Inscription(
                     t.id,
-                    t.Name,
+                    t.name,
                     t.language,
                     t.startDate,
                     t.endDate,

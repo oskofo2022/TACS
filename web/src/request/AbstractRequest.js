@@ -1,5 +1,5 @@
-import { InternalServerException } from "errors/InternalServerException";
-import { UnauthorizedException } from "errors/UnauthorizedException";
+import {UnauthorizedException} from "errors/UnauthorizedException";
+
 
 export class AbstractRequest {
     url;
@@ -28,7 +28,6 @@ export class AbstractRequest {
     async fetch(){
         this.response = await this.request.fetch();
         if(this.response.status === 401) throw new UnauthorizedException('Unauthorized');
-        if(this.response.status === 500) throw new InternalServerException(this.response.toString())
         return this.response;
     }
 

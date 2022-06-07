@@ -4,7 +4,7 @@ import {PostRequest} from "./PostRequest";
 export class SignUpRequest extends PostRequest{
 
     constructor(body) {
-        super(UrlConstants.USERS, body)
+        super({url: UrlConstants.USERS, body: body})
     }
 
     static from(body) {

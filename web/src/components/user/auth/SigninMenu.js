@@ -47,7 +47,7 @@ const SigninMenu = () => {
         const body = JSON.stringify({email: username, password: password});
         const loginRequest = LoginRequest.from(body);
         const responseJson = await loginRequest.fetchAsJSON();
-
+        
         if (loginRequest.response.status === 200) {
             const name = responseJson.name;
             authContext.signin(name);

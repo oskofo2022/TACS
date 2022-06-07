@@ -10,6 +10,8 @@ import {UnauthorizedException} from "../../errors/UnauthorizedException";
 const pages = ['diccionarios', 'torneos'];
 const defaultName = 'invitado';
 
+
+
 function App() {
 
     const [activeTab, setActiveTab] = React.useState(pages[0]);
@@ -36,7 +38,10 @@ function App() {
     }
 
     const handleUnauthorized = (e) => {
-        if (!e instanceof UnauthorizedException) throw e; else return (<Navigate to={'/logout'}/>);
+        if (e instanceof UnauthorizedException) 
+            return (<Navigate to={'/logout'}/>);
+        else
+            throw e;
     };
 
     React.useEffect(() => {
