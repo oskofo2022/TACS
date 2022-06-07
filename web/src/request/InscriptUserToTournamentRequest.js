@@ -1,34 +1,13 @@
 import {UrlConstants} from "../constants/UrlConstants";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
+import {PostRequest} from "./PostRequest";
 
-export class InscriptUserToTournamentRequest{
-    postURL = UrlConstants.TOURNAMENTS_USER_INSCRIPTION;
-    request;
-    response;
-    body;
-
-    buildRequest = () => {
-        let rb = RequestBuilder.post(this.postURL, this.body);
-        this.request = rb.setPathParms(this.pathParams).build();
-    }
+export class InscriptUserToTournamentRequest extends PostRequest {
 
     constructor(pathParams, body) {
-        this.body = body;
-        this.pathParams = pathParams;
-        this.buildRequest();
+        super({url: UrlConstants.TOURNAMENTS_USER_INSCRIPTION, body: body, pathParams: pathParams})
     }
 
     static from(pathParams, body) {
         return new InscriptUserToTournamentRequest(pathParams,body);
-    }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        return this.response;
-    }
-
-    async fetchAsJSON(){
-        await this.fetch()
-        return this.response.json();
     }
 }

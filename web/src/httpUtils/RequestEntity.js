@@ -1,7 +1,7 @@
 import {QueryParams} from "./QueryParams";
 import {HttpMethod} from "./RequestOptions";
 
-export class Request {
+export class RequestEntity {
     url: string;
     requestOptions: HttpMethod;
     queryParams: QueryParams;

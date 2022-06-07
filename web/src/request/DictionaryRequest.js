@@ -1,33 +1,12 @@
 import {UrlConstants} from "../constants/UrlConstants";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
 import {DictionaryResponse} from "../response/DictionaryResponse";
 import {MeaningNotFoundException} from "../errors/MeaningNotFoundException";
+import { GetRequest } from "./GetRequest";
 
-class DictionaryRequest{
-    getURL;
-    request;
-    pathParams;
-    response;
-
-    buildRequest = () => {
-        let rb = RequestBuilder.get(this.getURL);
-        this.request = rb.setPathParms(this.pathParams).build();
-    }
+class DictionaryRequest extends GetRequest{
 
     constructor(pathParams, url) {
-        this.pathParams = pathParams;
-        this.getURL = url;
-        this.buildRequest();
-    }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        return this.response;
-    }
-
-    async fetchAsJSON(){
-        await this.fetch()
-        return this.response.json();
+        super({pathParams, url})
     }
 
     async fetchMeanings(): Promise<DictionaryResponse>{

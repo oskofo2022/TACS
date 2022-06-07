@@ -1,31 +1,14 @@
 import {UrlConstants} from "../constants/UrlConstants";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
-import {UnauthorizedException} from "../errors/UnauthorizedException";
+import { PostRequest } from "./PostRequest";
 
-export class UserGuessRequest {
-    postURL = UrlConstants.USER_GUESS;
-    request;
-    response;
-    body;
-
-    buildRequest = () => {
-        let rb = RequestBuilder.post(this.postURL, this.body);
-        this.request = rb.build();
-    }
-
+export class UserGuessRequest extends PostRequest{
+    
     constructor(body) {
-        this.body = body;
-        this.buildRequest();
+        super({url: UrlConstants.USER_GUESS, body: body})
     }
 
     static from(body) {
         return new UserGuessRequest(body);
-    }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        if(this.response.status === 401) throw new UnauthorizedException('Unauthorized');
-        return this.response;
     }
 
 }

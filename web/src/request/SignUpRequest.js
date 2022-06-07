@@ -1,34 +1,14 @@
 import {UrlConstants} from "../constants/UrlConstants";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
+import {PostRequest} from "./PostRequest";
 
-export class SignUpRequest {
-    postURL = UrlConstants.USERS;
-    request;
-    response;
-    body;
-
-    buildRequest = () => {
-        let rb = RequestBuilder.post(this.postURL, this.body);
-        this.request = rb.build();
-    }
+export class SignUpRequest extends PostRequest{
 
     constructor(body) {
-        this.body = body;
-        this.buildRequest();
+        super(UrlConstants.USERS, body)
     }
 
     static from(body) {
         return new SignUpRequest(body);
     }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        return this.response;
-    }
-
-    async fetchAsJSON(){
-        await this.fetch()
-        return this.response.json();
-    }
-
+    
 }

@@ -1,9 +1,9 @@
 export class QueryParams {
     constructor({
-                    page = 0,
-                    pageSize = 5,
+                    page = 1,
+                    pageSize = 1000,
                     sortBy = 'id',
-                    sortOrder = 'ASC',
+                    sortOrder = 'ASCENDING',
                     ...params
                 }){
         this.page=page;
@@ -25,7 +25,14 @@ export class QueryParams {
 
     toString(){
         let p = [];
-        for (const key in this) p.push(key+'='+this[key]);
+        for (const key in this) {
+            let value;
+            if(Array.isArray(this[key]))
+                value = this[key].map(k => key+'='+k).join('&');
+            else
+                value = key+'='+this[key];
+            p.push(value);
+        }
         return p.join('&');
     }
 }

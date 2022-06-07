@@ -1,35 +1,13 @@
 import {UrlConstants} from "../constants/UrlConstants";
-import {RequestBuilder} from "../httpUtils/RequestBuilder";
-import {UnauthorizedException} from "../errors/UnauthorizedException";
+import { PostRequest } from "./PostRequest";
 
-export class InscriptMyselfRequest {
-    postURL = UrlConstants.PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION;
-    request;
-    response;
-    body;
-
-    buildRequest = () => {
-        let rb = RequestBuilder.post(this.postURL, '');
-        this.request = rb.setPathParms(this.pathParams).build();
-    }
+export class InscriptMyselfRequest extends PostRequest {
 
     constructor(pathParams) {
-        this.pathParams = pathParams;
-        this.buildRequest();
+        super({url: UrlConstants.PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION, pathParams: pathParams})
     }
 
     static from(pathParams) {
         return new InscriptMyselfRequest(pathParams);
-    }
-
-    async fetch(){
-        this.response = await this.request.fetch();
-        if(this.response.status === 401) throw new UnauthorizedException('Unauthorized');
-        return this.response;
-    }
-
-    async fetchAsJSON(){
-        await this.fetch()
-        return this.response.json();
     }
 }
