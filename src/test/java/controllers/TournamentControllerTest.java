@@ -2,10 +2,10 @@ package controllers;
 
 import constants.SuppressWarningsConstants;
 import constants.UriConstants;
+import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.User;
 import domain.persistence.entities.enums.Language;
-import domain.persistence.entities.enums.TournamentState;
 import domain.persistence.entities.enums.Visibility;
 import domain.persistence.repositories.TournamentRepository;
 import domain.persistence.sessions.UserContextService;
@@ -25,11 +25,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings(SuppressWarningsConstants.ALL)
@@ -46,7 +46,6 @@ public class TournamentControllerTest {
 
     @Test
     void listPublic() {
-
         final var tournamentOne = new Tournament();
         tournamentOne.setName("Tournament One");
         tournamentOne.setVisibility(Visibility.PUBLIC);
@@ -149,7 +148,21 @@ public class TournamentControllerTest {
         assertNotNull(headerLocation);
         assertEquals("http://localhost/users/myself/tournaments?id=%s".formatted(tournamentId), headerLocation.get(0));
 
+        Mockito.verify(this.tournamentRepository, Mockito.times(1)).findOne(Mockito.any(Specification.class));
         Mockito.verify(this.userContextService, Mockito.times(1)).get();
         Mockito.verify(this.tournamentRepository, Mockito.times(1)).save(getArgumentMatcherTournament.get());
+    }
+
+    @Test
+    void postDuplicateTournament() {
+        final var requestPostTournament = new RequestPostTournament();
+
+        Mockito.when(this.tournamentRepository.findOne(Mockito.any(Specification.class))).thenReturn(Optional.of(new Tournament()));
+
+        assertThrows(DuplicateEntityFoundRuntimeException.class, () -> this.tournamentsController.post(requestPostTournament));
+
+        Mockito.verify(this.tournamentRepository, Mockito.times(1)).findOne(Mockito.any(Specification.class));
+        Mockito.verify(this.userContextService, Mockito.never()).get();
+        Mockito.verify(this.tournamentRepository, Mockito.never()).save(Mockito.any());
     }
 }

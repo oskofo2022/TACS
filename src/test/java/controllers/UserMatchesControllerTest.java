@@ -1,6 +1,7 @@
 package controllers;
 
 import constants.SuppressWarningsConstants;
+import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.persistence.entities.Match;
 import domain.persistence.entities.User;
 import domain.persistence.entities.enums.Language;
@@ -19,9 +20,11 @@ import org.springframework.http.HttpStatus;
 
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings(SuppressWarningsConstants.ALL)
@@ -37,40 +40,54 @@ public class UserMatchesControllerTest {
     private UserMatchesController userMatchesController;
 
     @Test
-    void postWithoutDuplicatedFound(){
+    void post() {
         final var idUser = UUID.randomUUID();
 
         final var user = new User();
         user.setId(idUser);
-        user.setName("someName");
-        user.setEmail("some@email.com");
-        user.setPassword("somePassword");
 
-        RequestPostUserMatchTodayResult requestPostUserMatchTodayResultOne = new RequestPostUserMatchTodayResult();
-        requestPostUserMatchTodayResultOne.setLanguage(Language.SPANISH);
-        requestPostUserMatchTodayResultOne.setGuessesCount(3);
+        final var matches = new ArrayList<Match>() {
+            {
+                add(new Match());
+            }
+        };
 
-        RequestPostUserMatchTodayResult requestPostUserMatchTodayResultTwo = new RequestPostUserMatchTodayResult();
-        requestPostUserMatchTodayResultTwo.setLanguage(Language.ENGLISH);
-        requestPostUserMatchTodayResultTwo.setGuessesCount(4);
-
-        final var listRequestPostUserMatchTodayResult = new ArrayList<RequestPostUserMatchTodayResult>();
-        listRequestPostUserMatchTodayResult.add(requestPostUserMatchTodayResultOne);
-        listRequestPostUserMatchTodayResult.add(requestPostUserMatchTodayResultTwo);
-
-        RequestPostUserMatchToday requestPostUserMatchToday = Mockito.mock(RequestPostUserMatchToday.class);
-
-        final var matchList = new ArrayList<Match>();
+        final var requestPostUserMatchToday = Mockito.mock(RequestPostUserMatchToday.class);
 
         Mockito.when(this.userContextService.get()).thenReturn(user);
-        Mockito.when(this.matchRepository.findAll(Mockito.any(Specification.class))).thenReturn(matchList);
+        Mockito.when(requestPostUserMatchToday.listMatches(user)).thenReturn(matches);
 
         final var responseEntity = this.userMatchesController.post(requestPostUserMatchToday);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        Mockito.verify(this.matchRepository,Mockito.times(1)).findAll(Mockito.any(Specification.class));
-        Mockito.verify(this.matchRepository,Mockito.times(1)).saveAll(matchList);
-        Mockito.verify(this.userContextService,Mockito.times(1)).get();
+        Mockito.verify(this.userContextService, Mockito.times(1)).get();
+        Mockito.verify(this.matchRepository, Mockito.times(1)).findOne(Mockito.any(Specification.class));
+        Mockito.verify(requestPostUserMatchToday, Mockito.times(1)).listMatches(user);
+        Mockito.verify(this.matchRepository, Mockito.times(1)).saveAll(matches);
+        Mockito.verify(requestPostUserMatchToday, Mockito.never()).hasLanguage(Mockito.any());
+    }
+
+    @Test
+    void postDuplicateMatch() {
+        final var idUser = UUID.randomUUID();
+
+        final var user = new User();
+        user.setId(idUser);
+
+        final var requestPostUserMatchToday = Mockito.mock(RequestPostUserMatchToday.class);
+
+        final var existingMatch = new Match();
+        Mockito.when(this.userContextService.get()).thenReturn(user);
+        Mockito.when(requestPostUserMatchToday.hasLanguage(existingMatch)).thenReturn(true);
+        Mockito.when(this.matchRepository.findOne(Mockito.any(Specification.class))).thenReturn(Optional.of(existingMatch));
+
+        assertThrows(DuplicateEntityFoundRuntimeException.class, () -> this.userMatchesController.post(requestPostUserMatchToday));
+
+        Mockito.verify(this.userContextService, Mockito.times(1)).get();
+        Mockito.verify(this.matchRepository, Mockito.times(1)).findOne(Mockito.any(Specification.class));
+        Mockito.verify(requestPostUserMatchToday, Mockito.times(1)).hasLanguage(existingMatch);
+        Mockito.verify(requestPostUserMatchToday, Mockito.never()).listMatches(Mockito.any());
+        Mockito.verify(this.matchRepository, Mockito.never()).saveAll(Mockito.any());
     }
 }
