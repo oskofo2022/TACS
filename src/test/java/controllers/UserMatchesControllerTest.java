@@ -62,7 +62,7 @@ public class UserMatchesControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();
-        Mockito.verify(this.matchRepository, Mockito.times(1)).findOne(Mockito.any(Specification.class));
+        Mockito.verify(this.matchRepository, Mockito.times(1)).findAll(Mockito.any(Specification.class));
         Mockito.verify(requestPostUserMatchToday, Mockito.times(1)).listMatches(user);
         Mockito.verify(this.matchRepository, Mockito.times(1)).saveAll(matches);
         Mockito.verify(requestPostUserMatchToday, Mockito.never()).hasLanguage(Mockito.any());
@@ -80,12 +80,16 @@ public class UserMatchesControllerTest {
         final var existingMatch = new Match();
         Mockito.when(this.userContextService.get()).thenReturn(user);
         Mockito.when(requestPostUserMatchToday.hasLanguage(existingMatch)).thenReturn(true);
-        Mockito.when(this.matchRepository.findOne(Mockito.any(Specification.class))).thenReturn(Optional.of(existingMatch));
+        Mockito.when(this.matchRepository.findAll(Mockito.any(Specification.class))).thenReturn(new ArrayList() {
+            {
+                add(existingMatch);
+            }
+        });
 
         assertThrows(DuplicateEntityFoundRuntimeException.class, () -> this.userMatchesController.post(requestPostUserMatchToday));
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();
-        Mockito.verify(this.matchRepository, Mockito.times(1)).findOne(Mockito.any(Specification.class));
+        Mockito.verify(this.matchRepository, Mockito.times(1)).findAll(Mockito.any(Specification.class));
         Mockito.verify(requestPostUserMatchToday, Mockito.times(1)).hasLanguage(existingMatch);
         Mockito.verify(requestPostUserMatchToday, Mockito.never()).listMatches(Mockito.any());
         Mockito.verify(this.matchRepository, Mockito.never()).saveAll(Mockito.any());
