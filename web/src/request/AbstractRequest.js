@@ -9,7 +9,7 @@ export class AbstractRequest {
     response;
 
     constructor({
-        pathParams={},
+        pathParams=[],
         url='', 
         request={fetch: () => {}},
         body={}

@@ -11,12 +11,14 @@ import { InscriptMyselfRequest } from "../../../request/InscriptMyselfRequest";
 import AuthContext from "../../context/AuthContext";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import ReactNbsp from 'react-nbsp'
+import StatusCodeHandler from 'errors/StatusCodeHandler';
 
 const Tournaments = () => {
 
     const authContext = React.useContext(AuthContext);
     const [redirect, setRedirect] = React.useState(null);
     const [inscriptionSuccessDialogOpen, setInscriptionSuccessDialogOpen] = React.useState(false);
+    const [inscriptionFailedDialogOpen, setInscriptionFailedDialogOpen] = React.useState(false);
     const [tournamentName, setTournamentName] = React.useState('');
     const [tournamentLanguage, setTournamentLanguage] = React.useState('');
     const [tournamentBeginDate, setTournamentBeginDate] = React.useState('');
@@ -84,6 +86,9 @@ const Tournaments = () => {
     const handleCloseSuccessDialog = () => {
         setInscriptionSuccessDialogOpen(false);
     };
+    const handleCloseFailedDialog = () => {
+        setInscriptionFailedDialogOpen(false);
+    };
 
     const handlePostInscription = (tournamentId) => {
         const pathParams = { name: 'tournamentId', value: tournamentId }
@@ -97,8 +102,14 @@ const Tournaments = () => {
         setTournamentBeginDate(tournament.beginDate);
         setTournamentEndDate(tournament.endDate);
         handlePostInscription(tournament.id)
+            .then(StatusCodeHandler)
             .then(_ => setInscriptionSuccessDialogOpen(true))
-            .catch(e => setRedirect(authContext.handleUnauthorized(e)));
+            .catch(e => setRedirect(authContext.handleUnauthorized(e)))
+            .catch(e => e.response.json())
+            .then(r => {
+                console.log(r);
+                setInscriptionFailedDialogOpen(true);
+            });
     }
 
     const request = React.useRef(true);
@@ -106,6 +117,11 @@ const Tournaments = () => {
     const handleGetPublicTournaments = async (tournamentRequest): Promise<TournamentsResponse> => {
         updateData("loading", true);
         return await tournamentRequest.fetchAsPaged();
+    }
+
+    const handleGetPublicInscriptions = async (inscriptionRequest) => {
+        updateData("loading", true);
+        return await inscriptionRequest.fetchAsPaged();
     }
 
     React.useEffect(() => {
@@ -124,13 +140,8 @@ const Tournaments = () => {
 
         const response = handleGetPublicTournaments(tournamentRequest);
         response.then(r => {
-            const rows = r.pageItems;
-            const totalRows = r.totalCount;
-            updateData("totalRows", totalRows);
-            request.current = false
-            return rows;
-        }).then(rows => {
-            let filteredRows;
+            const rows = r.pageItems
+            updateData("totalRows", r.totalCount);
             const inscriptionsRequest = InscriptionsRequest.from(
                 new QueryParams({
                     sortBy: 'name',
@@ -138,18 +149,15 @@ const Tournaments = () => {
                     tournamentIds: rows.map(r => r.id),
                 })
             )
-            inscriptionsRequest.fetchAsPaged()
-                .then(r => {
-                    const inscriptionIds = r.pageItems.map(t => t.id);
-                    filteredRows = rows.map(t => { (inscriptionIds.includes(t.id)) ? t.inscripted = true : t.inscripted = false; return t; })
-                    updateData("rows", filteredRows);
-                    updateData("loading", false);
-                })
-                .catch(e => { })
-            return rows;
-        }).then(_rows => {
-            updateData("rows", _rows);
-            updateData("loading", false);
+            if (!!authContext.authenticated)
+                handleGetPublicInscriptions(inscriptionsRequest)
+                    .then(r => {
+                        const inscriptionIds = r.pageItems.map(t => t.id);
+                        const rowsWithInscription = rows.map(t => { (inscriptionIds.includes(t.id)) ? t.inscripted = true : t.inscripted = false; return t; })
+                        updateData("rows", rowsWithInscription);                        
+                    })
+            else updateData("rows", rows);
+            updateData("loading", false);          
         });
     }, [authContext.authenticated, data.page, data.pageSize]);
 
@@ -194,6 +202,14 @@ const Tournaments = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseSuccessDialog}>Close</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={inscriptionFailedDialogOpen} onClose={handleCloseFailedDialog} className='signinmodal' fullWidth>
+                <DialogTitle>
+                    <Typography variant="h5" sx={{ color: "red" }} textAlign="center">Inscription Failed</Typography>
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleCloseFailedDialog}>Close</Button>
                 </DialogActions>
             </Dialog>
             <div style={{ height: '60%', width: '100%' }}>

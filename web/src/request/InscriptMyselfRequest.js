@@ -4,7 +4,7 @@ import { PostRequest } from "./PostRequest";
 export class InscriptMyselfRequest extends PostRequest {
 
     constructor(pathParams) {
-        super({url: UrlConstants.PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION, pathParams: pathParams})
+        super({url: UrlConstants.PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION, pathParams: pathParams, body: undefined})
     }
 
     static from(pathParams) {
