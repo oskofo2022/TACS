@@ -124,6 +124,22 @@ const Tournaments = () => {
         return await inscriptionRequest.fetchAsPaged();
     }
 
+    const updateRowsWithInscriptions = (rows) => {
+        const inscriptionsRequest = InscriptionsRequest.from(
+            new QueryParams({
+                sortBy: 'name',
+                sortOrder: data.sortOrder,
+                tournamentIds: rows.map(r => r.id),
+            })
+        )
+        handleGetPublicInscriptions(inscriptionsRequest)
+            .then(r => {
+                const inscriptionIds = r.pageItems.map(t => t.id);
+                const rowsWithInscription = rows.map(t => { (inscriptionIds.includes(t.id)) ? t.inscripted = true : t.inscripted = false; return t; })
+                updateData("rows", rowsWithInscription);                        
+            })
+    }
+
     React.useEffect(() => {
         // console.log({auth: authContext.authenticated, current: request.current})
         // if(authContext.authenticated) columns.push(inscriptionColumn);
@@ -142,21 +158,7 @@ const Tournaments = () => {
         response.then(r => {
             const rows = r.pageItems
             updateData("totalRows", r.totalCount);
-            const inscriptionsRequest = InscriptionsRequest.from(
-                new QueryParams({
-                    sortBy: 'name',
-                    sortOrder: data.sortOrder,
-                    tournamentIds: rows.map(r => r.id),
-                })
-            )
-            if (!!authContext.authenticated)
-                handleGetPublicInscriptions(inscriptionsRequest)
-                    .then(r => {
-                        const inscriptionIds = r.pageItems.map(t => t.id);
-                        const rowsWithInscription = rows.map(t => { (inscriptionIds.includes(t.id)) ? t.inscripted = true : t.inscripted = false; return t; })
-                        updateData("rows", rowsWithInscription);                        
-                    })
-            else updateData("rows", rows);
+            (!!authContext.authenticated) ? updateRowsWithInscriptions(rows) : updateData("rows", rows);
             updateData("loading", false);          
         });
     }, [authContext.authenticated, data.page, data.pageSize]);
