@@ -1,5 +1,6 @@
 export const MSG_CONSTANTS = Object.freeze({
     _incorrect_text_msg: 'Sólo se admiten letras y espacios',
+    _incorrect_nospacedtext_msg: 'Sólo se admiten letras.',
     _empty_msg: 'Debe ingresar una palabra.',
     _incorrect_pwd_msg: 'El password debe tener al menos 1 símbolo, 1 número y 1 mayúsucla.',
     _empty_pwd_msg: 'Debe ingresar una contraseña.',
