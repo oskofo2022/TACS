@@ -78,12 +78,12 @@ class MyTournamentsControllerTest {
 
         final var wordleUser = new WordleUser("someName", "pass", "someEmail@email.com", userCreator.getId());
 
-        final var userPage = Mockito.mock(Page.class);
-        Mockito.when(userPage.getTotalElements()).thenReturn(totalElements);
-        Mockito.when(userPage.getTotalPages()).thenReturn(totalPages);
-        Mockito.when(userPage.stream()).thenReturn(tournaments.stream());
+        final var tournamentPage = Mockito.mock(Page.class);
+        Mockito.when(tournamentPage.getTotalElements()).thenReturn(totalElements);
+        Mockito.when(tournamentPage.getTotalPages()).thenReturn(totalPages);
+        Mockito.when(tournamentPage.stream()).thenReturn(tournaments.stream());
         Mockito.when(this.wordleAuthenticationManager.getCurrentUser()).thenReturn(wordleUser);
-        Mockito.when(this.tournamentRepository.findAll(Mockito.any(Specification.class), Mockito.any(PageRequest.class))).thenReturn(userPage);
+        Mockito.when(this.tournamentRepository.findAll(Mockito.any(Specification.class), Mockito.any(PageRequest.class))).thenReturn(tournamentPage);
 
         final var responseEntity =  this.myTournamentsController.list(requestGetListMyTournament);
         final var responseGetPagedList = responseEntity.getBody();
@@ -103,9 +103,9 @@ class MyTournamentsControllerTest {
             assertEquals(tournaments.get(index).getEndDate(), responsesGetListTournament.get(index).endDate());
         }
 
-        Mockito.verify(userPage, Mockito.times(1)).getTotalElements();
-        Mockito.verify(userPage, Mockito.times(1)).getTotalPages();
-        Mockito.verify(userPage, Mockito.times(1)).stream();
+        Mockito.verify(tournamentPage, Mockito.times(1)).getTotalElements();
+        Mockito.verify(tournamentPage, Mockito.times(1)).getTotalPages();
+        Mockito.verify(tournamentPage, Mockito.times(1)).stream();
         Mockito.verify(this.wordleAuthenticationManager, Mockito.times(1)).getCurrentUser();
         Mockito.verify(this.tournamentRepository, Mockito.times(1)).findAll(Mockito.any(Specification.class), Mockito.any(PageRequest.class));
     }

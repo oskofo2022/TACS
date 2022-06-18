@@ -76,7 +76,7 @@ public class UriConstants {
             public static final String URL = Users.URL + "/myself";
 
             public static class Matches {
-                private static final String URL = Myself.URL + "/matches";
+                public static final String URL = Myself.URL + "/matches";
                 public static class Today {
                     public static final String URL = Matches.URL + "/today";
                 }
