@@ -1,0 +1,13 @@
+.react-code-input:first-child {
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.react-code-input {
+    border-radius: 0px;
+}
+
+.react-code-input:last-child {
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px;
+}

@@ -7,7 +7,7 @@ import {BrowserRouter as Router, Navigate} from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import {UnauthorizedException} from "../../errors/UnauthorizedException";
 
-const pages = ['diccionarios', 'torneos'];
+const pages = ['diccionarios', 'torneos', 'helper'];
 const defaultName = 'invitado';
 
 

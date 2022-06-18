@@ -11,12 +11,23 @@ const at_least_symbol = /[!@#$%^&*]{1}/
 const at_least_uppercase = /[A-Z]{1}/
 const pwd_re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,60}$/
 const alphabet_re = /^[a-z A-Z]+$/;
+const nospacedalphabet_re = /^[a-zA-Z]*$/;
 const email_re = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
 
 export const validateLanguage = (formInput) => {
     const isValid = !!LanguagesConstants[formInput.value];
     formInput.setValid(isValid);
     (!isValid) ? formInput.setHelper(MSG_CONSTANTS._incorrect_language_msg) : formInput.setHelper('');
+    return isValid;
+}
+
+export const validateNoSpacedText = (formInput) => {
+    const isValid = nospacedalphabet_re.test(formInput.value);
+
+    formInput.setHelper('');
+    if (!isValid) formInput.setHelper(MSG_CONSTANTS._incorrect_nospacedtext_msg);
+
+    formInput.setValid(isValid);
     return isValid;
 }
 

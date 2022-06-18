@@ -1,4 +1,5 @@
-const API_DOMAIN = 'localhost:8080';
+const HOST = 'localhost';
+const API_DOMAIN = `${HOST}:8080`;
 const API_URL = `http://${API_DOMAIN}/api`;
 
 const USERS = `${API_URL}/users`;
@@ -19,6 +20,8 @@ const DICTIONARIES = `${API_URL}/dictionaries`;
 const ENGLISH_DICTIONARY = `${DICTIONARIES}/ENGLISH/words/{word}`;
 const SPANISH_DICTIONARY = `${DICTIONARIES}/SPANISH/words/{word}`;
 
+const HELPER = `${API_URL}/games/{language}/helps`;
+
 export const UrlConstants = Object.freeze({
     USERS:USERS,
     LOGIN: LOGIN,
@@ -36,4 +39,6 @@ export const UrlConstants = Object.freeze({
     DICTIONARIES: DICTIONARIES,
     ENGLISH_DICTIONARY: ENGLISH_DICTIONARY,
     SPANISH_DICTIONARY: SPANISH_DICTIONARY,
+
+    HELPER: HELPER,
 });
