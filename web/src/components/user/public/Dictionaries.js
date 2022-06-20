@@ -163,7 +163,7 @@ const Dictionaries = () => {
                     ))}
                 </TextField>
                 <LoadingButton
-                    type='Submit'
+                    type='submit'
                     variant="contained"
                     size="medium"
                     endIcon={<SearchIcon fontSize='large'/>}
