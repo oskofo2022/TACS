@@ -40,7 +40,7 @@ class JwtServiceTest {
         assertEquals(this.jwtService.cookieName, responseCookie.getName());
         assertEquals(this.jwtService.cookiePath, responseCookie.getPath());
         assertEquals(this.jwtService.cookieSameSite, responseCookie.getSameSite());
-        assertTrue(responseCookie.isSecure());
+        assertFalse(responseCookie.isSecure());
         assertFalse(responseCookie.isHttpOnly());
     }
 
