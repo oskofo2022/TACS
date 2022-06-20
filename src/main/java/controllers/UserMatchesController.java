@@ -2,6 +2,7 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.constants.ErrorMessageConstants;
 import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.persistence.entities.Match;
 import domain.persistence.queries.SpecificationBuilder;
@@ -54,7 +55,7 @@ public class UserMatchesController extends PagedListController {
                                                          .stream()
                                                          .filter(requestPostUserMatchToday::hasLanguage)
                                                          .findAny()
-                                                         .ifPresent(m -> { throw new DuplicateEntityFoundRuntimeException(Match.class); });
+                                                         .ifPresent(m -> { throw new DuplicateEntityFoundRuntimeException(ErrorMessageConstants.Entities.Names.MATCH, Match.class); });
 
         final var matches = requestPostUserMatchToday.listMatches(user);
 

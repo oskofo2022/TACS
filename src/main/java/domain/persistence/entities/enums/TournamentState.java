@@ -3,12 +3,14 @@ package domain.persistence.entities.enums;
 import domain.errors.runtime.TournamentStateInvalidInscriptionRuntimeException;
 import domain.persistence.entities.Tournament;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 
 public enum TournamentState {
     READY {
         @Override
-        public void validateInscriptionCreation() {
+        public boolean canInscribe() {
+            return true;
         }
 
         @Override
@@ -27,8 +29,8 @@ public enum TournamentState {
     },
     STARTED {
         @Override
-        public void validateInscriptionCreation() {
-            throw new TournamentStateInvalidInscriptionRuntimeException();
+        public boolean canInscribe() {
+            return false;
         }
 
         @Override
@@ -47,8 +49,8 @@ public enum TournamentState {
     },
     ENDED {
         @Override
-        public void validateInscriptionCreation() {
-            throw new TournamentStateInvalidInscriptionRuntimeException();
+        public boolean canInscribe() {
+            return false;
         }
 
         @Override
@@ -62,7 +64,7 @@ public enum TournamentState {
         }
     };
 
-    abstract public void validateInscriptionCreation();
+    abstract public boolean canInscribe();
 
     public abstract boolean hasStarted();
 

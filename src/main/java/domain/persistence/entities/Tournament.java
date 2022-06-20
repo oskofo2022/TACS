@@ -1,6 +1,7 @@
 package domain.persistence.entities;
 
 import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
+import domain.errors.runtime.TournamentStateInvalidInscriptionRuntimeException;
 import domain.errors.runtime.TournamentUnauthorizedUserActionRuntimeException;
 import domain.persistence.constants.ColumnConstants;
 import domain.persistence.constants.TableConstants;
@@ -114,8 +115,9 @@ public class Tournament {
     }
 
     public void inscribe(User user) {
-        this.getState()
-            .validateInscriptionCreation();
+        if (!this.getState().canInscribe()) {
+            throw new TournamentStateInvalidInscriptionRuntimeException();
+        }
 
         if (this.players.stream()
                         .anyMatch(p -> p.equals(user))) {

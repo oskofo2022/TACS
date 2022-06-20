@@ -2,6 +2,7 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.constants.ErrorMessageConstants;
 import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.Tournament;
 import domain.persistence.sessions.UserContextService;
@@ -47,7 +48,8 @@ public class MyTournamentsPositionsController {
                                                                                                                                                                           t.getEndDate(),
                                                                                                                                                                           t.getVisibility(),
                                                                                                                                                                           t.getLanguage(),
-                                                                                                                                                                          t.listPositions().sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount)).toList()));
+                                                                                                                                                                          t.listPositions().sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
+                                                                                                                                                                                           .limit(15).toList()));
         return ResponseEntity.ok(responseGetPagedList);
     }
 
@@ -60,7 +62,7 @@ public class MyTournamentsPositionsController {
                                               .stream()
                                               .filter(t -> t.getId().equals(tournamentId))
                                               .findFirst()
-                                              .orElseThrow(() -> new EntityNotFoundRuntimeException(Tournament.class));
+                                              .orElseThrow(() -> new EntityNotFoundRuntimeException(ErrorMessageConstants.Entities.Names.TOURNAMENT, Tournament.class));
 
         final Supplier<Stream<ResponseGetListTournamentPositionResult>> positionSupplier = tournament::listPositions;
 

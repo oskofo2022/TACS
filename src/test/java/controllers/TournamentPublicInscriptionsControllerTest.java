@@ -89,7 +89,7 @@ class TournamentPublicInscriptionsControllerTest {
         var entityNotFoundRuntimeException = assertThrows(EntityNotFoundRuntimeException.class, () -> this.tournamentPublicInscriptionsController.post(tournamentId));
 
         assertEquals(entityNotFoundRuntimeException.getCode(), "TOURNAMENT_NOT_FOUND");
-        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad Tournament no pudo ser encontrada");
+        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad torneo no pudo ser encontrada");
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();
         Mockito.verify(this.tournamentRepository, Mockito.times(1)).findById(tournamentId);
@@ -123,7 +123,7 @@ class TournamentPublicInscriptionsControllerTest {
         var entityNotFoundRuntimeException = assertThrows(EntityNotFoundRuntimeException.class, () -> this.tournamentPublicInscriptionsController.post(tournamentId));
 
         assertEquals(entityNotFoundRuntimeException.getCode(), "TOURNAMENT_NOT_FOUND");
-        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad Tournament no pudo ser encontrada");
+        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad torneo no pudo ser encontrada");
 
         Mockito.verify(tournament, Mockito.times(1)).getVisibility();
         Mockito.verify(tournament, Mockito.never()).getId();

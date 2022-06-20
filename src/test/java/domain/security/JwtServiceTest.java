@@ -39,7 +39,6 @@ class JwtServiceTest {
         assertEquals(this.jwtService.cookieExpirationSeconds, responseCookie.getMaxAge().getSeconds());
         assertEquals(this.jwtService.cookieName, responseCookie.getName());
         assertEquals(this.jwtService.cookiePath, responseCookie.getPath());
-        assertEquals(this.jwtService.cookieSameSite, responseCookie.getSameSite());
         assertFalse(responseCookie.isSecure());
         assertFalse(responseCookie.isHttpOnly());
     }

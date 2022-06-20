@@ -2,6 +2,7 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.constants.ErrorMessageConstants;
 import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.Tournament;
 import domain.persistence.entities.enums.Visibility;
@@ -35,7 +36,7 @@ public class TournamentPublicInscriptionsController extends TournamentInscriptio
 
         final var tournament = this.tournamentRepository.findById(tournamentId)
                                                                    .filter(t -> t.getVisibility() == Visibility.PUBLIC)
-                                                                   .orElseThrow(() -> new EntityNotFoundRuntimeException(Tournament.class));
+                                                                   .orElseThrow(() -> new EntityNotFoundRuntimeException(ErrorMessageConstants.Entities.Names.TOURNAMENT, Tournament.class));
 
         return this.inscribe(user, tournament);
     }

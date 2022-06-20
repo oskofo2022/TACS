@@ -2,6 +2,7 @@ package controllers;
 
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.constants.ErrorMessageConstants;
 import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.persistence.entities.Tournament;
 import domain.persistence.queries.SpecificationBuilder;
@@ -54,7 +55,7 @@ public class TournamentsController extends PagedListController {
         specificationBuilder.andEqual("name", requestPostTournament.getName());
 
         this.tournamentRepository.findOne(specificationBuilder.build())
-                                 .ifPresent(t -> { throw new DuplicateEntityFoundRuntimeException(Tournament.class); });
+                                 .ifPresent(t -> { throw new DuplicateEntityFoundRuntimeException(ErrorMessageConstants.Entities.Names.TOURNAMENT, Tournament.class); });
 
         final var user = this.userContextService.get();
 

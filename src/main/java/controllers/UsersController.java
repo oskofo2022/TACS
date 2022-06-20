@@ -1,6 +1,7 @@
 package controllers;
 import constants.MediaTypeConstants;
 import constants.UriConstants;
+import domain.errors.constants.ErrorMessageConstants;
 import domain.errors.runtime.DuplicateEntityFoundRuntimeException;
 import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.User;
@@ -42,7 +43,7 @@ public class UsersController extends PagedListController {
     public ResponseEntity<ResponseGetUser> get(@PathVariable UUID userId) {
 
         final var user = this.userRepository.findById(userId)
-                                                  .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
+                                                  .orElseThrow(() -> new EntityNotFoundRuntimeException(ErrorMessageConstants.Entities.Names.USER, User.class));
 
         final var responseGetUser = new ResponseGetUser(user.getName(), user.getEmail());
         return ResponseEntity.ok(responseGetUser);
@@ -71,7 +72,7 @@ public class UsersController extends PagedListController {
                                                                           .findAny();
 
         if (optionalDuplicateUser.isPresent()) {
-            throw new DuplicateEntityFoundRuntimeException(User.class);
+            throw new DuplicateEntityFoundRuntimeException(ErrorMessageConstants.Entities.Names.USER, User.class);
         }
 
         final var encodedPassword = this.passwordEncoder.encode(requestPostUser.getPassword());

@@ -1,5 +1,6 @@
 package domain.persistence.sessions;
 
+import domain.errors.constants.ErrorMessageConstants;
 import domain.errors.runtime.EntityNotFoundRuntimeException;
 import domain.persistence.entities.User;
 import domain.persistence.repositories.UserRepository;
@@ -22,6 +23,6 @@ public class UserContextService {
     public User get() {
         final var wordleUser = this.wordleAuthenticationManager.getCurrentUser();
         return this.userRepository.findById(wordleUser.getId())
-                                  .orElseThrow(() -> new EntityNotFoundRuntimeException(User.class));
+                                  .orElseThrow(() -> new EntityNotFoundRuntimeException(ErrorMessageConstants.Entities.Names.USER, User.class));
     }
 }

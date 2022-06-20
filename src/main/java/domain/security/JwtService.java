@@ -37,7 +37,6 @@ public class JwtService implements SessionCreator {
         var jwt = this.generate(wordleUser);
         return ResponseCookie.from(this.cookieName, jwt)
                              .path(this.cookiePath)
-                             .sameSite(this.cookieSameSite)
                              .secure(false)
                              .maxAge(this.cookieExpirationSeconds)
                              .build();

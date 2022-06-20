@@ -71,7 +71,7 @@ class UsersControllerTest {
         final var entityNotFoundRuntimeException = assertThrows(EntityNotFoundRuntimeException.class, () -> this.usersController.get(userId));
 
         assertEquals(entityNotFoundRuntimeException.getCode(), "USER_NOT_FOUND");
-        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad User no pudo ser encontrada");
+        assertEquals(entityNotFoundRuntimeException.getMessage(), "La entidad usuario no pudo ser encontrada");
 
         Mockito.verify(this.userRepository, Mockito.times(1)).findById(userId);
     }
