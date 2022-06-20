@@ -82,7 +82,7 @@ const SigninMenu = () => {
                         autoFocus
                         margin="dense"
                         id="username"
-                        label="Username or email address"
+                        label="Email address"
                         type="email"
                         fullWidth
                         variant="standard"
