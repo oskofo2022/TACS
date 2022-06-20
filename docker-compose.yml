@@ -5,28 +5,32 @@ services:
     container_name: wordle-db
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=wordle
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 20s
-      retries: 10
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+       - "3306:3306"
+    # healthcheck:
+    #    test: mysql ${MYSQL_DATABASE} --user=root --password='${MYSQL_ROOT_PASSWORD}' --silent --execute "SELECT 1;"
+    #    timeout: 20s
+    #    retries: 10
   web-app:
     build: .
+    image: tacsWordleRegistry.azurecr.io/wordle-web-app
     container_name: wordle-web-app
-    restart: on-failure
+    domainname: "tacs-wordle-web"
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
-      web-app-db:
-          condition: service_healthy
+      - web-app-db
   wordle-front:
     build: ./web
+    image: tacsWordleRegistry.azurecr.io/wordle-web-front
     container_name: wordle-web-front
     ports:
       - "3000:3000"
     depends_on:
-        - web-app
+      - web-app
 #  telegram-bot:
 #    image: wordle-telegram-bot
 #    container_name: wordle-telegram-bot
