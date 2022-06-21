@@ -44,7 +44,8 @@ public abstract class RequestCommonGetPagedList {
     }
 
     public String getSortBy() {
-        return Optional.ofNullable(sortBy)
+        return Optional.ofNullable(this.sortBy)
+                       .filter(sb -> !sb.isBlank())
                        .orElseGet(this::defaultSortBy);
     }
 
