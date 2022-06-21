@@ -75,15 +75,25 @@ public class MyTournamentsPositionsControllerTest {
         assertEquals(inscribedTournaments.size(), responseGetPagedList.totalCount());
         assertEquals(1, responseGetPagedList.pageCount());
 
-        for(int i = 0; i < inscribedTournaments.size(); i++){
-            assertEquals(inscribedTournaments.get(i).getId(), responsesGetListTournamentPosition.get(i).id());
-            assertEquals(inscribedTournaments.get(i).getName(), responsesGetListTournamentPosition.get(i).name());
-            assertEquals(inscribedTournaments.get(i).getState(), responsesGetListTournamentPosition.get(i).state());
-            assertEquals(inscribedTournaments.get(i).getVisibility(), responsesGetListTournamentPosition.get(i).visibility());
-            assertEquals(inscribedTournaments.get(i).getStartDate(), responsesGetListTournamentPosition.get(i).startDate());
-            assertEquals(inscribedTournaments.get(i).getEndDate(), responsesGetListTournamentPosition.get(i).endDate());
-            assertEquals(inscribedTournaments.get(i).getLanguage(), responsesGetListTournamentPosition.get(i).language());
-            assertEquals(inscribedTournaments.get(i).listPositions().toList(), responsesGetListTournamentPosition.get(i).positions());
+        for (int i = 0; i < inscribedTournaments.size(); i++) {
+            final var tournament = inscribedTournaments.get(i);
+            final var expectedPositions = tournament.listPositions().toList();
+
+            final var responseGetListTournamentPosition = responsesGetListTournamentPosition.get(i);
+            final var actualPositions = responseGetListTournamentPosition.positions();
+
+            assertEquals(tournament.getId(), responseGetListTournamentPosition.id());
+            assertEquals(tournament.getName(), responseGetListTournamentPosition.name());
+            assertEquals(tournament.getState(), responseGetListTournamentPosition.state());
+            assertEquals(tournament.getVisibility(), responseGetListTournamentPosition.visibility());
+            assertEquals(tournament.getStartDate(), responseGetListTournamentPosition.startDate());
+            assertEquals(tournament.getEndDate(), responseGetListTournamentPosition.endDate());
+            assertEquals(tournament.getLanguage(), responseGetListTournamentPosition.language());
+            for (int j = 0; i < expectedPositions.size(); i++) {
+                assertEquals(expectedPositions.get(j).getName(), actualPositions.get(j).getName());
+                assertEquals(expectedPositions.get(j).getGuessesCount(), actualPositions.get(j).getGuessesCount());
+                assertEquals(expectedPositions.get(j).getCardinal(), actualPositions.get(j).getCardinal());
+            }
         }
 
         Mockito.verify(this.userContextService, Mockito.times(1)).get();

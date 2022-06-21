@@ -4,6 +4,7 @@ import domain.responses.gets.lists.ResponseGetListTournamentPositionResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +26,7 @@ class RequestGetListPositionTest extends RequestGetListOnMemoryPagedListTest<Res
 
     @Test
     public void isValid() {
-        assertTrue(this.request.isValid(new ResponseGetListTournamentPositionResult("name", 7)));
+        assertTrue(this.request.isValid(new ResponseGetListTournamentPositionResult()));
     }
 
     @Override
@@ -46,14 +47,27 @@ class RequestGetListPositionTest extends RequestGetListOnMemoryPagedListTest<Res
         this.request.setPageSize(3);
         this.request.setSortOrder(SortOrder.DESCENDING);
 
-        final var responsesGetListTournamentPositionResult = new ArrayList<ResponseGetListTournamentPositionResult>() {
-            {
-                add(new ResponseGetListTournamentPositionResult("name 1", 4));
-                add(new ResponseGetListTournamentPositionResult("name 2", 3));
-                add(new ResponseGetListTournamentPositionResult("name 3", 2));
-                add(new ResponseGetListTournamentPositionResult("name 4", 1));
-            }
-        };
+        final var firstPosition = new ResponseGetListTournamentPositionResult();
+        firstPosition.setName("Name 1");
+        firstPosition.setGuessesCount(4);
+        firstPosition.setCardinal(4);
+
+        final var secondPosition = new ResponseGetListTournamentPositionResult();
+        firstPosition.setName("Name 2");
+        firstPosition.setGuessesCount(3);
+        firstPosition.setCardinal(3);
+
+        final var thirdPosition = new ResponseGetListTournamentPositionResult();
+        firstPosition.setName("Name 3");
+        firstPosition.setGuessesCount(2);
+        firstPosition.setCardinal(2);
+
+        final var fourthPosition = new ResponseGetListTournamentPositionResult();
+        firstPosition.setName("Name 4");
+        firstPosition.setGuessesCount(1);
+        firstPosition.setCardinal(1);
+
+        final var responsesGetListTournamentPositionResult = Arrays.asList(firstPosition, secondPosition, thirdPosition, fourthPosition);
 
         final var responseGetPagedList = this.request.paginate(responsesGetListTournamentPositionResult::stream);
 

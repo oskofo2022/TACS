@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @RestController
@@ -48,14 +50,13 @@ public class MyTournamentsPositionsController {
                                                                                                                                                                           t.getEndDate(),
                                                                                                                                                                           t.getVisibility(),
                                                                                                                                                                           t.getLanguage(),
-                                                                                                                                                                          t.listPositions().sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::guessesCount))
-                                                                                                                                                                                           .limit(15).toList()));
+                                                                                                                                                                          this.listSummarizedPositions(t)));
         return ResponseEntity.ok(responseGetPagedList);
     }
 
     @GetMapping(path = UriConstants.Users.Myself.Inscriptions.Tournaments.One.Positions.URL,produces = MediaTypeConstants.JSON)
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournamentPositionResult>> get(@PathVariable UUID tournamentId, @Valid RequestGetListPosition requestGetListPosition) {
+    public ResponseEntity<ResponseGetPagedList<ResponseGetListTournamentPositionResult>> list(@PathVariable UUID tournamentId, @Valid RequestGetListPosition requestGetListPosition) {
         final var user = this.userContextService.get();
 
         final var tournament = user.getInscribedTournaments()
@@ -66,7 +67,20 @@ public class MyTournamentsPositionsController {
 
         final Supplier<Stream<ResponseGetListTournamentPositionResult>> positionSupplier = tournament::listPositions;
 
-        final var responseGetPagedList = requestGetListPosition.paginate(positionSupplier);
+        requestGetListPosition.setStartCardinal(tournament);
+        final var responseGetPagedList = requestGetListPosition.paginate(positionSupplier, requestGetListPosition::setCardinal);
         return ResponseEntity.ok(responseGetPagedList);
+    }
+
+    private List<ResponseGetListTournamentPositionResult> listSummarizedPositions(Tournament tournament) {
+        final var responsesGetListTournamentPositionResult = tournament.listPositions()
+                                                                                                          .sorted(Comparator.comparing(ResponseGetListTournamentPositionResult::getGuessesCount))
+                                                                                                          .limit(15)
+                                                                                                          .toList();
+
+        IntStream.range(0, responsesGetListTournamentPositionResult.size())
+                 .forEach(i -> responsesGetListTournamentPositionResult.get(i).setCardinal(i + 1));
+
+        return responsesGetListTournamentPositionResult;
     }
 }

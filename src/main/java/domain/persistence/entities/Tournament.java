@@ -158,7 +158,11 @@ public class Tournament {
             deltaDays--;
         }
 
-        return new ResponseGetListTournamentPositionResult(user.getName(), score);
+        final var responseGetListTournamentPositionResult = new ResponseGetListTournamentPositionResult();
+        responseGetListTournamentPositionResult.setName(user.getName());
+        responseGetListTournamentPositionResult.setGuessesCount(score);
+
+        return responseGetListTournamentPositionResult;
     }
 
     private boolean isInDateRange(Match match, LocalDate topDate) {

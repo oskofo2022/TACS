@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@RegexSortBy(allowedValues = { "identity" })
+@RegexSortBy(allowedValues = { "word" })
 public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<String> {
 
     @Size(max = 20)
@@ -66,7 +66,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
     public Map<String, Comparator<String>> getComparatorMap() {
         return new HashMap<>() {
             {
-                put("identity", Comparator.comparing(Function.identity()));
+                put("word", Comparator.comparing(Function.identity()));
             }
         };
     }
@@ -85,7 +85,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
 
     @Override
     protected String defaultSortBy() {
-        return "identity";
+        return "word";
     }
 
     private boolean hasBadLetters(String word) {

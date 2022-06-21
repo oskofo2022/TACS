@@ -100,12 +100,12 @@ class TournamentTest {
         this.tournament.setPlayers(Arrays.asList(firstUser, secondUser, thirdUser));
 
         final var positions = this.tournament.listPositions().toList();
-        assertEquals(firstUser.getName(), positions.get(0).name());
-        assertEquals(32, positions.get(0).guessesCount());
-        assertEquals(secondUser.getName(), positions.get(1).name());
-        assertEquals(31, positions.get(1).guessesCount());
-        assertEquals(thirdUser.getName(), positions.get(2).name());
-        assertEquals(30, positions.get(2).guessesCount());
+        assertEquals(firstUser.getName(), positions.get(0).getName());
+        assertEquals(32, positions.get(0).getGuessesCount());
+        assertEquals(secondUser.getName(), positions.get(1).getName());
+        assertEquals(31, positions.get(1).getGuessesCount());
+        assertEquals(thirdUser.getName(), positions.get(2).getName());
+        assertEquals(30, positions.get(2).getGuessesCount());
     }
 
     private Match createMatch(LocalDate localDate, int guessesCount, Language language) {

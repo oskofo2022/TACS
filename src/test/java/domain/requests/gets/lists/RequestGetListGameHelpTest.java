@@ -48,8 +48,8 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
     }
 
     @Test
-    public void sortByIdentity() {
-        this.request.setSortBy("identity");
+    public void sortByWord() {
+        this.request.setSortBy("word");
 
         this.valid();
     }
@@ -69,7 +69,7 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
     @Test
     @Override
     public void defaultSortBy() {
-        assertEquals("identity", this.request.defaultSortBy());
+        assertEquals("word", this.request.defaultSortBy());
     }
 
     @Test
