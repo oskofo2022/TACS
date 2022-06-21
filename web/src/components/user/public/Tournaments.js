@@ -96,20 +96,22 @@ const Tournaments = () => {
         return inscriptMyselfRequest.fetch();
     }
 
+    const inscriptTournament = (tournament) => {
+        tournament.inscripted = true
+        return tournament
+    }
+
     const handleTournamentInscription = (tournament) => () => {
         setTournamentName(tournament.name);
         setTournamentLanguage(tournament.language);
         setTournamentBeginDate(tournament.beginDate);
         setTournamentEndDate(tournament.endDate);
+        updateData("rows", data.rows.map(t => (t.id === tournament.id)? inscriptTournament(t):t))
         handlePostInscription(tournament.id)
             .then(StatusCodeHandler)
             .then(_ => setInscriptionSuccessDialogOpen(true))
             .catch(e => setRedirect(authContext.handleUnauthorized(e)))
-            .catch(e => e.response.json())
-            .then(r => {
-                console.log(r);
-                setInscriptionFailedDialogOpen(true);
-            });
+            .catch(e => setInscriptionFailedDialogOpen(true))
     }
 
     const request = React.useRef(true);

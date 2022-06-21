@@ -1,4 +1,4 @@
-const HOST = 'localhost';
+const HOST = window.location.hostname;
 const API_DOMAIN = `${HOST}:8080`;
 const API_URL = `http://${API_DOMAIN}/api`;
 

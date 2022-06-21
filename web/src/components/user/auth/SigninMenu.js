@@ -1,12 +1,13 @@
 import * as React from 'react';
 //import axios from 'axios';
 import {
+    Alert,
     Button,
+    Collapse,
     Container,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     MenuItem,
     TextField,
@@ -16,10 +17,11 @@ import SignUpDialog from './SignUpDialog'
 import AuthContext from "../../context/AuthContext";
 import {LoginRequest} from "../../../request/LoginRequest";
 
+const errorMsg = 'Incorrect user or password.'
+
 const SigninMenu = () => {
 
     const [signinOpen, setSigninOpen] = React.useState(false);
-    const [dialogMessage, setDialogMessage] = React.useState('Incorrect user or password.');
     const [incorrectAccount, setIncorrectAccount] = React.useState(false);
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -44,10 +46,10 @@ const SigninMenu = () => {
     };
 
     const handleSigninPost = async () => {
-        const body = JSON.stringify({email: username, password: password});
+        const body = JSON.stringify({email: username, password: password });
         const loginRequest = LoginRequest.from(body);
         const responseJson = await loginRequest.fetchAsJSON();
-        
+
         if (loginRequest.response.status === 200) {
             const name = responseJson.name;
             authContext.signin(name);
@@ -63,26 +65,28 @@ const SigninMenu = () => {
 
     return (
         <Container
-            sx={{display: "flex", flexDirection: "row"}}>
+            sx={{ display: "flex", flexDirection: "row" }}>
             <MenuItem key="Sign in" onClick={handleOpenSigninDialog}>
-                <Typography sx={{color: "#BFE3B4"}} textAlign="center">Sign in</Typography>
+                <Typography sx={{ color: "#BFE3B4" }} textAlign="center">Sign in</Typography>
             </MenuItem>
             <MenuItem key="Sign up" onClick={handleOpenSignUpDialog}>
-                <Typography sx={{color: "#BFE3B4"}} textAlign="center">Sign up</Typography>
+                <Typography sx={{ color: "#BFE3B4" }} textAlign="center">Sign up</Typography>
             </MenuItem>
             <Dialog open={signinOpen} onClose={handleCloseSigninDialog} className='signinmodal'>
                 <DialogTitle>
-                    <Typography sx={{color: "#BFE3B4"}} textAlign="center">Sign in</Typography>
+                    <Typography sx={{ color: "#BFE3B4" }} textAlign="center">Sign in</Typography>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{display: incorrectAccount ? 'block' : 'none', color:'red'}}>
-                        {dialogMessage}
-                    </DialogContentText>
+                    <Collapse in={incorrectAccount} sx={{ minWidth: 'inherit', maxWidth: 'inherit' }} >
+                        <Alert variant="filled" sx={{ mb: 2, minWidth: 'inherit', maxWidth: 'inherit' }} severity="error">
+                            {errorMsg}
+                        </Alert>
+                    </Collapse>
                     <TextField
                         autoFocus
                         margin="dense"
                         id="username"
-                        label="Username or email address"
+                        label="Email address"
                         type="email"
                         fullWidth
                         variant="standard"
@@ -100,10 +104,10 @@ const SigninMenu = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseSigninDialog}>Cancel</Button>
-                    <Button type='Submit' onClick={handleSigninPost}>Submit</Button>
+                    <Button type='submit' onClick={handleSigninPost}>Submit</Button>
                 </DialogActions>
             </Dialog>
-            <SignUpDialog open={isSignUpDialogOpen} handleClose={handleCloseSignUpDialog}/>
+            <SignUpDialog open={isSignUpDialogOpen} handleClose={handleCloseSignUpDialog} />
         </Container>
     );
 };
