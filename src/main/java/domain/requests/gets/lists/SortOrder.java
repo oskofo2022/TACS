@@ -29,5 +29,5 @@ public enum SortOrder {
 
     public abstract <T> Comparator<T> getComparator(Comparator<T> comparator);
 
-    public abstract long next(long cardinal);
+    public abstract long next(long number);
 }
