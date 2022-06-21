@@ -21,9 +21,9 @@ const MyTournaments = () => {
        loading: true,
        rows: [],
        totalRows: 0,
-       pageSize: 2,
+       pageSize: 5,
        page: 1,
-       rowsPerPageOptions: [2, 5, 10, 20],
+       rowsPerPageOptions: [5, 10, 15, 20],
        sortBy: 'name',
        sortOrder:'ASCENDING',
    });

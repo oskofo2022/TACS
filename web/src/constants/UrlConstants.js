@@ -14,7 +14,7 @@ const PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION = `${PUBLIC_TOURNAMENTS}/{tournament
 const USER_MYSELF = `${API_URL}/users/myself`
 const USER_GUESS = `${USER_MYSELF}/matches/today`
 const INSCRIPTIONS = `${USER_MYSELF}/inscriptions/tournaments`;
-const POSITIONS = `${USER_MYSELF}/inscriptions/tournaments/positions`;
+const POSITIONS = `${USER_MYSELF}/inscriptions/tournaments/{tournamentId}/positions`;
 
 const DICTIONARIES = `${API_URL}/dictionaries`;
 const ENGLISH_DICTIONARY = `${DICTIONARIES}/ENGLISH/words/{word}`;

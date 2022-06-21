@@ -1,20 +1,19 @@
 import {QueryParams} from "../httpUtils/QueryParams";
 import {UrlConstants} from "../constants/UrlConstants";
-import {TournamentsResponse} from "../response/TournamentsResponse";
-import {PositionsResponse} from "../response/PositionsResponse";
 import {GetRequest} from "./GetRequest";
+import { PositionsResponse } from "response/PositionsResponse";
 
 export class PositionsRequest extends GetRequest{
 
-    constructor(queryParams: QueryParams) {
-        super({url: UrlConstants.POSITIONS, queryParams: queryParams})
+    constructor(pathParams, queryParams: QueryParams) {
+        super({pathParams: pathParams, url: UrlConstants.POSITIONS, queryParams: queryParams})
     }
 
-    static from(params: QueryParams) {
-        return new PositionsRequest(params);
+    static from(pathParams, queryParams: QueryParams) {
+        return new PositionsRequest(pathParams, queryParams);
     }
 
-    async fetchAsPaged(): Promise<TournamentsResponse>{
+    async fetchAsPaged(){
         const response = await this.fetchAsJSON();
         return new PositionsResponse(response);
     }

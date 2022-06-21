@@ -1,6 +1,6 @@
-import {QueryParams} from "./QueryParams";
-import {HttpMethod, RequestOptions} from "./RequestOptions";
-import {RequestEntity} from "./RequestEntity";
+import { QueryParams } from "./QueryParams";
+import { HttpMethod, RequestOptions } from "./RequestOptions";
+import { RequestEntity } from "./RequestEntity";
 
 export class RequestEntityBuilder {
     pathParams: [{ name: string, value: string }];
@@ -51,17 +51,20 @@ export class RequestEntityBuilder {
         return this;
     }
 
-    setHeader({name: name, value:value}){
-        Object.assign(this.requestOptions.headers, {[name]: value});
+    setHeader({ name: name, value: value }) {
+        Object.assign(this.requestOptions.headers, { [name]: value });
         return this;
     }
 
-    setAuthorizationHeader(){
+    setAuthorizationHeader() {
         const cookieName = 'wordle-session';
-        const cookie = document.cookie.split('; ').find(c => c.indexOf(cookieName) === 0);
-        if(cookie){
+        const cookie = document.cookie
+            .split('; ')
+            .reverse()
+            .find(c => c.indexOf(cookieName) === 0);
+        if (cookie) {
             const token = cookie.split('=')[1];
-            this.setHeader({name:'Authorization', value: 'Bearer '+token})
+            this.setHeader({ name: 'Authorization', value: 'Bearer ' + token })
         }
         return this;
     }
