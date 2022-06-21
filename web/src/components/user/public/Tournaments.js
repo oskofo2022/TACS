@@ -6,6 +6,7 @@ import { InscriptionsRequest } from "../../../request/InscriptionsRequest";
 import { TournamentsResponse } from "../../../response/TournamentsResponse";
 import IconButton from "@mui/material/IconButton";
 import LoginIcon from '@mui/icons-material/Login';
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { InscriptMyselfRequest } from "../../../request/InscriptMyselfRequest";
 import AuthContext from "../../context/AuthContext";
@@ -28,9 +29,9 @@ const Tournaments = () => {
         loading: true,
         rows: [],
         totalRows: 0,
-        pageSize: 2,
+        pageSize: 5,
         page: 1,
-        rowsPerPageOptions: [2, 5, 10, 20],
+        rowsPerPageOptions: [5, 10, 15, 20],
         sortBy: 'id',
         sortOrder: 'ASCENDING',
     });
@@ -44,7 +45,7 @@ const Tournaments = () => {
         { field: 'endDate', headerName: 'End date', width: 130, sortable: false, },
         { field: 'state', headerName: 'State', width: 130, sortable: false, },
         {
-            field: 'inscription', headerName: 'Inscription', width: 130, sortable: false, hide: !authContext.authenticated, renderCell:
+            field: 'inscription', headerName: 'Inscription', width: 160, sortable: false, hide: !authContext.authenticated, renderCell:
                 (t) => {
                     const row = t.row
                     const inscripted = !!row.inscripted
@@ -66,6 +67,18 @@ const Tournaments = () => {
                                     <HowToRegIcon />
                                 </IconButton>
                                 ) :
+                                (row.state === 'STARTED') ? 
+                                (<IconButton
+                                    size="large"
+                                    aria-label="Tournament has started"
+                                    title="Tournament has started"
+                                    onClick={e => e.preventDefault()}
+                                    color='error'
+                                    disableRipple={true}
+                                    sx={{ cursor: 'default' }}
+                                >
+                                    <DoNotDisturbIcon />
+                                </IconButton>) :
                                 (<IconButton
                                     key={'tournamentInscriptButton'}
                                     size="large"
@@ -101,6 +114,11 @@ const Tournaments = () => {
         return tournament
     }
 
+    const unInscriptTournament = (tournament) => {
+        tournament.inscripted = false
+        return tournament
+    }
+
     const handleTournamentInscription = (tournament) => () => {
         setTournamentName(tournament.name);
         setTournamentLanguage(tournament.language);
@@ -111,7 +129,10 @@ const Tournaments = () => {
             .then(StatusCodeHandler)
             .then(_ => setInscriptionSuccessDialogOpen(true))
             .catch(e => setRedirect(authContext.handleUnauthorized(e)))
-            .catch(e => setInscriptionFailedDialogOpen(true))
+            .catch(e => {
+                setInscriptionFailedDialogOpen(true)
+                updateData("rows", data.rows.map(t => (t.id === tournament.id)? unInscriptTournament(t):t))
+            })
     }
 
     const request = React.useRef(true);

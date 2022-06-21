@@ -34,7 +34,7 @@ function App() {
         setAuthenticated(false);
         setName(defaultName);
         sessionStorage.removeItem('userData');
-        document.cookie = "wordle-session=";
+        document.cookie = "wordle-session=;path=/";
     }
 
     const handleUnauthorized = (e) => {
