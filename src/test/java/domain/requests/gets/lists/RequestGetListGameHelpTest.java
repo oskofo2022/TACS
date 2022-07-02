@@ -45,9 +45,9 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
     @Test
     public void isNotValidByBadLetters() {
         this.request.setBadLetters("ap");
-        final var validWords = Arrays.asList("apple", "people", "polite", "brawler", "operation");
+        final var invalidWords = Arrays.asList("apple", "people", "polite", "brawler", "operation");
 
-        this.assertion(validWords, Assertions::assertFalse);
+        this.assertion(invalidWords, Assertions::assertFalse);
     }
 
     @Test
@@ -61,9 +61,9 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
     @Test
     public void isNotValidByGoodLetters() {
         this.request.setGoodLetters("ap");
-        final var validWords = Arrays.asList("polite", "amaze", "process", "south", "around");
+        final var invalidWords = Arrays.asList("polite", "amaze", "process", "south", "around");
 
-        this.assertion(validWords, Assertions::assertFalse);
+        this.assertion(invalidWords, Assertions::assertFalse);
     }
 
     @Test
@@ -77,9 +77,9 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
     @Test
     public void isNotValidByGreenLetters() {
         this.request.setGreenLetters("a-p");
-        final var validWords = Arrays.asList("praise", "payment", "operation", "apology", "antelope");
+        final var invalidWords = Arrays.asList("praise", "payment", "operation", "apology", "antelope");
 
-        this.assertion(validWords, Assertions::assertFalse);
+        this.assertion(invalidWords, Assertions::assertFalse);
     }
 
     @Test
