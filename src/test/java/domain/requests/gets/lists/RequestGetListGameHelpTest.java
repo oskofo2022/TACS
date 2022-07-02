@@ -1,9 +1,13 @@
 package domain.requests.gets.lists;
 
 import domain.responses.gets.lists.ResponseGetListGameHelp;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,20 +35,61 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
     }
 
     @Test
-    public void isValid() {
-        this.request.setBadLetters("aw");
-        this.request.setGoodLetters("el");
+    public void isValidByBadLetters() {
+        this.request.setBadLetters("ap");
+        final var validWords = Arrays.asList("south", "length", "color", "omicron", "light");
 
-        assertTrue(this.request.isValid("eel"));
+        this.assertion(validWords, Assertions::assertTrue);
     }
 
     @Test
-    public void isNotValid() {
-        this.request.setBadLetters("ai");
-        this.request.setGoodLetters("h");
+    public void isNotValidByBadLetters() {
+        this.request.setBadLetters("ap");
+        final var validWords = Arrays.asList("apple", "people", "polite", "brawler", "operation");
 
+        this.assertion(validWords, Assertions::assertFalse);
+    }
 
-        assertFalse(this.request.isValid("fish"));
+    @Test
+    public void isValidByGoodLetters() {
+        this.request.setGoodLetters("ap");
+        final var validWords = Arrays.asList("apple", "appraise", "apology", "payment", "operation");
+
+        this.assertion(validWords, Assertions::assertTrue);
+    }
+
+    @Test
+    public void isNotValidByGoodLetters() {
+        this.request.setGoodLetters("ap");
+        final var validWords = Arrays.asList("polite", "amaze", "process", "south", "around");
+
+        this.assertion(validWords, Assertions::assertFalse);
+    }
+
+    @Test
+    public void isValidByGreenLetters() {
+        this.request.setGreenLetters("a-p");
+        final var validWords = Arrays.asList("apple", "appraise", "app", "ampersand", "applause");
+
+        this.assertion(validWords, Assertions::assertTrue);
+    }
+
+    @Test
+    public void isNotValidByGreenLetters() {
+        this.request.setGreenLetters("a-p");
+        final var validWords = Arrays.asList("praise", "payment", "operation", "apology", "antelope");
+
+        this.assertion(validWords, Assertions::assertFalse);
+    }
+
+    @Test
+    public void isValid() {
+        this.request.setGoodLetters("pp");
+        this.request.setBadLetters("mu");
+        this.request.setGreenLetters("a-p");
+        final var validWords = Arrays.asList("apple", "app", "appraise");
+
+        this.assertion(validWords, Assertions::assertTrue);
     }
 
     @Test
@@ -100,5 +145,9 @@ public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListT
         assertEquals("some", responsesGetListGameHelp.get(0).word());
         assertEquals("line", responsesGetListGameHelp.get(1).word());
         assertEquals("lime", responsesGetListGameHelp.get(2).word());
+    }
+
+    private void assertion(List<String> words, Consumer<Boolean> assertContext) {
+        words.forEach(w -> assertContext.accept(this.request.isValid(w)));
     }
 }
