@@ -1,4 +1,4 @@
-import {styled, Typography} from "@mui/material";
+import { Button, styled, Typography } from "@mui/material";
 import React from "react";
 
 const WBox = styled('div')(({ theme }) => ({
@@ -7,7 +7,7 @@ const WBox = styled('div')(({ theme }) => ({
     flexWrap: 'wrap',
     justifyContent: 'left',
     alignItems: 'center',
-    width: '500px',
+    maxWidth: '500px',
     padding: theme.spacing(2),
     backgroundColor: 'white',
     borderRadius: '25px',
@@ -21,8 +21,9 @@ const WBox = styled('div')(({ theme }) => ({
     '& .MuiButtonBase-root': {
         margin: theme.spacing(2),
     },
-
-    margin: '50em',
+    marginLeft: '1em',
+    marginTop: '2em',
+    // margin: '50em',
 }));
 
 const WordBox = styled('div')(({ theme }) => ({
@@ -36,14 +37,26 @@ const WordBox = styled('div')(({ theme }) => ({
     margin: '3px',
 }));
 
-const WordList = ({words}) => {
+const WordList = ({ words, disabledMoreButton, moreWords }) => {
     return (
         <WBox>
-            {words.map(i => 
+            {words.map(i =>
                 <WordBox>
                     <Typography>{i}</Typography>
                 </WordBox>
             )}
+            <Button
+                variant="contained"
+                size="medium"
+                disabled={disabledMoreButton}
+                onClick={moreWords}
+                sx={[
+                    { backgroundColor: '#BFE3B4', height: '50px', top: '2px', flexBasis: '100%' },
+                    { '&:hover': { color: 'gray', backgroundColor: 'white', fontWeight: '700' } } //, textShadow: '2px 2px 4px #FF0000'
+                ]}
+            >
+                More
+            </Button>
         </WBox>
     )
 }

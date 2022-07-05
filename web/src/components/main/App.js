@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import Header from './Header'
 import Home from './Home'
-import Footer from './Footer'
 import {BrowserRouter as Router, Navigate} from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import {UnauthorizedException} from "../../errors/UnauthorizedException";
@@ -57,7 +56,6 @@ function App() {
                 <AuthContext.Provider value={{authenticated: authenticated, signin: signin, signout: signout, name: name, handleUnauthorized: handleUnauthorized}}>
                     <Header pages={pages} handleTab={handleTab}/>
                     <Home activeTab={activeTab}/>
-                    <Footer/>
                 </AuthContext.Provider>
             </Router>
         </main>

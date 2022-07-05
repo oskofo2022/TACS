@@ -109,7 +109,7 @@ const AddGuess = ({open, onClose}) => {
             {redirect}
             <Dialog open={open} onClose={onClose} className='addusermodal' fullWidth>
                 <DialogTitle>
-                    <Typography variant="h5" sx={{color: "green"}} textAlign="center">Add User</Typography>
+                    <Typography variant="h5" sx={{color: "green"}} textAlign="center">Add Guess</Typography>
                 </DialogTitle>
                 <DialogContent>
                     <TextField

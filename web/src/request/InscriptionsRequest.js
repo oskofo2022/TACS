@@ -1,7 +1,6 @@
 import {UrlConstants} from "../constants/UrlConstants";
-import {TournamentsResponse} from "../response/TournamentsResponse";
 import {InscriptionsResponse} from "../response/InscriptionsResponse";
-import { GetRequest } from "./GetRequest";
+import {GetRequest} from "./GetRequest";
 
 export class InscriptionsRequest extends GetRequest  {
 
@@ -13,7 +12,7 @@ export class InscriptionsRequest extends GetRequest  {
         return new InscriptionsRequest(queryParams);
     }
 
-    async fetchAsPaged(): Promise<TournamentsResponse>{
+    async fetchAsPaged() {
         const response = await this.fetchAsJSON();
         return new InscriptionsResponse(response);
     }

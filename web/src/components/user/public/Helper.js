@@ -3,20 +3,26 @@ import ReactCodeInput from "react-code-input/ReactCodeInput";
 import WordleTextField from "../WordleInput";
 import LoadingButton from '@mui/lab/LoadingButton';
 import SearchIcon from '@mui/icons-material/Search';
-import {Divider, MenuItem, Stack, styled} from "@mui/material";
+import {MenuItem, styled} from "@mui/material";
 import {validateLanguage, validateNoSpacedText} from "components/formValidations/formValidations";
 import {LanguagesConstants} from "constants/LanguagesConstants";
 import {HelpRequest} from "request/HelpRequest";
 import {QueryParams} from "httpUtils/QueryParams";
 import WordList from "./WordList";
 
+const HelperDiv = styled('div')(({theme})=> ({
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+}))
 
 const HelperFormStyle = styled('form')(({theme}) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    maxWidth: '300px',
     padding: theme.spacing(2),
 
     '& .MuiTextField-root': {
@@ -29,12 +35,15 @@ const HelperFormStyle = styled('form')(({theme}) => ({
 }));
 
 const WORD_LEN = 5
-const pageSize = 500
+const pageSize = 20
+const defaultFirstPage = 1
+
 
 const Helper = () => {
     const [loading, setLoading] = React.useState(false);
     const [words, setWords] = React.useState([]);
-    const [page, setPage] = React.useState(1);
+    const [page, setPage] = React.useState(defaultFirstPage);
+    const [disabledMoreButton, setDisabledMoreButton] = React.useState(false);
     const [formData, setFormData] = React.useState(new Map([
         ['goodLetters', {value: '', isValid: false}],
         ['badLetters', {value: '', isValid: false}],
@@ -45,9 +54,10 @@ const Helper = () => {
 
     const setValue = (propName) => (value) => setFormData(formData.set(propName, value))
 
-    const handleGetHelp = () => {
+    const handleGetHelp = (_page) => {// _page fix a bug in case page state does not update immediatly
+        console.log(_page, page)
         const queryParams = new QueryParams({
-            page: page,
+            page: _page || page,
             pageSize: pageSize,
             sortBy: 'word',
             sortOrder: 'ASCENDING',
@@ -74,19 +84,29 @@ const Helper = () => {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
-        handleGetHelp()
+        setPage(defaultFirstPage);
+        setDisabledMoreButton(false);
+        handleGetHelp(defaultFirstPage)
             .then(r => setWords(r.pageItems.map(i => i.word)))
             .then(_ => setLoading(false))
 
     }
 
+    const handleMoreWords = (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setPage(page+1);
+        handleGetHelp(page+1)
+            .then(r => {
+                if(r.pageCount === page) setDisabledMoreButton(true);
+                return r
+            })
+            .then(r => setWords(words.concat(r.pageItems.map(i => i.word))))
+            .then(_ => setLoading(false))
+    }
+
     return (
-        <Stack
-            direction="row"
-            spacing={2}
-            divider={<Divider orientation="vertical" flexItem/>}
-            alignItems={"flex-start"}
-        >
+        <HelperDiv>
             <HelperFormStyle onSubmit={handleFormSubmit}>
                 <WordleTextField
                     id="select-language"
@@ -143,8 +163,8 @@ const Helper = () => {
                     Search
                 </LoadingButton>
             </HelperFormStyle>
-            {words.length > 0 && <WordList words={words}/>}
-        </Stack>
+            {words.length > 0 && <WordList words={words} disabledMoreButton={disabledMoreButton} moreWords={handleMoreWords}/>}
+        </HelperDiv>
 
 
     )

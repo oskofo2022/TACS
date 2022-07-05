@@ -15,9 +15,9 @@ services:
     #    retries: 10
   web-app:
     build: .
-    image: tacsWordleRegistry.azurecr.io/wordle-web-app
+    image: tacswordleregistry1.azurecr.io/wordle-web-app
     container_name: wordle-web-app
-    domainname: "tacs-wordle-web"
+    domainname: "tacs-wordle-web1"
     restart: always
     ports:
       - "8080:8080"
@@ -25,7 +25,7 @@ services:
       - web-app-db
   wordle-front:
     build: ./web
-    image: tacsWordleRegistry.azurecr.io/wordle-web-front
+    image: tacswordleregistry1.azurecr.io/wordle-web-front
     container_name: wordle-web-front
     ports:
       - "3000:3000"
