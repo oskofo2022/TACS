@@ -29,7 +29,7 @@ const _user_not_exists = 'El usuario no existe.'
 const _incorrect_text_msg = 'Sólo se admiten numeros';
 const _empty_msg = 'Debe ingresar una palabra.';
 
-const errorMsg = 'Uno de los usuarios ya se encuentra inscripto!'
+const errorMsg = 'Uno de los usuarios ya se encontraba inscripto! Se inscribió al resto.'
 const successMsg = 'Se agregaron todos los usuarios al torneo.'
 
 const searchUserByName = debounce(
