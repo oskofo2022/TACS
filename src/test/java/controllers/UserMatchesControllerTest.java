@@ -49,10 +49,12 @@ public class UserMatchesControllerTest {
         final var firstMatch = new Match();
         firstMatch.setLanguage(Language.SPANISH);
         firstMatch.setDate(LocalDate.now());
+        firstMatch.setGuessesCount(4);
 
         final var secondMatch = new Match();
-        firstMatch.setLanguage(Language.ENGLISH);
-        firstMatch.setDate(LocalDate.now().plusDays(1));
+        secondMatch.setLanguage(Language.ENGLISH);
+        secondMatch.setDate(LocalDate.now().plusDays(1));
+        secondMatch.setGuessesCount(2);
 
         final var matches = new ArrayList<Match>() {
             {
@@ -88,6 +90,7 @@ public class UserMatchesControllerTest {
         for (var index = 0; index < matches.size(); index++) {
             assertEquals(matches.get(index).getLanguage(), responsesGetListUserMatch.get(index).language());
             assertEquals(matches.get(index).getDate(), responsesGetListUserMatch.get(index).date());
+            assertEquals(matches.get(index).getGuessesCount(), responsesGetListUserMatch.get(index).guessesCount());
         }
 
         Mockito.verify(matchPage, Mockito.times(1)).getTotalElements();

@@ -24,10 +24,10 @@ public abstract class TournamentInscriptionsController {
         this.tournamentRepository.save(tournament);
 
         final var location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                                                        .path(UriConstants.DELIMITER + UriConstants.Users.Myself.Inscriptions.Tournaments.URL)
-                                                        .query(UriConstants.Users.Myself.Inscriptions.Tournaments.Queries.ID)
-                                                        .buildAndExpand(tournament.getId())
-                                                        .toUri();
+                                                             .path(UriConstants.DELIMITER + UriConstants.Users.Myself.Inscriptions.Tournaments.URL)
+                                                             .query(UriConstants.Users.Myself.Inscriptions.Tournaments.Queries.ID)
+                                                             .buildAndExpand(tournament.getId())
+                                                             .toUri();
 
         return ResponseEntity.created(location)
                              .build();

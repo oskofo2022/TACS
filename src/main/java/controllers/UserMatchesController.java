@@ -36,7 +36,7 @@ public class UserMatchesController extends PagedListController {
         final var user = this.userContextService.get();
         requestGetListUserMatch.setUserId(user.getId());
 
-        final var pagedList = this.list(this.matchRepository, requestGetListUserMatch, (m) -> new ResponseGetListUserMatch(m.getDate(), m.getLanguage()));
+        final var pagedList = this.list(this.matchRepository, requestGetListUserMatch, (m) -> new ResponseGetListUserMatch(m.getDate(), m.getLanguage(), m.getGuessesCount()));
 
         return ResponseEntity.ok(pagedList);
     }

@@ -4,5 +4,5 @@ import domain.persistence.entities.enums.Language;
 
 import java.time.LocalDate;
 
-public record ResponseGetListUserMatch(LocalDate date, Language language) {
+public record ResponseGetListUserMatch(LocalDate date, Language language, int guessesCount) {
 }

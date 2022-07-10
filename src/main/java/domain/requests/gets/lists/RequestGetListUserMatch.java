@@ -23,12 +23,18 @@ public class RequestGetListUserMatch extends RequestGetPagedList {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate topDate;
 
+    private Integer bottomGuessesCount;
+
+    private Integer topGuessesCount;
+
     @Override
     protected void addRestrictions() {
         this.addRestriction(RSQLConstants.Filters.getEqual("user.id"), this.userId);
         this.addRestriction(RSQLConstants.Filters.getEqual("language"), this.language);
         this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("date"), this.bottomDate);
         this.addRestriction(RSQLConstants.Filters.getLowerThan("date"), Optional.ofNullable(this.topDate).map(d -> d.plusDays(1)).orElse(null));
+        this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("guessesCount"), this.bottomGuessesCount);
+        this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("guessesCount"), this.topGuessesCount);
     }
 
     @Override
