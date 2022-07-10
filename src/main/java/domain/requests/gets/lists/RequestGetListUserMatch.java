@@ -73,4 +73,20 @@ public class RequestGetListUserMatch extends RequestGetPagedList {
     public void setTopDate(LocalDate topDate) {
         this.topDate = topDate;
     }
+
+    public Integer getBottomGuessesCount() {
+        return bottomGuessesCount;
+    }
+
+    public void setBottomGuessesCount(Integer bottomGuessesCount) {
+        this.bottomGuessesCount = bottomGuessesCount;
+    }
+
+    public Integer getTopGuessesCount() {
+        return topGuessesCount;
+    }
+
+    public void setTopGuessesCount(Integer topGuessesCount) {
+        this.topGuessesCount = topGuessesCount;
+    }
 }
