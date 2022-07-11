@@ -14,7 +14,7 @@ const PUBLIC_TOURNAMENTS_MYSELF_INSCRIPTION = `${PUBLIC_TOURNAMENTS}/{tournament
 const USER_MYSELF = `${API_URL}/users/myself`
 const MYSELF_MATCHES = `${USER_MYSELF}/matches`
 const MYSELF_TOURNAMENTS = `${USER_MYSELF}/tournaments`;
-const USER_GUESS = `${MYSELF_MATCHES}/matches/today`
+const USER_GUESS = `${MYSELF_MATCHES}/today`
 const INSCRIPTIONS = `${USER_MYSELF}/inscriptions/tournaments`;
 const POSITIONS = `${USER_MYSELF}/inscriptions/tournaments/{tournamentId}/positions`;
 
