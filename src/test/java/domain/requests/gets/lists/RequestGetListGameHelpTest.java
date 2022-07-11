@@ -14,6 +14,27 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RequestGetListGameHelpTest extends RequestGetListOnMemoryPagedListTest<String, RequestGetListGameHelp> {
 
     @Test
+    public void getBadLettersAsLowercase() {
+        this.request.setBadLetters("CVZXA");
+
+        assertEquals("cvzxa", this.request.getBadLetters());
+    }
+
+    @Test
+    public void getGoodLettersAsLowercase() {
+        this.request.setGoodLetters("ASVSA");
+
+        assertEquals("asvsa", this.request.getGoodLetters());
+    }
+
+    @Test
+    public void getGreenLettersAsLowercase() {
+        this.request.setGreenLetters("-RAR");
+
+        assertEquals("-rar", this.request.getGreenLetters());
+    }
+
+    @Test
     public void badLettersOverSized() {
         this.request.setBadLetters("a".repeat(21));
 

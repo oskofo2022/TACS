@@ -22,7 +22,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
     private List<RequestGetListGreenLetter> indexedGreenLetters;
 
     public String getGoodLetters() {
-        return Optional.ofNullable(this.goodLetters).orElse("");
+        return Optional.ofNullable(this.goodLetters).orElse("").toLowerCase();
     }
 
     public void setGoodLetters(String goodLetters) {
@@ -30,7 +30,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
     }
 
     public String getBadLetters() {
-        return Optional.ofNullable(this.badLetters).orElse("");
+        return Optional.ofNullable(this.badLetters).orElse("").toLowerCase();
     }
 
     public void setBadLetters(String badLetters) {
@@ -38,7 +38,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
     }
 
     public String getGreenLetters() {
-        return Optional.ofNullable(this.greenLetters).orElse("");
+        return Optional.ofNullable(this.greenLetters).orElse("").toLowerCase();
     }
 
     public void setGreenLetters(String greenLetters) {
@@ -78,7 +78,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
         if (!greenLetters.isBlank()) {
             this.indexedGreenLetters = IntStream.range(0, greenLetters.length())
                                                 .filter(i -> greenLetters.charAt(i) != '-')
-                                                .mapToObj(i -> new RequestGetListGreenLetter(i, this.greenLetters.charAt(i)))
+                                                .mapToObj(i -> new RequestGetListGreenLetter(i, greenLetters.charAt(i)))
                                                 .collect(Collectors.toList());
         }
     }
@@ -92,7 +92,7 @@ public class RequestGetListGameHelp extends RequestGetListOnMemoryPagedList<Stri
         final var badLetters = this.getBadLetters();
 
         return !badLetters.isBlank() && Arrays.stream(badLetters.split(""))
-                                                                .anyMatch(word::contains);
+                                              .anyMatch(word::contains);
     }
 
     private boolean hasGoodLetters(String word) {
