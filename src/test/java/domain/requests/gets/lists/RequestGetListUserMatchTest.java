@@ -73,6 +73,26 @@ class RequestGetListUserMatchTest extends RequestGetPagedListTest<RequestGetList
         assertEquals(filterValue, filter.get());
     }
 
+    @Test
+    public void getFilterBottomGuessesCount() {
+        this.request.setBottomGuessesCount(2);
+        final var filterValue = "guessesCount>=2";
+
+        final var filter = this.request.getFilter();
+        assertTrue(filter.isPresent());
+        assertEquals(filterValue, filter.get());
+    }
+
+    @Test
+    public void getFilterTopGuessesCount() {
+        this.request.setTopGuessesCount(5);
+        final var filterValue = "guessesCount<=5";
+
+        final var filter = this.request.getFilter();
+        assertTrue(filter.isPresent());
+        assertEquals(filterValue, filter.get());
+    }
+
     @Override
     protected RequestGetListUserMatch createValidRequest() {
         return new RequestGetListUserMatch();

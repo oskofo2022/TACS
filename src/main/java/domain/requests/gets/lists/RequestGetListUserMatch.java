@@ -34,7 +34,7 @@ public class RequestGetListUserMatch extends RequestGetPagedList {
         this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("date"), this.bottomDate);
         this.addRestriction(RSQLConstants.Filters.getLowerThan("date"), Optional.ofNullable(this.topDate).map(d -> d.plusDays(1)).orElse(null));
         this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("guessesCount"), this.bottomGuessesCount);
-        this.addRestriction(RSQLConstants.Filters.getGreaterThanEqual("guessesCount"), this.topGuessesCount);
+        this.addRestriction(RSQLConstants.Filters.getLowerThanEqual("guessesCount"), this.topGuessesCount);
     }
 
     @Override
