@@ -11,6 +11,7 @@ import NewTournament from "../user/private/NewTournament";
 import MyTournaments from "../user/private/MyTournaments";
 import {styled} from "@mui/material";
 import Helper from 'components/user/public/Helper';
+import MyGames from 'components/user/private/MyGames';
 
 const HomeStyle = styled('section')(({theme}) => ({
     // width: 'max-content',
@@ -34,6 +35,7 @@ const Home = () => {
                 <Route path="/torneos" element={<Tournaments/>}/>
                 <Route path="/diccionarios" element={<Dictionaries/>}/>
                 <Route path="/helper" element={<Helper/>}/>
+                <Route path="/mis-jugadas" element={authContext.authenticated && <MyGames/>} ></Route>
                 <Route path="/mis-torneos" element={authContext.authenticated && <MyTournaments/>} ></Route>
                 <Route path="/inscripciones" element={authContext.authenticated && <MyInscriptions/>} ></Route>
                 <Route path="/nuevo-torneo" element={authContext.authenticated && <NewTournament/>} ></Route>

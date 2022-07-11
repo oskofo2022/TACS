@@ -1,6 +1,9 @@
 import React from "react";
 import {
+    Alert,
     Button,
+    Collapse,
+    Container,
     Dialog,
     DialogActions,
     DialogContent,
@@ -13,9 +16,12 @@ import {
 import {LanguagesConstants} from "../../../constants/LanguagesConstants";
 import AuthContext from "../../context/AuthContext";
 import {UserGuessRequest} from "../../../request/UserGuessRequest";
+import StatusCodeHandler from "errors/StatusCodeHandler";
 
 const _incorrect_language_msg = 'Debe seleccionar un idioma';
 const _incorrect_guesses_msg = 'Debe ingresar un numero entre 1 y 7';
+
+const _errorMsg = 'Ya informó la jugada de hoy';
 
 const AddGuess = ({open, onClose}) => {
     const authContext = React.useContext(AuthContext);
@@ -23,6 +29,7 @@ const AddGuess = ({open, onClose}) => {
 
     // const [open, setOpen] = React.useState(true);
     const [success, setSuccess] = React.useState(false);
+    const [addGuessError, setAddGuessError] = React.useState(false);
 
     const [guess, setGuess] = React.useState();
     const [guessesValid, setGuessesValid] = React.useState(true);
@@ -83,7 +90,7 @@ const AddGuess = ({open, onClose}) => {
                 }
             ]
         });
-        const userGuessRequest = UserGuessRequest.from( body);
+        const userGuessRequest = UserGuessRequest.from(body);
         return await userGuessRequest.fetch();
     }
 
@@ -92,12 +99,20 @@ const AddGuess = ({open, onClose}) => {
         {f: validateGuess, v: guess},
     ];
 
-    const handleCloseAddUserDialogSuccess = () => {
+    const handleCloseAddUserDialogSuccess = () => {        
+        setAddGuessError(false);
         const isValid = allValidations.reduce((prev, validation) => validation.f(validation.v) && prev, true);
         if (!isValid) return;
         handleGuessPost()
-            .then((r) => {if (r.status === 200) handleSuccess();})
-            .catch(e => setRedirect(authContext.handleUnauthorized(e)));
+            .then(StatusCodeHandler)
+            .then((r) => {if (r.ok) handleSuccess();})
+            .catch(e => setRedirect(authContext.handleUnauthorized(e)))
+            .catch(e => setAddGuessError(true));
+    }
+
+    const handleOnClose = () => {
+        setAddGuessError(false);
+        onClose();
     }
 
     const handleCloseSuccessDialog = () => {
@@ -107,10 +122,17 @@ const AddGuess = ({open, onClose}) => {
     return (
         <React.Fragment>
             {redirect}
-            <Dialog open={open} onClose={onClose} className='addusermodal' fullWidth>
+            <Dialog open={open} onClose={handleOnClose} className='addusermodal' fullWidth>
                 <DialogTitle>
                     <Typography variant="h5" sx={{color: "green"}} textAlign="center">Add Guess</Typography>
                 </DialogTitle>
+                <Container>
+                    <Collapse in={addGuessError}>
+                        <Alert variant="filled" sx={{ mb: 2}} severity="error">
+                            {_errorMsg}
+                        </Alert>
+                    </Collapse>
+                </Container>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -144,7 +166,7 @@ const AddGuess = ({open, onClose}) => {
                     </TextField>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleOnClose}>Cancel</Button>
                     <Button onClick={handleCloseAddUserDialogSuccess}>Add</Button>
                 </DialogActions>
             </Dialog>
