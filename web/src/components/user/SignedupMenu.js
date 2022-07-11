@@ -10,7 +10,7 @@ import AuthContext from "../context/AuthContext";
 import {deepOrange} from "@mui/material/colors";
 import AddGuess from "./private/AddGuess";
 
-const settings = ['Nuevo Torneo', 'Inscripciones', 'Mis Torneos', 'Logout'];
+const settings = ['Nuevo Torneo', 'Inscripciones', 'Mis Jugadas', 'Mis Torneos', 'Logout'];
 
 const SignedupMenu = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
