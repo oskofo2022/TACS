@@ -1,14 +1,14 @@
 version: "3.9"
 services:
-  web-app-db:
-    image: mysql
-    container_name: wordle-db
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-    ports:
-       - "3306:3306"
+  # web-app-db:
+  #   image: mysql
+  #   container_name: wordle-db
+  #   restart: always
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #     - MYSQL_DATABASE=${MYSQL_DATABASE}
+  #   ports:
+  #      - "3306:3306"
     # healthcheck:
     #    test: mysql ${MYSQL_DATABASE} --user=root --password='${MYSQL_ROOT_PASSWORD}' --silent --execute "SELECT 1;"
     #    timeout: 20s

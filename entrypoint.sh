@@ -1,2 +1,2 @@
 #!/bin/bash
-sleep 2m && java -jar /wordle.war
+java -jar /wordle.war
